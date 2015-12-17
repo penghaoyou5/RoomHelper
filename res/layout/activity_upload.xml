@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title" />
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="157dp"
+        android:src="@drawable/rig1"/>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_image"
+        android:layout_marginTop="26dp"
+        android:layout_centerHorizontal="true"
+        android:text="啊啊啊啊啊啊啊啊啊啊啊"/>
+
+    <TextView
+        android:id="@+id/tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_content"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="17sp"
+        android:text="已保存"/>
+
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_below="@id/tv_state"
+        style="@style/btn_default"
+        android:layout_marginTop="53dp"
+        android:text="手机网络直接上传"/>
+
+
+<TextView
+    android:layout_below="@id/btn_upload"
+    android:text="默认自动连接WIFI上传"
+    android:layout_centerHorizontal="true"
+    android:layout_width="wrap_content"
+    android:layout_marginTop="10dp"
+    android:textColor="@color/textColor2"
+    android:textSize="15sp"
+    android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/select_item_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="97dp">
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="112.5dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16.5dp"
+            android:background="#0f0" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="21dp"
+            android:layout_toRightOf="@id/iv_image"
+            android:text="墙面/脱皮/xx/xxx"
+            android:textSize="16sp" />
+
+        <TextView
+            android:text="未完成"
+            android:textSize="10sp"
+            android:layout_marginTop="5dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_content"
+            android:layout_alignLeft="@+id/tv_content"
+            />
+    </RelativeLayout>
+</RelativeLayout>

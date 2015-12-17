@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <include
+                android:id="@+id/title"
+                layout="@layout/title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+
+            <ImageView
+                android:id="@+id/iv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/title" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black_transparent">
+
+                <TextView
+                    android:id="@+id/tv_left"
+                    style="@style/add_question"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginTop="21dp"
+                    android:drawableLeft="@drawable/s"
+                    android:text="重拍" />
+
+                <TextView
+                    android:id="@+id/tv_center"
+                    style="@style/add_question"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/ok"
+                    android:text="确认" />
+
+                <TextView
+                    android:id="@+id/tv_right"
+                    style="@style/add_question"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="17dp"
+                    android:drawableLeft="@drawable/wen"
+                    android:text="添加问题" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_tackphoto"
+            android:layout_width="100dp"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="28.5dp"
+                android:background="@null"
+                android:src="@drawable/back1" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:src="@drawable/ca" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="28.5dp"
+                android:background="@null"
+                android:src="@drawable/add" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
