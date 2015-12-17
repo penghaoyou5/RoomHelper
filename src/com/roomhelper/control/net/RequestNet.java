@@ -10,15 +10,15 @@ import com.roomhelper.control.bean.TaskListBean;
 
 /**
  * @author peng
- *	Ö÷Òª½øĞĞÍøÂçÇëÇóÓëÎÄ¼şÏÂÔØµÄÀà
+ *	ä¸»è¦è¿›è¡Œç½‘ç»œè¯·æ±‚ä¸æ–‡ä»¶ä¸‹è½½çš„ç±»
  */
 public class RequestNet extends BaseNet {
 	
 	/**
-	 * ½øĞĞµÇÂ½µÄ·Å¸Â
-	 * @param username ÓÃ»§Ãû
-	 * @param password ÃÜÂë
-	 * @param callBack ÇëÇó»Øµô
+	 * è¿›è¡Œç™»é™†çš„æ”¾å˜
+	 * @param username ç”¨æˆ·å
+	 * @param password å¯†ç 
+	 * @param callBack è¯·æ±‚å›æ‰
 	 */
 	public void login(String username,String password,BaseCallBack<LoginBean> callBack){
 		RequestParams requestParams = new RequestParams();
@@ -28,9 +28,9 @@ public class RequestNet extends BaseNet {
 	}
 	
 	/**
-	 * »ñÈ¡ÈÎÎñÁĞ±í
-	 * @param userid ÓÃ»§ID
-	 * @param callBack ÇëÇó»Øµô
+	 * è·å–ä»»åŠ¡åˆ—è¡¨
+	 * @param userid ç”¨æˆ·ID
+	 * @param callBack è¯·æ±‚å›æ‰
 	 */
 	public void taskList(String userid,BaseCallBack<TaskListBean> callBack){
 		RequestParams requestParams = new RequestParams();
@@ -39,9 +39,9 @@ public class RequestNet extends BaseNet {
 	}
 	
 	/**
-	 * »ñÈ¡Ä£°åÃ÷Ï¸
-	 * @param PreCheckArrangeDateCode ÑéÊÕ·¶Î§±àÂë
-	 * @param callBack ÇëÇó»Øµô
+	 * è·å–æ¨¡æ¿æ˜ç»†
+	 * @param PreCheckArrangeDateCode éªŒæ”¶èŒƒå›´ç¼–ç 
+	 * @param callBack è¯·æ±‚å›æ‰
 	 */
 	public void taskDetail(String PreCheckArrangeDateCode,BaseCallBack<TaskDetailBean> callBack){
 		RequestParams requestParams = new RequestParams();
@@ -50,15 +50,15 @@ public class RequestNet extends BaseNet {
 	}
 	
 	/**
-	 * »ñÈ¡¹¤³ÌÎÊÌâ
-	 * @param callBack ÇëÇó»Øµô
+	 * è·å–å·¥ç¨‹é—®é¢˜
+	 * @param callBack è¯·æ±‚å›æ‰
 	 */
 	public void projectProblem(BaseCallBack<ProjectProblemBean> callBack){
 		baseRequest(new RequestParams(), Constants.PROJECT_PROBLEM, callBack, ProjectProblemBean.class);
 	}
 	
 	/**
-	 * »ñµÃÍ¼Æ¬ÎÄ¼ş
+	 * è·å¾—å›¾ç‰‡æ–‡ä»¶
 	 */
 	public void getImage(){
 		

@@ -2,11 +2,11 @@ package com.roomhelper.control.base;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-//模仿application
+//妯′豢application
 public class BaseBean implements Serializable {
 
 	/**
-	 * 成功信息：true ，false
+	 * 鎴愬姛淇℃伅锛歵rue 锛宖alse
 	 */
 	public String SuccessMsg;
 	public String ErrorMsg;

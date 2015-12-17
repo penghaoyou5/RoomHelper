@@ -4,12 +4,12 @@ import com.roomhelper.control.base.BaseBean;
 
 public class LoginBean  extends BaseBean{
 	 /**
-	 * 成功信息：true  ，false 
-	 * 用户登录是否成功
+	 * 鎴愬姛淇℃伅锛歵rue  锛宖alse 
+	 * 鐢ㄦ埛鐧诲綍鏄惁鎴愬姛
 	 */
 	public boolean  SuccessMsg;
 	/**
-	 * 提示信息
+	 * 鎻愮ず淇℃伅
 	 */
 	public String  ErrorMsg;
 	/**

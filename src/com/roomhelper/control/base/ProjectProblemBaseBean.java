@@ -4,7 +4,7 @@ public class ProjectProblemBaseBean extends BaseBean {
 
 	public String AttachmentIDS;
 	public String AllProblemDescriptionList;
-	//ÕâÀïÓ¦¸ÃÊÇ¸öÁĞ±í Ö»ÊÇ¼ÙÊı¾İ ¸øµÄÊÇ null  
+	//è¿™é‡Œåº”è¯¥æ˜¯ä¸ªåˆ—è¡¨ åªæ˜¯å‡æ•°æ® ç»™çš„æ˜¯ null  
 	public String ProblemDescriptionList;
 	public String EnginTypeFullName;
 	public String CheckRemark;

@@ -15,11 +15,11 @@ public class TaskListBean extends BaseBean {
 	public class TaskMessage extends BaseBean {
 
 		/**
-		 * ÈÎÎñ±àÂë
+		 * ä»»åŠ¡ç¼–ç 
 		 */
 		public String TaskCode;
 		/**
-		 * ÈÎÎñÃèÊö
+		 * ä»»åŠ¡æè¿°
 		 */
 		public String TaskName;
 	}

@@ -13,27 +13,27 @@ import com.loopj.android.http.RequestParams;
 public class BaseNet {
 	
 	/**
-	 * »Ø·µ3ÖÖÀàĞÍ ÄÇÕâÀï¾ÍÓÃÃ¶¾Ù°É
+	 * å›è¿”3ç§ç±»å‹ é‚£è¿™é‡Œå°±ç”¨æšä¸¾å§
 	 * 
-	 * @author Administrator ¿ÕµÄ·µ»ØÀàĞÍ ÎŞ²Î»Øµ÷·µ»Ø
+	 * @author Administrator ç©ºçš„è¿”å›ç±»å‹ æ— å‚å›è°ƒè¿”å›
 	 */
 	public static  enum RequestType {
 		/**
-		 * Á¬½ÓÊ§°Ü
+		 * è¿æ¥å¤±è´¥
 		 */
 		connectFailure, 
 		/**
-		 *ÏûÏ¢³É¹¦·µ»Ø 
+		 *æ¶ˆæ¯æˆåŠŸè¿”å› 
 		 */
 		messagetrue, 
 		/**
-		 * ÏûÏ¢ÇëÇóÊ§°Ü
+		 * æ¶ˆæ¯è¯·æ±‚å¤±è´¥
 		 */
 		messagefalse
 	}
 	
 	/**
-	 * »ù±¾½Ó¿Ú
+	 * åŸºæœ¬æ¥å£
 	 * 
 	 * @author Administrator
 	 * 
@@ -42,17 +42,17 @@ public class BaseNet {
 	public static interface BaseCallBack<T extends BaseBean> {
 		
 		/**
-		 * ½øĞĞÍøÂçÇëÇóµÄ»Øµô
-		 * @param requestType ÇëÇó³É¹¦
-		 * @param bean ÇëÇó³É¹¦µÄbean
-		 * @param errorMessage ÇëÇóµÄÏûÏ¢·µ»ØÖµ
+		 * è¿›è¡Œç½‘ç»œè¯·æ±‚çš„å›æ‰
+		 * @param requestType è¯·æ±‚æˆåŠŸ
+		 * @param bean è¯·æ±‚æˆåŠŸçš„bean
+		 * @param errorMessage è¯·æ±‚çš„æ¶ˆæ¯è¿”å›å€¼
 		 */
 		void messageResponse(RequestType requestType,T bean,String message);
 	}
 	
 	private static AsyncHttpClient httpClient;
 	/**
-	 * »ñµÃµ¥ÀıµÄAsyncHttpClient ¿Í»§¶Ë
+	 * è·å¾—å•ä¾‹çš„AsyncHttpClient å®¢æˆ·ç«¯
 	 * @return AsyncHttpClient
 	 */
 	public static AsyncHttpClient getAsyncHttpClient(){
@@ -64,12 +64,12 @@ public class BaseNet {
 	
 	private static Gson gson;
 	/**
-	 * »ñÈ¡µ¥ÀıGson¶ÔÏó
+	 * è·å–å•ä¾‹Gsonå¯¹è±¡
 	 * @return Gson
-	 * ËµÃ÷http://blog.csdn.net/jxxfzgy/article/details/43746317
+	 * è¯´æ˜http://blog.csdn.net/jxxfzgy/article/details/43746317
 	 */
 	public static Gson getGson(){
-		//Í¨¹ıÖ¸¶¨ÉùÃ÷µÄÈ¨ÏŞÀ´¹ıÂË£¬ÕâÀï¹ıÂËµôÉùÃ÷Îª protcted µÄ±äÁ¿
+		//é€šè¿‡æŒ‡å®šå£°æ˜çš„æƒé™æ¥è¿‡æ»¤ï¼Œè¿™é‡Œè¿‡æ»¤æ‰å£°æ˜ä¸º protcted çš„å˜é‡
 		gson = new GsonBuilder().excludeFieldsWithModifiers(Modifier.PROTECTED).create() ;
 		return gson;
 	}
@@ -92,7 +92,7 @@ public class BaseNet {
 			public void onSuccess(int statusCode, Header[] headers,byte[] responseBody) {
 				T bean = getGson().fromJson(new String(responseBody), beanClass);
 				
-				//ÔİÊ±Ã»ÓĞÇø·ÖÏûÏ¢µÄ³É¹¦ÓëÊ§°Ü
+				//æš‚æ—¶æ²¡æœ‰åŒºåˆ†æ¶ˆæ¯çš„æˆåŠŸä¸å¤±è´¥
 				callback.messageResponse( RequestType.messagetrue, bean, null);
 				
 			}

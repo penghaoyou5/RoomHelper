@@ -23,7 +23,7 @@ public class TaskDetailBean extends BaseBean {
 			public String PreCheckCode;
 			public String ProPretTypeName;
 			public String SpaceLayoutCode;
-			//TODO:ԭpublic List<AttachmentIDS> AttachmentIDS;
+			//TODO:原public List<AttachmentIDS> AttachmentIDS;
 			public List<String> AttachmentIDS;
 
 		}
@@ -31,7 +31,7 @@ public class TaskDetailBean extends BaseBean {
 			public String SpaceLayoutFullName;
 			public int SpaceLayoutCode;
 			public String SpaceLayoutName;
-			//TODO:ԭpublic List<AttachmentIDS> AttachmentIDS;
+			//TODO:原public List<AttachmentIDS> AttachmentIDS;
 			public List<String> AttachmentIDS;
 
 			public List<EnginTypeList> EnginTypeList;
@@ -42,7 +42,7 @@ public class TaskDetailBean extends BaseBean {
 				public String CheckRemark;
 				public String EnginTypeName;
 				public String EnginTypeCode;
-				//TODO:ԭpublic List<AttachmentIDS> AttachmentIDS;
+				//TODO:原public List<AttachmentIDS> AttachmentIDS;
 				public List<String> AttachmentIDS;
 
 				public List<ProblemDescriptionList> ProblemDescriptionList;
