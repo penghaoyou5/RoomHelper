@@ -5,6 +5,10 @@ import java.util.List;
 import com.roomhelper.control.base.BaseBean;
 import com.roomhelper.control.base.ProjectProblemBaseBean;
 
+/**
+ * @author peng
+ * 问题类型选择界面
+ */
 public class ProjectProblemBean extends BaseBean {
 	public String SuccessMsg;
 	public String ErrorMsg;

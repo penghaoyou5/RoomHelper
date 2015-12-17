@@ -6,6 +6,10 @@ import java.util.List;
 
 import com.roomhelper.control.base.BaseBean;
 
+/**
+ * @author peng
+ * 任务列表
+ */
 public class TaskListBean extends BaseBean {
 
 	public String message;

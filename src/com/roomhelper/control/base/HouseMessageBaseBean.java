@@ -1,7 +1,10 @@
 package com.roomhelper.control.base;
 
-public class HouseMessageBaseBean extends BaseBean {
-
+/**
+ * @author peng
+ * 房屋信息的基类
+ */
+public abstract class HouseMessageBaseBean extends BaseBean {
 	public String PreBuildingName;
 	public String ActHouseName;
 	public String PreHouseName;

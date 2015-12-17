@@ -1,6 +1,10 @@
 package com.roomhelper.control.base;
 
-public class ProjectProblemBaseBean extends BaseBean {
+/**
+ * @author peng
+ * 三级问题描述的基类
+ */
+public abstract class ProjectProblemBaseBean extends BaseBean {
 
 	public String AttachmentIDS;
 	public String AllProblemDescriptionList;

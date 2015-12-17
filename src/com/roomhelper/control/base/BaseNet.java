@@ -10,6 +10,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+/**
+ * @author peng
+ *	进行网络请求的基类
+ */
 public class BaseNet {
 	
 	/**

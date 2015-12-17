@@ -2,7 +2,11 @@ package com.roomhelper.control.base;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-//模仿application
+
+/**
+ * @author peng
+ * 基础bean类要不要模仿application？
+ */
 public class BaseBean implements Serializable {
 
 	/**

@@ -2,11 +2,11 @@ package com.roomhelper.control.net;
 
 import com.loopj.android.http.RequestParams;
 import com.roomhelper.control.base.BaseNet;
-import com.roomhelper.control.base.Constants;
 import com.roomhelper.control.bean.LoginBean;
 import com.roomhelper.control.bean.ProjectProblemBean;
 import com.roomhelper.control.bean.TaskDetailBean;
 import com.roomhelper.control.bean.TaskListBean;
+import com.roomhelper.control.constant.NetUrl;
 
 /**
  * @author peng
@@ -24,7 +24,7 @@ public class RequestNet extends BaseNet {
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("username", username);
 		requestParams.add("username", password);
-		baseRequest(requestParams, Constants.LOGIN, callBack, LoginBean.class);
+		baseRequest(requestParams, NetUrl.LOGIN, callBack, LoginBean.class);
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class RequestNet extends BaseNet {
 	public void taskList(String userid,BaseCallBack<TaskListBean> callBack){
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("userid", userid);
-		baseRequest(requestParams, Constants.TASK_LIST, callBack, TaskListBean.class);
+		baseRequest(requestParams, NetUrl.TASK_LIST, callBack, TaskListBean.class);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class RequestNet extends BaseNet {
 	public void taskDetail(String PreCheckArrangeDateCode,BaseCallBack<TaskDetailBean> callBack){
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("PreCheckArrangeDateCode", PreCheckArrangeDateCode);
-		baseRequest(requestParams, Constants.TASK_DETAIL, callBack, TaskDetailBean.class);
+		baseRequest(requestParams, NetUrl.TASK_DETAIL, callBack, TaskDetailBean.class);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class RequestNet extends BaseNet {
 	 * @param callBack 请求回掉
 	 */
 	public void projectProblem(BaseCallBack<ProjectProblemBean> callBack){
-		baseRequest(new RequestParams(), Constants.PROJECT_PROBLEM, callBack, ProjectProblemBean.class);
+		baseRequest(new RequestParams(), NetUrl.PROJECT_PROBLEM, callBack, ProjectProblemBean.class);
 	}
 	
 	/**
