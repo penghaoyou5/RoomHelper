@@ -1,10 +1,10 @@
 package com.roomhelper.ui;
 
-import com.example.roomhelper.R;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
+
+import com.roomhelper.R;
 
 public class MainActivity extends Activity {
 
