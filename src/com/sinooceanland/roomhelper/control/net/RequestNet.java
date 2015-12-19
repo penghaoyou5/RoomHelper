@@ -3,10 +3,10 @@ package com.sinooceanland.roomhelper.control.net;
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
-import com.sinooceanland.roomhelper.control.bean.ProjectProblemBean;
-import com.sinooceanland.roomhelper.control.bean.TaskDetailBean;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
+import com.sinooceanland.roomhelper.dao.module.ProjectProblemBean;
+import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
+import com.sinooceanland.roomhelper.dao.module.TaskListBean;
 
 /**
  * @author peng

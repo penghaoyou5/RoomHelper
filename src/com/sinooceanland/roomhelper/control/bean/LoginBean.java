@@ -1,6 +1,6 @@
 package com.sinooceanland.roomhelper.control.bean;
 
-import com.sinooceanland.roomhelper.control.base.BaseBean;
+import com.sinooceanland.roomhelper.dao.base.BaseBean;
 
 /**
  * @author peng

@@ -1,9 +1,9 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
 import com.sinooceanland.roomhelper.control.base.BaseNet;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
+import com.sinooceanland.roomhelper.dao.module.TaskListBean;
 
 /**
  * @author peng
