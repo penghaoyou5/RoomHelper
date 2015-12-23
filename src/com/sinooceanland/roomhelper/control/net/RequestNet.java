@@ -9,7 +9,7 @@ import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
 import com.sinooceanland.roomhelper.dao.module.TaskListBean;
 
 /**
- * @author peng
+ * @author peng  peng
  *	主要进行网络请求与文件下载的类
  */
 public class RequestNet extends BaseNet {
