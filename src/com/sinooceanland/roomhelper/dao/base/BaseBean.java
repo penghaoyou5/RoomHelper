@@ -15,8 +15,6 @@ public class BaseBean implements Serializable {
 	public String SuccessMsg;
 	public String ErrorMsg;
 
-	
-	
 	@Override
 	public String toString() {
 		String s = "";

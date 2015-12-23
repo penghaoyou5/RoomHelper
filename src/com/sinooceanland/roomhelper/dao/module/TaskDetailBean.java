@@ -14,4 +14,23 @@ public class TaskDetailBean extends BaseBean {
 	public int downloadState = 0;
 	public int finishState = 0;
 	public int uploadState = 0;
+	
+	public String getSuccessMsg() {
+		return SuccessMsg;
+	}
+	public void setSuccessMsg(String successMsg) {
+		SuccessMsg = successMsg;
+	}
+	public List<HouseMessage> getList() {
+		return list;
+	}
+	public void setList(List<HouseMessage> list) {
+		this.list = list;
+	}
+	public int getErrorMsg() {
+		return this.ErrorMsg;
+	}
+	public void setErrorMsg(int errorMsg) {
+		ErrorMsg = errorMsg;
+	}
 }
