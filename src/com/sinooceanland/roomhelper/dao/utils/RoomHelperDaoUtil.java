@@ -47,6 +47,11 @@ public class RoomHelperDaoUtil {
 		return str;
 	}
 	
+	/**
+	 * 从SP中删除指定key的值
+	 * @param context
+	 * @param key
+	 */
 	public static void removeDataByKey(Context context, String key){
 		if(sp==null){
 			sp = context.getSharedPreferences(SPNAME, 0);
@@ -57,6 +62,10 @@ public class RoomHelperDaoUtil {
 		edit.commit();
 	}
 	
+	/**
+	 * 清除所有SP中的数据
+	 * @param context
+	 */
 	public static void clearAllData(Context context){
 		if(sp==null){
 			sp = context.getSharedPreferences(SPNAME, 0);
@@ -65,18 +74,31 @@ public class RoomHelperDaoUtil {
 		sp.edit().clear().commit();
 	}
 	
+	/**
+	 * 将json转换为Bean对象
+	 * @param json
+	 * @param clazz
+	 * @return
+	 */
 	public static <T> T fillBeanFromJson(String json, Class<T> clazz){
 		T t = new Gson().fromJson(json, clazz);
 		return t;
 	}
 	
+	//Bean对象转为Json数据
 	public static <T> String bean2Json(T t){
 		String json = "";
 		json = new Gson().toJson(t);
 		return json;
 	}
 	
-	public static String fromatMethodName(String name){
+	//格式化方法名为set方法
+	public static String fromatSetMethodName(String name){
 		return "set".concat(String.valueOf(name.charAt(0)).toUpperCase().concat(name.substring(1)));
+	}
+	
+	//格式化方法名为get方法
+	public static String fromatGetMethodName(String name){
+		return "get".concat(String.valueOf(name.charAt(0)).toUpperCase().concat(name.substring(1)));
 	}
 }

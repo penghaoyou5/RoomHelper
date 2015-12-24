@@ -33,11 +33,13 @@ public class BigJsonManager extends BaseJsonManager {
 		super(context,key,json);
 	}
 	
+	//将解析的大json的Bean返回
 	public TaskDetailBean getTaskDetailBean(){
 		taskDetailBean = jsonToBean(mJson, TaskDetailBean.class);
 		return taskDetailBean;
 	}
 	
+	//获取任务列表集合
 	public List<HouseMessage> getTaskList(){
 		List<HouseMessage> list = null;
 		if(taskDetailBean!=null){
@@ -46,6 +48,14 @@ public class BigJsonManager extends BaseJsonManager {
 		return list;
 	}
 	
+	/**
+	 * 通过界面position获取指定的目标集合
+	 * @param clazz 目标集合中对象的class字节码（比如：想获取SpaceLayoutList集合，传递SpaceLayoutList.class即可）
+	 * @param indexs 可变参数，指目标集合的上级对象所在它的集合中位置position
+	 * @return
+	 * 
+	 * 补充：该方法为统一管理方法，调用该方法可获取到大Json中的任何一个集合
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getGoalList(Class<T> clazz, int ...indexs){
 		List<HouseMessage> taskList = getTaskList();
@@ -65,6 +75,12 @@ public class BigJsonManager extends BaseJsonManager {
 		return null;
 	}
 	
+	/**
+	 * 专门获取AttachmentIDS得方法，使用方法和getGoalList()类似
+	 * @param clazz
+	 * @param indexs
+	 * @return
+	 */
 	public <T> List<String> getAttachmentIDS(Class<T> clazz, int ...indexs){
 		List<HouseMessage> taskList = getTaskList();
 		int length = indexs.length;
@@ -82,10 +98,44 @@ public class BigJsonManager extends BaseJsonManager {
 		return null;
 	}
 	
-	public <T> void modifyData(String variableNamem, String value, int position, Class<T> clazz, int ...indexs){
+	/**
+	 * 通过字段的值来点位对象在集合中的位置，即通过某个字段值找到对应的对象
+	 * @param list 要查找的集合
+	 * @param variableName 提供的字段的名字
+	 * @param value 提供的字段的值
+	 * @return
+	 */
+	public <T> T findDataFromList(List<T> list, String variableName, String value){
+		T t = null;
+		String methodName = RoomHelperDaoUtil.fromatGetMethodName(variableName);
+		try{
+			Method method = t.getClass().getMethod(methodName);
+			for(T temp : list){
+				String str = (String)method.invoke(temp);
+				if(value.equals(str)){
+					t = temp;
+					break;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return t;
+	}
+	
+	/**
+	 * 该方法为统一管理方法，调用该方法可修改任意一个对象的任意一个字段值
+	 * @param variableName 要修改的变量的名称
+	 * @param value 要修改的值
+	 * @param position 要修改的对象在集合中的位置
+	 * @param clazz 要修改的对象的class字节码
+	 * @param indexs 可变参数，界面上对象对应的位置
+	 */
+	public <T> void modifyData(String variableName, String value, int position, Class<T> clazz, int ...indexs){
 		List<T> goalList = getGoalList(clazz, indexs);
 		if(goalList!=null && goalList.size()>position){
-			String methodName = RoomHelperDaoUtil.fromatMethodName(variableNamem);
+			String methodName = RoomHelperDaoUtil.fromatSetMethodName(variableName);
 			T t = goalList.get(position);
 			try {
 				Method method = clazz.getMethod(methodName, String.class);
@@ -93,6 +143,22 @@ public class BigJsonManager extends BaseJsonManager {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	/**
+	 * 修改对象的字段的值，调用该方法可修改任意对象的任意字段值
+	 * @param m 要修改的对象
+	 * @param variableName 要修改的变量的名称
+	 * @param n 要修改的值
+	 */
+	public <M,N> void modifyData(M m, String variableName, N n){
+		String methodName = RoomHelperDaoUtil.fromatSetMethodName(variableName);
+		try{
+			Method method = m.getClass().getMethod(methodName, n.getClass());
+			method.invoke(m, n);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 }
