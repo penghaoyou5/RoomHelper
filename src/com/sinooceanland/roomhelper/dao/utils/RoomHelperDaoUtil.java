@@ -94,11 +94,15 @@ public class RoomHelperDaoUtil {
 	
 	//格式化方法名为set方法
 	public static String fromatSetMethodName(String name){
-		return "set".concat(String.valueOf(name.charAt(0)).toUpperCase().concat(name.substring(1)));
+		return formatMethodName("set",name);
 	}
 	
 	//格式化方法名为get方法
 	public static String fromatGetMethodName(String name){
-		return "get".concat(String.valueOf(name.charAt(0)).toUpperCase().concat(name.substring(1)));
+		return formatMethodName("get",name);
+	}
+	
+	public static String formatMethodName(String handleName, String name){
+		return handleName.concat(String.valueOf(name.charAt(0)).toUpperCase().concat(name.substring(1)));
 	}
 }

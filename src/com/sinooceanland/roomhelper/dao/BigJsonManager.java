@@ -19,12 +19,12 @@ import com.sinooceanland.roomhelper.dao.utils.RoomHelperDaoUtil;
  * @author Administrator
  */
 public class BigJsonManager extends BaseJsonManager {
-	protected String JSONKEY = "Big-Json";
-	public TaskDetailBean taskDetailBean;
 	public static final String SPACE_LAYOUT = "SpaceLayoutList";
 	public static final String LAST_CHECK_PROBLEM = "LastCheckProblemList";
 	public static final String ENGIN_TYPE = "EnginTypeList";
 	public static final String PROBLEM_DESCRIPTION = "ProblemDescriptionList";
+	protected String JSONKEY = "Big-Json";
+	public TaskDetailBean taskDetailBean;
 	public BigJsonManager(Context context, String json){
 		super(context, json);
 	}
