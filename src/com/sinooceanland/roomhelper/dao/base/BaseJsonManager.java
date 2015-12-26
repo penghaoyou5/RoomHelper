@@ -1,5 +1,7 @@
 package com.sinooceanland.roomhelper.dao.base;
 
+import java.lang.reflect.Constructor;
+
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -32,16 +34,22 @@ public class BaseJsonManager {
 	 * 通过key获取jsonManger
 	 * @param context
 	 * @param key
+	 * @param clazz 
 	 * @return
 	 */
-	public static BaseJsonManager findManagerByKey(Context context, String key){
+	public static <T> T findManagerByKey(Context context, String key, Class<T> clazz){
 		String json = RoomHelperDaoUtil.getStringFromSp(context, key);
-		BaseJsonManager manager = null;
+		T t = null;
 		if(!TextUtils.isEmpty(json)){
-			manager = new BaseJsonManager(context,key,json);
+			try{
+				Constructor constructor = t.getClass().getConstructor(Context.class,String.class,String.class);
+				t = (T)constructor.newInstance(context,key,json);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
-		return manager;
+		return t;
 	}
 	
 	//定义共用的保存json数据的方法
