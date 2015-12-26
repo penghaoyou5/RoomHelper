@@ -16,19 +16,16 @@ import com.sinooceanland.roomhelper.dao.utils.RoomHelperDaoUtil;
  */
 public class BaseJsonManager {
 	public Context mContext;
-	public String mJson;
 	protected String JSONKEY = "json-key" + this.getClass().getName();
 	public BaseJsonManager(Context context, String json){
 		this.mContext = context;
-		this.mJson = json;
-		saveJson(mJson);
+		saveJson(json);
 	}
 	
 	public BaseJsonManager(Context context, String key, String json){
 		this.mContext = context;
-		this.mJson = json;
 		this.JSONKEY = key;
-		saveJson(mJson);
+		saveJson(json);
 	}
 	
 	/**
@@ -62,15 +59,15 @@ public class BaseJsonManager {
 	
 	//重新设置保存json数据
 	public void resetJson(String json){
-		this.mJson = json;
 		RoomHelperDaoUtil.putStringToSP(mContext, this.JSONKEY, json);
 	}
 	
 	//删除原来key保存的json数据，重新以新key保存json数据
 	public void resetKey(String key){
+		String json = obtainJson();
 		RoomHelperDaoUtil.removeDataByKey(mContext, JSONKEY);
 		this.JSONKEY = key;
-		saveJson(mJson);
+		resetJson(json);
 	}
 	
 	//清除所有json数据
