@@ -35,7 +35,7 @@ public class BigJsonManager extends BaseJsonManager {
 	
 	//将解析的大json的Bean返回
 	public TaskDetailBean getTaskDetailBean(){
-		taskDetailBean = jsonToBean(mJson, TaskDetailBean.class);
+		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
 		return taskDetailBean;
 	}
 	
