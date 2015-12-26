@@ -24,19 +24,20 @@ public class BigJsonManager extends BaseJsonManager {
 	public static final String ENGIN_TYPE = "EnginTypeList";
 	public static final String PROBLEM_DESCRIPTION = "ProblemDescriptionList";
 	protected String JSONKEY = "Big-Json";
-	public TaskDetailBean taskDetailBean;
+	private TaskDetailBean taskDetailBean;
 	public BigJsonManager(Context context, String json){
 		super(context, json);
+		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
 	}
 	
 	public BigJsonManager(Context context, String key, String json){
 		super(context,key,json);
+		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
 	}
 	
 	//将解析的大json的Bean返回
 	public TaskDetailBean getTaskDetailBean(){
-		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
-		return taskDetailBean;
+		return this.taskDetailBean;
 	}
 	
 	//获取任务列表集合
