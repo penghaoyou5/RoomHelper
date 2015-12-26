@@ -1,6 +1,7 @@
 package com.sinooceanland.roomhelper.dao.base;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.sinooceanland.roomhelper.dao.utils.RoomHelperDaoUtil;
@@ -13,7 +14,7 @@ import com.sinooceanland.roomhelper.dao.utils.RoomHelperDaoUtil;
  * 项目后期如果添加了别的类型大Json数据，需要管理Json数据，可以继承该基类
  * @author Administrator
  */
-public abstract class BaseJsonManager {
+public class BaseJsonManager {
 	public Context mContext;
 	public String mJson;
 	protected String JSONKEY = "json-key" + this.getClass().getName();
@@ -30,10 +31,28 @@ public abstract class BaseJsonManager {
 		saveJson(mJson);
 	}
 	
+	/**
+	 * 通过key获取jsonManger
+	 * @param context
+	 * @param key
+	 * @return
+	 */
+	public static BaseJsonManager findManagerByKey(Context context, String key){
+		String json = RoomHelperDaoUtil.getStringFromSp(context, key);
+		BaseJsonManager manager = null;
+		if(!TextUtils.isEmpty(json)){
+			manager = new BaseJsonManager(context,key,json);
+		}
+		
+		return manager;
+	}
+	
 	//定义共用的保存json数据的方法
-	public void saveJson(String json){
-		this.mJson = json;
-		RoomHelperDaoUtil.putStringToSP(mContext, this.JSONKEY, json);
+	//优化保存json的方法，json存在就不保存了
+	private void saveJson(String json){
+		if(TextUtils.isEmpty(obtainJson())){
+			resetJson(json);
+		}
 	}
 	
 	//获取托管的json数据
@@ -44,7 +63,7 @@ public abstract class BaseJsonManager {
 	//重新设置保存json数据
 	public void resetJson(String json){
 		this.mJson = json;
-		saveJson(json);
+		RoomHelperDaoUtil.putStringToSP(mContext, this.JSONKEY, json);
 	}
 	
 	//删除原来key保存的json数据，重新以新key保存json数据
