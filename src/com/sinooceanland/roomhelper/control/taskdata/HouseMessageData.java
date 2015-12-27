@@ -137,7 +137,8 @@ public class HouseMessageData {
 					.getEnginTypeList();
 			// 要根据布局一级返回图片信息
 			List<String> attachmentIDS = spaceLayoutList.AttachmentIDS;
-			
+			if(attachmentIDS==null)
+				return infos;//如果图片为空返回null
 			// 循环便利图片获得所有图片信息进行处理返回
 			for (int j = 0; j < attachmentIDS.size(); j++) {
 				String uri = attachmentIDS.get(i);
