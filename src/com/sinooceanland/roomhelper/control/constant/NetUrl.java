@@ -26,4 +26,11 @@ public class NetUrl {
 	 * 获取工程问题
 	 */
 	public static final String PROJECT_PROBLEM = BASEURL +"";
+	
+	/**
+	 * 获取工程问题
+	 */
+	public static final String PICTURE_DOWN = BASEURL +"http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/DownLoad";
+	
+	
 }

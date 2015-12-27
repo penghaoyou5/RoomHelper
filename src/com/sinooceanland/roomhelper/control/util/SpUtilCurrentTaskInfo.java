@@ -6,13 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * SharedPreferences工具类
+ * SpUtilCurrentTaskInfo工具类
+ * 对当前任务的配置信息进行存储  过程存储方便删除
  * 
  * @author Fsq
  * @date 2015-6-11 上午10:47:40
  * 
  */
-public class SpUtil {
+public class SpUtilCurrentTaskInfo {
 
 	private static Context mContext;
 
@@ -74,16 +75,25 @@ public class SpUtil {
 	public static boolean hasKey(String key) {
 		return getSharedPref().contains(key);
 	}
-	
+	/**
+	 * 获得当前任务对应的sp文件
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static SharedPreferences getCurrentTaskSharedPref() {
+		return mContext.getSharedPreferences(SpKey.getCurrentTaskMessage(),
+				Context.MODE_PRIVATE);
+	}
 
 	/**
-	 * 获得应用默认SharedPreferences
+	 * 获得根据任务名写的sp文件
 	 * 
 	 * @param context
 	 * @return
 	 */
 	public static SharedPreferences getSharedPref() {
-		return mContext.getSharedPreferences("RoomHelper",
+		return mContext.getSharedPreferences(SpKey.getCurrentTaskMessage(),
 				Context.MODE_PRIVATE);
 	}
 

@@ -1,34 +1,46 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.bean.TaskListBean;
+import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
-import com.sinooceanland.roomhelper.dao.module.TaskListBean;
 
 /**
  * @author peng
- * 可以得到任务列表的类
+ * 获得当前用户登录的任务列表
  * 
  */
 public class TaskList {
 	
 
 	private TaskListBean taskListBean;
-
-	/**
-	 * @param taskListBean
-	 * UI返回网络qinq请求获得的数据进行展示
-	 */
-	public TaskList(TaskListBean taskListBean){
-		this.taskListBean = taskListBean;
-	}
+	
+	private List<TaskMessage> alreadLoad = new ArrayList<TaskListBean.TaskMessage>();
+	private List<TaskMessage> unLoad = new ArrayList<TaskListBean.TaskMessage>();
 	
 	/**
-	 * 网络请求调用
+	 * 获取当前
 	 */
 	public TaskList() {
-		String taskList = SpUtil.getString(SpKey.TASKLIST, "");
-		BaseNet.getGson().fromJson(SpKey.TASKLIST, TaskListBean.class);
-		
+		taskListBean = BaseNet.getGson().fromJson(SpKey.getTaskList(), TaskListBean.class);
+		if(taskListBean==null||taskListBean.list==null||taskListBean.list.size()<=0){
+			return;
+		}
+		List<TaskMessage> list = taskListBean.list;
+		for (int i = 0; i < list.size(); i++) {
+			TaskMessage taskMessage = list.get(i);
+			String taskCode = taskMessage.TaskCode;
+			taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
+			boolean load = SpUtil.getBoolean(taskCode, false);
+			if(load){
+				alreadLoad.add(taskMessage);
+			}else{
+				unLoad.add(taskMessage);
+			}
+		}
 	}
 }
