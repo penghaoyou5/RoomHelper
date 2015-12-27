@@ -35,6 +35,8 @@ public class TaskMyssageData {
 		}
 	}
 	
+	
+	
 	/**
 	 * 通过 key 找 BigJsonManager 如果已经存在就不会再次寻找
 	 * @param key
