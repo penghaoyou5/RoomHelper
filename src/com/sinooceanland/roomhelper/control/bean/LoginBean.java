@@ -15,7 +15,7 @@ public class LoginBean  extends BaseBean{
 	/**
 	 * 提示信息
 	 */
-	public String  ErrorMsg;
+	protected String  ErrorMsg;
 	/**
 	 * userID
 	 */

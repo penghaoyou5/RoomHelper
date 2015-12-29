@@ -24,6 +24,10 @@ public class testTTT extends AndroidTestCase {
 			});
 		}
 	
+		
+		public void  testTaskList(){
+			
+		}
 	
 	
 //	 public void testAdd() throws Exception {  

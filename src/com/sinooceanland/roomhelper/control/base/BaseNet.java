@@ -110,9 +110,11 @@ public class BaseNet {
 		return gson;
 	}
 
+	Class cla;
 	public boolean isTest = false;
 	public <T extends BaseBean> void baseRequest(RequestParams requestParams,
 			String url, final BaseCallBack<T> callback, final Class<T> beanClass) {
+		cla = beanClass;
 		if(isTest){
 			String str = "";
 			if(url.equals(NetUrl.LOGIN)){
@@ -120,7 +122,7 @@ public class BaseNet {
 			}else if(url.equals(NetUrl.TASK_LIST)){
 				str = "{\"message\":\"\",\"code\":0,\"list\":[{\"TaskCode\":\"041cb848-523c-4cc7-8e59-07f3645212e6\",\"BuildingList\":[{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24178\",\"UnitCode\":[\"31C24C65-0226-4D40-9239-191A63106E13\",\"31C24C65-0226-4D40-9239-191A63106E16\"]},{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24179\",\"UnitCode\":[\"31C24C65-0226-4D40-9239-191A63106E14\",\"31C24C65-0226-4D40-9239-191A63106E15\"]}],\"TaskName\":\"肖大爷测试专用\"},{\"TaskCode\":\"041cb848-523c-4cc7-8e59-07f3645212e6\",\"TaskName\":\"肖大爷测试专用\"}]}";
 			}
-			T bean = getGson().fromJson(str,beanClass);
+			T bean = (T) getGson().fromJson(str,cla);
 			callback.messageResponse(RequestType.messagetrue, bean, str);
 			return;
 		}
@@ -144,7 +146,7 @@ public class BaseNet {
 					public void onSuccess(int statusCode, Header[] headers,
 							byte[] responseBody) {
 						String req = new String(responseBody);
-						T bean = getGson().fromJson(req, beanClass);
+						T bean = (T) getGson().fromJson(req, cla);
 
 						// 暂时没有区分消息的成功与失败
 						callback.messageResponse(RequestType.messagetrue, bean,
