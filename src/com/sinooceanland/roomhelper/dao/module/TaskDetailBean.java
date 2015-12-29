@@ -14,7 +14,15 @@ public class TaskDetailBean extends BaseBean {
 	public int downloadState = 0;
 	public int finishState = 0;
 	public int uploadState = 0;
+	public String TaskState;
 	
+	
+	public String getTaskState() {
+		return TaskState;
+	}
+	public void setTaskState(String taskState) {
+		TaskState = taskState;
+	}
 	public String getSuccessMsg() {
 		return SuccessMsg;
 	}

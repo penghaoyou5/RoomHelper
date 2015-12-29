@@ -31,6 +31,11 @@ public class TaskListBean extends BaseBean {
 		 */ 
 		public String TaskName;
 		
+		/**
+		 * 0等待上传 1.正在上传
+		 */
+		public boolean isLoading;
+		
 		public boolean isFinish; 
 		public List<BuildingList> buildingList;
 		

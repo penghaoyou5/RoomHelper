@@ -102,8 +102,7 @@ public class HouseMessageData {
 			}
 			
 			PictureInfo pictureInfo = new PictureInfo();
-			pictureInfo.bigPictureUri = bigPickturUrl+ imageName;
-			pictureInfo.smallPictureUri = smallPickturUrl+ imageName;
+			pictureInfo.pictureUri = imageName;
 			pictureInfo.isSure = sure;
 			pictureInfo.problem = proinfo;
 			String json = BaseNet.getGson().toJson(pictureInfo);
@@ -171,8 +170,19 @@ public class HouseMessageData {
 	}
 
 	public class PictureInfo {
-		public String bigPictureUri;
-		public String smallPictureUri;
+		public String pictureUri;
+		public void setPictureUri(String pictureUri){
+			this.pictureUri = pictureUri;
+		}
+		
+		public String getBigPictureUri() {
+			return bigPickturUrl+pictureUri;
+		}
+		
+		public String getSmallPictureUri() {
+			return smallPickturUrl+pictureUri;
+		}
+		
 		public boolean isSure = false;
 		public ProbleamInfo problem;
 //		public String problem;
@@ -192,6 +202,16 @@ public class HouseMessageData {
 			public String ProblemDescriptionCode;
 		}
 	}
+	
+	
+	public void initSpaceLayoutIsFinish(){
+		
+	}
+	
+	public void setCurrentHomeFinish(){
+		
+	}
+	
 
 	/**
 	 * 进行照片的保存

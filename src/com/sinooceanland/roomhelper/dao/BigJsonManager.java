@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 
+import com.sinooceanland.roomhelper.control.net.TestClassttt;
 import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList;
@@ -32,7 +33,7 @@ public class BigJsonManager extends BaseJsonManager {
 	
 	public BigJsonManager(Context context, String key, String json){
 		super(context,key,json);
-		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
+		TestClassttt taskDetailBean = jsonToBean(obtainJson(), TestClassttt.class);
 	}
 	
 	//将解析的大json的Bean返回

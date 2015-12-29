@@ -43,4 +43,16 @@ public class TaskList {
 			}
 		}
 	}
+	
+	public List<TaskMessage> getAlreadLoad(){
+		return alreadLoad;
+		
+	}
+	
+	public List<TaskMessage> getUnLoad(){
+		return unLoad;
+		
+	}
+	
+	
 }

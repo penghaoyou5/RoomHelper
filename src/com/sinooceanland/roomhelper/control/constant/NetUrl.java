@@ -9,7 +9,7 @@ public class NetUrl {
 	/**
 	 * 登陆地址
 	 */
-	public static final String LOGIN = BASEURL +"/MCSWebApp/SinoOcean.Seagull2.HouseDelivery/PreCheckAppHandler/SignInCheckForPreCheckApp.ashx";
+	public static final String LOGIN = "http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/SignInCheckForPreCheckApp";
 	
 	/**
 	 * 获取模板列表

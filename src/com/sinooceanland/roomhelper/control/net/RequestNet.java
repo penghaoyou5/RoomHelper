@@ -121,8 +121,48 @@ public class RequestNet extends BaseNet {
 	 * @param callBack
 	 *            请求回掉 若全部成功则成功 有一个失败则进行失败回掉
 	 */
+	int ii;
 	public void downTask(final Context context, final TaskMessage taskMessage,
 			final BaseCallBack<String> callBack,final ImageCallBack imageCallBack) {
+		if(isTest){
+			for (int i = 0; i < 100; i++) {
+				requestCount++;
+				getTaskDetail("", "",
+						"", new BaseCallBack<String>() {
+							@Override
+							public void messageResponse(
+									RequestType requestType, String bean,
+									String message) {
+								if (requestType == RequestType.messagetrue) {
+									requestCount--;
+									ii++;
+									
+									new BigJsonManager(context,
+											"key"+ii+System.currentTimeMillis(), bean);
+									BaseNet.getGson().fromJson(bean, TestClassttt.class);
+									if (requestCount <= 0) {
+//										SpUtil.putBoolean(taskMessage.TaskCode, true);
+										callBack.messageResponse(requestType,
+												"下载成功", "下载成功");
+										//开始进行图片下载
+//										downLoadImage(taskMessage,imageCallBack);
+									}
+								} else {
+									callBack.messageResponse(requestType, bean,
+											message);
+								}
+							}
+
+						});
+				
+				
+			}
+			
+			return;
+		}
+		
+		
+		
 		requestCount = 0;
 		for (int i = 0; i < taskMessage.buildingList.size(); i++) {
 			final BuildingList buildingList = taskMessage.buildingList.get(i);
