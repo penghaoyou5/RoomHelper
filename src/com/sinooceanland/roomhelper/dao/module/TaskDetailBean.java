@@ -8,8 +8,8 @@ import com.sinooceanland.roomhelper.dao.base.BaseBean;
  */
 public class TaskDetailBean extends BaseBean {
 
-	public String SuccessMsg;
-	public int ErrorMsg;
+//	public String SuccessMsg;
+//	public int ErrorMsg;
 	public List<HouseMessage> list;
 	public int downloadState = 0;
 	public int finishState = 0;
@@ -35,10 +35,10 @@ public class TaskDetailBean extends BaseBean {
 	public void setList(List<HouseMessage> list) {
 		this.list = list;
 	}
-	public int getErrorMsg() {
-		return this.ErrorMsg;
-	}
-	public void setErrorMsg(int errorMsg) {
-		ErrorMsg = errorMsg;
-	}
+//	public int getErrorMsg() {
+//		return this.ErrorMsg;
+//	}
+//	public void setErrorMsg(int errorMsg) {
+//		ErrorMsg = errorMsg;
+//	}
 }

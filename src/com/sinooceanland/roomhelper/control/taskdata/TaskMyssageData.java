@@ -13,11 +13,13 @@ import android.text.TextUtils;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
+import com.sinooceanland.roomhelper.control.test.TestNet;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
+import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
 
 /**
  * @author peng 这是点击任务进入房间信息类
@@ -43,6 +45,7 @@ public class TaskMyssageData {
 	 * @return
 	 */
 	public static BigJsonManager getBigJson(String key){
+		
 		BigJsonManager bigJsonManager = mapBigJson.get(key);
 		if(bigJsonManager==null){
 			bigJsonManager = ((BigJsonManager) BaseJsonManager
@@ -50,6 +53,12 @@ public class TaskMyssageData {
 			mapBigJson.put(key, bigJsonManager);
 		}
 		return bigJsonManager;
+	}
+	
+	public TaskDetailBean getTaskDetail(){
+		
+		if(BaseNet.isTest)return TestNet.getTaskDetail();
+		return null;
 	}
 	
 	private TaskMessage taskMessage;

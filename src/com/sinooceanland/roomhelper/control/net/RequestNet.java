@@ -102,7 +102,7 @@ public class RequestNet extends BaseNet {
 	 * @param UnitCode
 	 * @param callBack
 	 */
-	private void getTaskDetail(String PreCheckArrangeDateCode,
+	public void getTaskDetail(String PreCheckArrangeDateCode,
 			String BuildingCode, String UnitCode, BaseCallBack<String> callBack) {
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("PreCheckArrangeDateCode", PreCheckArrangeDateCode);
@@ -139,7 +139,7 @@ public class RequestNet extends BaseNet {
 									
 									new BigJsonManager(context,
 											"key"+ii+System.currentTimeMillis(), bean);
-									BaseNet.getGson().fromJson(bean, TestClassttt.class);
+//									BaseNet.getGson().fromJson(bean, TestClassttt.class);
 									if (requestCount <= 0) {
 //										SpUtil.putBoolean(taskMessage.TaskCode, true);
 										callBack.messageResponse(requestType,

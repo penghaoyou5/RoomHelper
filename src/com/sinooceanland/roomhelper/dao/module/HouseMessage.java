@@ -29,7 +29,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 		/**
 		 * 要修改 上次验收问题是否通过 0 未通过 1 通过
 		 */
-		public String CheckStauts;
+//		public String CheckStauts;
 
 		public String getSpaceLayoutName() {
 			return SpaceLayoutName;
@@ -99,7 +99,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 	/**
 	 * @author peng 布局类 例如 厨房这一级
 	 */
-	public class SpaceLayoutList extends BaseBean {
+	public static class SpaceLayoutList extends BaseBean {
 		public String SpaceLayoutFullName;
 		public int SpaceLayoutCode;
 		public String SpaceLayoutName;

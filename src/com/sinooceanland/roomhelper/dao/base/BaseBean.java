@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * @author peng
  * 基础bean类要不要模仿application？
  */
-public class BaseBean implements Serializable {
+public  class BaseBean implements Serializable {
 
 	/**
 	 * 成功信息：true ，false

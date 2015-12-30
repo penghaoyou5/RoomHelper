@@ -19,7 +19,7 @@ public class TaskListBean extends BaseBean {
 	 * @author peng
 	 *
 	 */
-	public class TaskMessage extends BaseBean {
+	public static class TaskMessage extends BaseBean {
 
 		/**
 		 * 任务编码

@@ -1,16 +1,12 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
-import junit.framework.Test;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.sinooceanland.roomhelper.R;
-import com.sinooceanland.roomhelper.control.net.TestClassttt;
-import com.sinooceanland.roomhelper.control.net.testTTT;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.utils.TextUtil;
 
@@ -36,7 +32,7 @@ public class MainActivity extends BaseActivity {
 
     private void testNet() {
 		try {
-			new testTTT().testLogin();
+//			new testTTT().testLogin();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
