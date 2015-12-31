@@ -1,7 +1,7 @@
 package com.sinooceanland.roomhelper.control.util;
 
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage.BuildingList;
+import com.sinooceanland.roomhelper.control.bean.BuildingList;
+import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 
 /**
  * @author peng
@@ -15,11 +15,11 @@ public abstract class TasMessagetUtil {
 	}
 	public  void xunhuan(){
 		for (int i = 0; i < taskMessage.buildingList.size(); i++) {
-			final BuildingList buildingList = taskMessage.buildingList.get(i);
-			for (int j = 0; j < buildingList.UnitCode.size(); j++) {
-				final String UnitCode = buildingList.UnitCode.get(j);
-				boolean forKey = forKey(taskMessage.TaskCode + "+"+ buildingList.BuildingCode+ "+" + UnitCode);
-				if(forKey)return;
+//			final BuildingList buildingList = taskMessage.buildingList.get(i);
+			for (int j = 0; j < 100; j++) {
+//				final String UnitCode = buildingList.UnitCode.get(j);
+//				boolean forKey = forKey(taskMessage.TaskCode + "+"+ buildingList.BuildingCode+ "+" + UnitCode);
+				if(true)return;
 			}
 		}
 	}

@@ -1,13 +1,14 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.TaskListBean;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
+import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author peng
@@ -19,8 +20,8 @@ public class TaskList {
 
 	private TaskListBean taskListBean;
 	
-	private List<TaskMessage> alreadLoad = new ArrayList<TaskListBean.TaskMessage>();
-	private List<TaskMessage> unLoad = new ArrayList<TaskListBean.TaskMessage>();
+	private List<TaskMessage> alreadLoad = new ArrayList<TaskMessage>();
+	private List<TaskMessage> unLoad = new ArrayList<TaskMessage>();
 	
 	/**
 	 * 获取当前
@@ -34,8 +35,14 @@ public class TaskList {
 		for (int i = 0; i < list.size(); i++) {
 			TaskMessage taskMessage = list.get(i);
 			String taskCode = taskMessage.TaskCode;
+			boolean load;
+			if(i==1){
 			taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
-			boolean load = SpUtil.getBoolean(taskCode, false);
+			 load = SpUtil.getBoolean(taskCode, false);
+			}else{
+				taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
+				 load = SpUtil.getBoolean(taskCode, true);
+			}
 			if(load){
 				alreadLoad.add(taskMessage);
 			}else{

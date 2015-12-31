@@ -19,7 +19,9 @@ public class HouseMessageData {
 	private String bigPickturUrl;
 	private String smallPickturUrl;
 
-	public HouseMessageData(HouseMessage homMessage) {
+	private static HouseMessageData data;
+	
+	private HouseMessageData(HouseMessage homMessage) {
 		HouseMessageData.homMessage = homMessage;
 		bigPickturUrl = SpKey.getBigPictureAddress();
 		smallPickturUrl = SpKey.getSmallPictureAddress();
@@ -31,8 +33,15 @@ public class HouseMessageData {
 	 * @param homMessage
 	 * @return
 	 */
-	public static HouseMessageData getInstents(HouseMessage homMessage) {
-		return new HouseMessageData(homMessage);
+	public static HouseMessageData setHouseMessage(HouseMessage homMessage) {
+		if(data==null){
+			data = new HouseMessageData(homMessage);
+		}
+		return data;
+	}
+	
+	public static HouseMessageData getInstance(){
+		return data;
 	}
 
 	/**
@@ -40,7 +49,7 @@ public class HouseMessageData {
 	 * 
 	 * @return
 	 */
-	public HouseMessage getHouseMessageData() {
+	public HouseMessage getHouseMessage() {
 		return homMessage;
 	}
 

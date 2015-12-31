@@ -6,11 +6,10 @@ import android.content.Context;
 
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
-import com.sinooceanland.roomhelper.control.base.BaseNet.BaseCallBack;
+import com.sinooceanland.roomhelper.control.bean.BuildingList;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.bean.TaskListBean;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage.BuildingList;
+import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.taskdata.TaskList;
@@ -21,7 +20,6 @@ import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.ProjectProblemBean;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
-import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
 
 /**
  * @author peng 主要进行网络请求与文件下载的类

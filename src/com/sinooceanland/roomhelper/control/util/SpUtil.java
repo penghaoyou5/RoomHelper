@@ -14,7 +14,7 @@ import android.content.SharedPreferences;
  */
 public class SpUtil {
 
-	private static Context mContext;
+	public static Context mContext;
 
 	public static void init(Context context){
 		mContext  = context;

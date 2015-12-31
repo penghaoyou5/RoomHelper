@@ -1,7 +1,7 @@
 package com.sinooceanland.roomhelper.control.net;
 
 import com.sinooceanland.roomhelper.control.base.BaseNet;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
+import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 
 /**
  * @author peng

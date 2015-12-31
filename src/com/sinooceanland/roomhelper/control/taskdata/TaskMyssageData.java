@@ -1,5 +1,10 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +16,11 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sinooceanland.roomhelper.control.base.BaseNet;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean.TaskMessage;
+import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
+import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.test.TestNet;
+import com.sinooceanland.roomhelper.control.util.GetAssertUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
@@ -43,8 +50,31 @@ public class TaskMyssageData {
 	 * 通过 key 找 BigJsonManager 如果已经存在就不会再次寻找
 	 * @param key
 	 * @return
+	 * @throws IOException 
 	 */
-	public static BigJsonManager getBigJson(String key){
+	public static BigJsonManager getBigJson(String key) {
+		if(BaseNet.isTest){
+			key="test";
+			if(mapBigJson.get(key)==null){
+				StringBuffer buffer = new StringBuffer();
+				
+//				try {
+//					InputStream open = context.getAssets().open("taskdetail.txt");
+//					
+//					
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				String str = GetAssertUtil.readAssertResource(context, "taskdetail.txt");
+				//String str = "{\"SuccessMsg\":\"\",\"ErrorMsg\":0,\"TaskState\":0,\"list\":[{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24178\",\"PreBuildingName\":\"18\",\"ActBuildingName\":\"18\",\"UnitCode\":\"31C24C65-0226-4D40-9239-191A63106E13\",\"PreUnitName\":\"2\",\"ActUnitName\":\"2\",\"HouseCode\":\"034E777D-95E9-43BD-AB3A-86F74C355AB7\",\"PreHouseName\":\"2302\",\"ActHouseName\":\"2302\",\"PreHouseFullName\":\"18#2-2302\",\"ActHouseFullName\":\"18#2-2302\",\"PropertTypeName\":\"普通房\",\"OwnerNames\":\"\",\"CheckRound\":2,\"SpaceLayoutList\":[{\"SpaceLayoutCode\":2,\"SpaceLayoutName\":\"套内空间\",\"SpaceLayoutFullName\":\"套内空间\"}]}]}";
+				BigJsonManager bigJsonManager =new BigJsonManager(context, str);
+				
+				
+				
+				mapBigJson.put(key, bigJsonManager);
+			}
+		}
 		
 		BigJsonManager bigJsonManager = mapBigJson.get(key);
 		if(bigJsonManager==null){
@@ -85,6 +115,13 @@ public class TaskMyssageData {
 	 * @return
 	 */
 	public List<HouseMessage> getHomeList(final int index) {
+		if(BaseNet.isTest){
+			BigJsonManager bigJsonManager = getBigJson("");
+			List<HouseMessage> taskList = bigJsonManager.getTaskList();
+			messages = taskList;
+			return messages;
+		}
+		
 		getHomeListCount = 0;
 		messages = null;
 		new TasMessagetUtil(taskMessage) {
@@ -107,14 +144,44 @@ public class TaskMyssageData {
 	 * 
 	 * @return
 	 */
-	public BuildInfo getBuildingInformation() {
-		String string = SpUtil.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
-		//判断是否已经有此任务对应的楼栋列表信息
-		if(!TextUtils.isEmpty(string)){
-			return BaseNet.getGson().fromJson(string, BuildInfo.class);
+	public ArrayList<ChooseHouseBean> getBuildingInformation() {
+		
+		if(BaseNet.isTest){
+			ArrayList<ChooseHouseBean> arrayList = new ArrayList<ChooseHouseBean>();
+			for (int i = 0; i < 5; i++) {
+				ChooseHouseBean bean = new ChooseHouseBean();
+				bean.build = i;
+				bean.buildSize=5;
+				bean.houseCode = new ArrayList<Integer>();
+				for (int j = 0; j < 6; j++) {
+					bean.houseCode.add(j);
+				}
+				arrayList.add(bean);
+			}
+			return arrayList;
 		}
 		
+		
+		
+		
+		String string = SpUtil.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
+		//判断是否已经有此任务对应的楼栋列表信息
+//		if(!TextUtils.isEmpty(string)){
+//			return BaseNet.getGson().fromJson(string, BuildInfo.class);
+//		}
+		
 		final Map<Integer, TreeSet<Integer>> map = new TreeMap<Integer, TreeSet<Integer>>();
+		if(BaseNet.isTest){
+			BuildInfo buildInfo = new BuildInfo();
+			buildInfo.builds = new ArrayList<Integer>();
+			for (int i = 0; i < 6; i++) {
+				
+				for (int j = 0; j < 7; j++) {
+					
+				}
+				
+			}
+		}
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {
@@ -122,7 +189,7 @@ public class TaskMyssageData {
 				return false;
 			}
 		};
-		return new BuildInfo(map);
+		return null;
 	}
 
 	private void addBuildInfo(Map<Integer, TreeSet<Integer>> map, String key) {
@@ -158,6 +225,8 @@ public class TaskMyssageData {
 			}
 			SpUtil.putString(SpKey.getBuildInfoKey(taskMessage.TaskCode), BaseNet.getGson().toJson(this));
 		}
+		
+		public  BuildInfo(){}
 		/**
 		 * 楼栋编号 
 		 */
@@ -168,6 +237,35 @@ public class TaskMyssageData {
 		 */
 		public Map<Integer, List<Integer>> houres;
 	}
+	
+	public ArrayList<StatusBean> getStatus(){
+		ArrayList<StatusBean> arrayList = new ArrayList<StatusBean>();
+		for (int i = 0; i < 4; i++) {
+			StatusBean statusBean = new StatusBean();
+			arrayList.add(statusBean);
+			statusBean.date = "已验收";
+			statusBean.id = String.valueOf(i);
+			switch (i) {
+			case 0:
+				statusBean.date = "全部";
+				break;
+			case 1:
+				statusBean.date = "已验收";
+				break;
+			case 2:
+				statusBean.date = "已验收未通过";
+				break;
+			case 3:
+				statusBean.date = " 已验收已通过";
+				break;
+
+			default:
+				break;
+			}
+		}
+		return arrayList;
+	}
+	
 
 	/**
 	 * 根据楼房状态进行筛选
@@ -197,6 +295,8 @@ public class TaskMyssageData {
 	 * @return 一个房间
 	 */
 	public HouseMessage getHouseByBuildNameAndHouseName(final String buildName,final String Housename){
+		if(BaseNet.isTest)
+		return getHomeList(0).get(0);
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {
@@ -221,6 +321,9 @@ public class TaskMyssageData {
 	 * @return
 	 */
 	public List<HouseMessage> getHouseByHouseName(final String Housename){
+		if(BaseNet.isTest){
+			return getHomeList(2);
+		}
 		final List<HouseMessage> messages = new ArrayList<HouseMessage>(); 
 		new TasMessagetUtil(taskMessage) {
 			@Override
