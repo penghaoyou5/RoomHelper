@@ -15,9 +15,10 @@ public class TreeDataBean {
     public String EnginTypeName;
     public String EnginTypeFullName;
 
-    public List<TreeDataBean> childrens;
+    public List<TreeDataBean> Children;
+    
 
-    public String AttachmentIDS;
+    public List<String> AttachmentIDS;
     public String CheckRemark;
     public List<ProblemDescription> AllProblemDescriptionList;
     public List<ProblemDescription> ProblemDescriptionList;

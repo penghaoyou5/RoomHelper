@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
-import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData.PictureInfo.ProbleamInfo;
+import com.sinooceanland.roomhelper.control.util.MD5Util;
 import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
+import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList;
 
@@ -94,14 +96,15 @@ public class HouseMessageData {
 		
 		/**
 		 * 增加图片信息 或者修改图片信息
-		 * @param Potion 是第几个布局？
+		 * @param layoutPotion 是第几个布局？
 		 * @param imageName 图片名
 		 * @param sure 是否确认
 		 * @param pinfo 问题
+		 * @return 
 		 */
-		public void addPictureInfoOrModify(int Potion,String imageName,boolean sure,ProbleamInfo proinfo){
+		public PictureInfo addPictureInfoOrModify(int layoutPotion,String imageName,boolean sure,ProbleamInfo proinfo){
 			//得到布局
-			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(0);
+			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(layoutPotion);
 			List<String> attachmentIDS = spaceLayoutList.AttachmentIDS;
 			if(attachmentIDS==null){
 				attachmentIDS=new ArrayList<String>();
@@ -116,6 +119,34 @@ public class HouseMessageData {
 			pictureInfo.problem = proinfo;
 			String json = BaseNet.getGson().toJson(pictureInfo);
 			SpUtilCurrentTaskInfo.putString(imageName, json);
+			return pictureInfo;
+		}
+		
+		public PictureInfo newInstancePictureInfo(int layoutPotion,String imageName){
+			//得到布局
+			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(layoutPotion);
+			if(spaceLayoutList.AttachmentIDS==null){
+				spaceLayoutList.AttachmentIDS=new ArrayList<String>();
+			}
+			if(!spaceLayoutList.AttachmentIDS.contains(imageName)){
+				spaceLayoutList.AttachmentIDS.add(imageName);
+			}
+			PictureInfo pictureInfo = new PictureInfo();
+			pictureInfo.pictureUri = imageName;
+			String json = BaseNet.getGson().toJson(pictureInfo);
+			SpUtilCurrentTaskInfo.putString(imageName, json);
+			return pictureInfo;
+		}
+		
+		//这是进行图片删除的方法
+		public void deletePicture(int layoutPotion,PictureInfo pictureInfo){
+			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(layoutPotion);
+			List<String> attachmentIDS = spaceLayoutList.AttachmentIDS;
+			if(attachmentIDS!=null&&attachmentIDS.contains(pictureInfo.pictureUri)){
+				attachmentIDS.remove(pictureInfo.pictureUri);
+			}
+			new File(pictureInfo.getBigPictureUri()).deleteOnExit();
+			new File(pictureInfo.getSmallPictureUri()).deleteOnExit();
 		}
 		
 		/**
@@ -179,7 +210,7 @@ public class HouseMessageData {
 	}
 
 	public class PictureInfo {
-		public String pictureUri;
+		private String pictureUri;
 		public void setPictureUri(String pictureUri){
 			this.pictureUri = pictureUri;
 		}
@@ -192,26 +223,61 @@ public class HouseMessageData {
 			return smallPickturUrl+pictureUri;
 		}
 		
-		public boolean isSure = false;
-		public ProbleamInfo problem;
-//		public String problem;
-		public class ProbleamInfo{
-			
-			/**
-			 * 第一层问题的编码 
-			 */
-			public String EnginTypeCode;
-			/**
-			 * 第三层问题编码
-			 */
-			public String ProblemDescriptionName;
-			/**
-			 * 第三层问题描述
-			 */
-			public String ProblemDescriptionCode;
+		public boolean isSure() {
+			return isSure;
 		}
+
+		public void setSure(boolean isSure) {
+			this.isSure = isSure;
+			SpUtilCurrentTaskInfo.putString(pictureUri, "");
+		}
+
+		public ProbleamInfo getProblem() {
+			return problem;
+		}
+
+		public void setProblem(ProbleamInfo problem) {
+			this.problem = problem;
+			SpUtilCurrentTaskInfo.putString(pictureUri, "");
+		}
+
+		public String getPictureUri() {
+			return pictureUri;
+		}
+
+
+
+		private boolean isSure = false;
+		private ProbleamInfo problem;
+		public void  setPictureProbleam(String EnginTypeCode,String ProblemDescriptionCode,String ProblemDescriptionName){
+			if(problem==null)
+			problem = new ProbleamInfo();
+			problem.EnginTypeCode = EnginTypeCode;
+			problem.ProblemDescriptionCode = ProblemDescriptionCode;
+			problem.ProblemDescriptionName = ProblemDescriptionName;
+		}
+//		public String problem;
+	}
+	public static class ProbleamInfo{
+		
+		/**
+		 * 第一层问题的编码 
+		 */
+		public String EnginTypeCode;
+		/**
+		 * 第三层问题编码
+		 */
+		public String ProblemDescriptionName;
+		/**
+		 * 第三层问题描述
+		 */
+		public String ProblemDescriptionCode;
 	}
 	
+	//TODO:请求结果
+	public List<HouseMessage> getHomeList(int page,String checkedStatue){
+		return null;
+	}
 	
 	public void initSpaceLayoutIsFinish(){
 		
@@ -231,4 +297,29 @@ public class HouseMessageData {
 
 		return null;
 	}
+	private static String preUrl;
+	public static String getPictrueName(String layoutCode,boolean isPreUrl ){
+		if(isPreUrl){
+			return preUrl;
+		}
+		String pictureUri;
+		if(homMessage==null||homMessage.ActHouseFullName==null){
+			pictureUri =System.currentTimeMillis()+ layoutCode;
+		}else{
+			pictureUri = System.currentTimeMillis() +SpKey.getCurrentTaskMessage()+  homMessage.ActHouseFullName;
+		}
+
+		preUrl = MD5Util.GetMD5Code(pictureUri);
+		return preUrl;
+	}
+
+	public List<LastCheckProblemList> getProblemList(){
+		 return homMessage.LastCheckProblemList;
+	}
+	
+	public String setCheckStautsSure(){
+		homMessage.CheckStauts  = "2";
+		return "2";
+	}
+	
 }

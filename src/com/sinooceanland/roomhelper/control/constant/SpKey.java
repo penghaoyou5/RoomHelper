@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.os.Environment;
 
+import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.ui.utils.SDUtils;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
@@ -18,7 +19,7 @@ public class SpKey {
 	}
 	/**根据用户id任务列表 */
 	public static final String getTaskList(){
-		return getUerId();
+		return   SpUtil.getString(getUerId(), "") ;
 	}
 	/**工程问题*/
 	public static final String PROJECTPROBLEM = "rojectProblem";
@@ -26,7 +27,7 @@ public class SpKey {
 	/**工程问题*/
 	public static final String TASKSTATUE = "taskStatue";
 	
-	/**当前进入的某个工程*/
+	/**当前进入的某个工程  这是用当前的任务名taskcode 进行区分的*/
 	public static final String CURRENTTASKMESSAGE = "currentTaskMessage";
 	public static final String getCurrentTaskMessage(){
 		return SpUtil.getString(CURRENTTASKMESSAGE, "");
@@ -54,21 +55,41 @@ public class SpKey {
 	 * @return 未压缩图片路径
 	 */
 	public static final String getBigPictureAddress(){
-		return getPictureAddress("big");
+		String fileName = getPictureAddress("big");
+		File file = new File(fileName);
+		if(!file.exists()){
+			boolean mkdirs = file.mkdirs();
+		}
+		return file.getAbsolutePath()+File.separator;
 	}
 	/**
 	 * @return 已压缩图片路径
 	 */
 	public static final String getSmallPictureAddress(){
-		return getPictureAddress("smal");
+		String fileName = getPictureAddress("small");
+		File file = new File(fileName);
+		if(!file.exists()){
+			boolean mkdirs = file.mkdirs();
+		}
+		return file.getAbsolutePath()+File.separator;
 	}
 	
 	/**
 	 * @return 验收有问题路径
 	 */
 	public static final String getProblemPictureAddress(){
-		return getPictureAddress("problem");
+		String fileName = getPictureAddress("problem");
+		if(BaseNet.isTest){
+			fileName = getPictureAddress("small");
+		}
+		File file = new File(fileName);
+		if(!file.exists()){
+			boolean mkdirs = file.mkdirs();
+		}
+		return file.getAbsolutePath()+File.separator;
 	}
+	
+	
 //	private static final String TASKDITAIL = "TaskDetail";
 //	public static final String getTaskDetail(){
 //		return null;

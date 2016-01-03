@@ -1,14 +1,12 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -20,8 +18,8 @@ import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.test.TestNet;
-import com.sinooceanland.roomhelper.control.util.GetAssertUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
+import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
@@ -37,7 +35,7 @@ public class TaskMyssageData {
 	/**
 	 * 最后推出调用  保存json 
 	 */
-	public void saveModifyBigJson(){
+	public static void saveModifyBigJson(){
 		for (Map.Entry<String, BigJsonManager> entry : mapBigJson.entrySet()) {
 			BigJsonManager value = entry.getValue();
 			entry.getValue().resetJson(value.beanToJson(value.getTaskDetailBean()));;
@@ -53,40 +51,34 @@ public class TaskMyssageData {
 	 * @throws IOException 
 	 */
 	public static BigJsonManager getBigJson(String key) {
-		if(BaseNet.isTest){
-			key="test";
-			if(mapBigJson.get(key)==null){
-				StringBuffer buffer = new StringBuffer();
-				
-//				try {
-//					InputStream open = context.getAssets().open("taskdetail.txt");
-//					
-//					
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				String str = GetAssertUtil.readAssertResource(context, "taskdetail.txt");
-				//String str = "{\"SuccessMsg\":\"\",\"ErrorMsg\":0,\"TaskState\":0,\"list\":[{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24178\",\"PreBuildingName\":\"18\",\"ActBuildingName\":\"18\",\"UnitCode\":\"31C24C65-0226-4D40-9239-191A63106E13\",\"PreUnitName\":\"2\",\"ActUnitName\":\"2\",\"HouseCode\":\"034E777D-95E9-43BD-AB3A-86F74C355AB7\",\"PreHouseName\":\"2302\",\"ActHouseName\":\"2302\",\"PreHouseFullName\":\"18#2-2302\",\"ActHouseFullName\":\"18#2-2302\",\"PropertTypeName\":\"普通房\",\"OwnerNames\":\"\",\"CheckRound\":2,\"SpaceLayoutList\":[{\"SpaceLayoutCode\":2,\"SpaceLayoutName\":\"套内空间\",\"SpaceLayoutFullName\":\"套内空间\"}]}]}";
-				BigJsonManager bigJsonManager =new BigJsonManager(context, str);
-				
-				
-				
-				mapBigJson.put(key, bigJsonManager);
-			}
-		}
-		
 		BigJsonManager bigJsonManager = mapBigJson.get(key);
 		if(bigJsonManager==null){
-			bigJsonManager = ((BigJsonManager) BaseJsonManager
-					.findManagerByKey(context, key,BigJsonManager.class));
+			bigJsonManager =  BaseJsonManager
+					.findManagerByKey(context, key,BigJsonManager.class);
 			mapBigJson.put(key, bigJsonManager);
 		}
 		return bigJsonManager;
 	}
 	
+	/**
+	 * 通过 key 找 BigJsonManager 如果已经存在就不会再次寻找
+	 * 寻找到不向集合中添加
+	 * @param key 这是key找到大json唯一标示
+	 * @param isAddBigJson 是否添加到map集合  true 如果map中不存在进行添加，false 如过不存在不添加
+	 * @return
+	 */
+	public static BigJsonManager getBigJsonNoAddMap(String key){
+		BigJsonManager bigJsonManager = mapBigJson.get(key);
+		if(bigJsonManager==null){
+			bigJsonManager =  BaseJsonManager
+					.findManagerByKey(context, key,BigJsonManager.class);
+		}
+		return bigJsonManager;
+	}
+	
+	
+	
 	public TaskDetailBean getTaskDetail(){
-		
 		if(BaseNet.isTest)return TestNet.getTaskDetail();
 		return null;
 	}
@@ -94,14 +86,20 @@ public class TaskMyssageData {
 	private TaskMessage taskMessage;
 	private static Context context;
 
+	/**
+	 * 这是点击任务进入房间列表的类
+	 * @param context
+	 *zz @param taskMessage
+	 */
 	public TaskMyssageData(Context context, TaskMessage taskMessage) {
 		// 存储当前任务信息
-		SpUtil.putString(SpKey.CURRENTTASKMESSAGE, "");
+		SpUtil.putString(SpKey.CURRENTTASKMESSAGE, taskMessage.TaskCode);
 		this.taskMessage = taskMessage;
 		this.context = context;
+		mapBigJson = new HashMap<String, BigJsonManager>();
 	}
 
-	// 以方法名定义成员计数
+	/**以方法名定义成员计数 是第几页 从1开始*/
 	private int getHomeListCount;
 	private List<HouseMessage> messages;
 
@@ -109,21 +107,12 @@ public class TaskMyssageData {
 	 * 获得房间列表
 	 * 
 	 * @param index
-	 *            请求页数
-	 * @param CheckStauts
-	 *            房屋验收状态
+	 *            请求页数  从一开始
 	 * @return
 	 */
 	public List<HouseMessage> getHomeList(final int index) {
-		if(BaseNet.isTest){
-			BigJsonManager bigJsonManager = getBigJson("");
-			List<HouseMessage> taskList = bigJsonManager.getTaskList();
-			messages = taskList;
-			return messages;
-		}
-		
 		getHomeListCount = 0;
-		messages = null;
+		messages = new ArrayList<HouseMessage>();
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {
@@ -138,6 +127,49 @@ public class TaskMyssageData {
 		};
 		return messages;
 	}
+	
+	/**
+	 * 获得房间列表
+	 * 
+	 * @param index
+	 *            请求页数  从一开始
+	 * @param CheckStauts
+	 *            房屋验收状态
+	 * @return
+	 */
+	public List<HouseMessage> getHomeList(final int index,final String Statue) {
+		getHomeListCount = 0;
+		final List<HouseMessage> messages = new ArrayList<HouseMessage>();
+		new TasMessagetUtil(taskMessage) {
+			@Override
+			public boolean forKey(String key) {
+				getHomeListCount++;
+				if (index == getHomeListCount) {
+					BigJsonManager bigJsonManager = getBigJson(key);
+					List<HouseMessage> taskList = bigJsonManager.getTaskList();
+					//全部
+					if("-1".equals(Statue)){
+						messages.addAll(taskList);
+						return true;
+					}
+					for (int i = 0; i < taskList.size(); i++) {
+						HouseMessage houseMessage = taskList.get(i);
+						//0 未验收 1 已验收未通过 2 已验收已通过
+						String checkStauts = houseMessage.CheckStauts;
+						if(Statue.equals(checkStauts)){
+							messages.add(houseMessage);
+						}
+					}
+//					messages = bigJsonManager.getTaskList();
+					messages.addAll(bigJsonManager.getTaskList());
+					return true;
+				}
+				return false;
+			}
+		};
+		return messages;
+	}
+
 
 	/**
 	 * 得到楼栋信息的双级列表 第一层楼栋信息 第二层房间信息
@@ -145,55 +177,46 @@ public class TaskMyssageData {
 	 * @return
 	 */
 	public ArrayList<ChooseHouseBean> getBuildingInformation() {
-		
-		if(BaseNet.isTest){
-			ArrayList<ChooseHouseBean> arrayList = new ArrayList<ChooseHouseBean>();
-			for (int i = 0; i < 5; i++) {
-				ChooseHouseBean bean = new ChooseHouseBean();
-				bean.build = i;
-				bean.buildSize=5;
-				bean.houseCode = new ArrayList<Integer>();
-				for (int j = 0; j < 6; j++) {
-					bean.houseCode.add(j);
-				}
-				arrayList.add(bean);
-			}
-			return arrayList;
+		/**这是得到楼栋信息的方法*/
+		String str = SpUtilCurrentTaskInfo.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
+		//判断是否已经有此任务对应的楼栋列表信息  如果有就直接用
+		if(!TextUtils.isEmpty(str)){
+			return BaseNet.getGson().fromJson(str, ArrayList.class);
 		}
 		
-		
-		
-		
-		String string = SpUtil.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
-		//判断是否已经有此任务对应的楼栋列表信息
-//		if(!TextUtils.isEmpty(string)){
-//			return BaseNet.getGson().fromJson(string, BuildInfo.class);
-//		}
-		
+		//这里是进行本地循环查询的方法       循环遍历向集合中添加元素
 		final Map<Integer, TreeSet<Integer>> map = new TreeMap<Integer, TreeSet<Integer>>();
-		if(BaseNet.isTest){
-			BuildInfo buildInfo = new BuildInfo();
-			buildInfo.builds = new ArrayList<Integer>();
-			for (int i = 0; i < 6; i++) {
-				
-				for (int j = 0; j < 7; j++) {
-					
-				}
-				
-			}
-		}
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {
-				addBuildInfo(map, key);
+				addChooseHouse(map, key);
 				return false;
 			}
 		};
-		return null;
+		//将map对象转化为ChooseHouseBean集合
+		ArrayList<ChooseHouseBean> arrayList = new ArrayList<ChooseHouseBean>();
+		
+		
+		Iterator<Integer> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			//it.next()得到的是key，tm.get(key)得到obj
+			Integer key = it.next();
+			TreeSet<Integer> value = map.get(key);
+			ChooseHouseBean bean = new ChooseHouseBean();
+			bean.build = key;
+			bean.houseCode = new ArrayList<Integer>(value);
+			bean.buildSize = bean.houseCode.size();
+			arrayList.add(bean);
+		}
+		
+		//进行列表的存放
+		String json = BaseNet.getGson().toJson(arrayList);
+		SpUtilCurrentTaskInfo.putString(SpKey.getBuildInfoKey(taskMessage.TaskCode), json);
+		return arrayList;
 	}
 
-	private void addBuildInfo(Map<Integer, TreeSet<Integer>> map, String key) {
-		BigJsonManager bigJsonManager = getBigJson(key);
+	private void addChooseHouse(Map<Integer, TreeSet<Integer>> map, String key) {
+		BigJsonManager bigJsonManager = getBigJsonNoAddMap(key);
 		List<HouseMessage> taskList = bigJsonManager.getTaskList();
 		for (int i = 0; i < taskList.size(); i++) {
 			HouseMessage houseMessage = taskList.get(i);
@@ -209,34 +232,6 @@ public class TaskMyssageData {
 		}
 	}
 
-	/**
-	 * @author peng
-	 * 楼栋信息类
-	 */
-	public class BuildInfo {
-		public BuildInfo(Map<Integer, TreeSet<Integer>> map) {
-			builds = new ArrayList<Integer>();
-			houres = new TreeMap<Integer, List<Integer>>();
-			for (Map.Entry<Integer, TreeSet<Integer>> entry : map.entrySet()) {
-				Integer key = entry.getKey();
-				TreeSet<Integer> value = entry.getValue();
-				builds.add(key);
-				houres.put(key, new ArrayList<Integer>(value));
-			}
-			SpUtil.putString(SpKey.getBuildInfoKey(taskMessage.TaskCode), BaseNet.getGson().toJson(this));
-		}
-		
-		public  BuildInfo(){}
-		/**
-		 * 楼栋编号 
-		 */
-		public List<Integer> builds;
-
-		/**
-		 * 楼栋对应房间集合
-		 */
-		public Map<Integer, List<Integer>> houres;
-	}
 	
 	public ArrayList<StatusBean> getStatus(){
 		ArrayList<StatusBean> arrayList = new ArrayList<StatusBean>();
@@ -244,19 +239,19 @@ public class TaskMyssageData {
 			StatusBean statusBean = new StatusBean();
 			arrayList.add(statusBean);
 			statusBean.date = "已验收";
-			statusBean.id = String.valueOf(i);
+			statusBean.id = String.valueOf(i-1);
 			switch (i) {
 			case 0:
 				statusBean.date = "全部";
 				break;
 			case 1:
-				statusBean.date = "已验收";
+				statusBean.date = "未验收";
 				break;
 			case 2:
 				statusBean.date = "已验收未通过";
 				break;
 			case 3:
-				statusBean.date = " 已验收已通过";
+				statusBean.date = "已验收已通过";
 				break;
 
 			default:
@@ -286,7 +281,7 @@ public class TaskMyssageData {
 		}
 		return houseMessagesStatue;
 	}
-	
+	/**重新赋值不会出问题*/
 	HouseMessage message;
 	/**
 	 * 点击楼栋信息筛选使用
@@ -321,9 +316,6 @@ public class TaskMyssageData {
 	 * @return
 	 */
 	public List<HouseMessage> getHouseByHouseName(final String Housename){
-		if(BaseNet.isTest){
-			return getHomeList(2);
-		}
 		final List<HouseMessage> messages = new ArrayList<HouseMessage>(); 
 		new TasMessagetUtil(taskMessage) {
 			@Override

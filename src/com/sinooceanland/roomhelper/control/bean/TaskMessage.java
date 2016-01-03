@@ -30,7 +30,7 @@ public  class TaskMessage extends BaseBean implements Parcelable {
     public boolean isLoading;
 
     public boolean isFinish;
-    public List<BuildingList> buildingList;
+    public List<BuildingList> BuildingList;
     public TaskMessage(){}
 
     protected TaskMessage(Parcel in) {

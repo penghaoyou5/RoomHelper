@@ -36,13 +36,10 @@ public class TaskList {
 			TaskMessage taskMessage = list.get(i);
 			String taskCode = taskMessage.TaskCode;
 			boolean load;
-			if(i==1){
+			//是否已完成
 			taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
-			 load = SpUtil.getBoolean(taskCode, false);
-			}else{
-				taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
-				 load = SpUtil.getBoolean(taskCode, true);
-			}
+			//根据任务编码是否已下载
+			load = SpUtil.getBoolean(taskCode, false);
 			if(load){
 				alreadLoad.add(taskMessage);
 			}else{

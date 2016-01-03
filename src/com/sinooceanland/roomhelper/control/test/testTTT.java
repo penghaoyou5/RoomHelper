@@ -9,7 +9,10 @@ import com.sinooceanland.roomhelper.control.base.BaseNet.BaseCallBack;
 import com.sinooceanland.roomhelper.control.base.BaseNet.RequestType;
 import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
+import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
+import com.sinooceanland.roomhelper.control.constant.NetUrl;
+import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.control.taskdata.TaskList;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
@@ -32,7 +35,10 @@ public class testTTT extends AndroidTestCase {
 				public void messageResponse(RequestType requestType, LoginBean bean,
 						String message) {
 					System.out.println("gggggg"+bean.userID);
-//					Toast.makeText(mContext, bean.userID, 1).show();
+					System.out.println("usernsme"+ SpUtil.getString(SpKey.USERINAME, ""));
+					//得到当前用户的useID
+					System.out.println("userid"+ SpKey.getUerId());
+					
 				}
 			});
 		}
@@ -44,37 +50,90 @@ public class testTTT extends AndroidTestCase {
 			SpUtilCurrentTaskInfo.init(mContext);
 		}
 		
+		//任务列表基本网络获取成功
+//		public void testTaskListNet(){
+//			SpUtil.init(mContext);
+//			new RequestNet(mContext).baseRequest(null, NetUrl.TASK_LIST,
+//					new BaseCallBack<TaskListBean>() {
+//				@Override
+//				public void messageResponse(RequestType requestType,
+//						TaskListBean bean, String message) {
+//					if (requestType == RequestType.messagetrue) {
+//						// 使用用户id存储任务列表
+//						SpUtil.putString(
+//								SpKey.getUerId(),
+//								message);
+////						String uerId = SpKey.getUerId();
+////						SpUtil.getString(uerId, defaultValue)
+////						System.out.println(sp);
+//						System.out.println("ggggg"+SpKey.getTaskList());
+//					}
+//				}
+//			}, TaskListBean.class);
+//			
+//		}
+		
+		
+		
 		//任务列表页数据请求
+	
 		public void testTaskListMessage(){
 			iniSp();
 			new RequestNet(mContext).taskList(new BaseCallBack<TaskList>() {
 				@Override
 				public void messageResponse(RequestType requestType,
 						TaskList bean, String message) {
-					
+				String uinco = 	bean.getUnLoad().get(0).BuildingList.get(0).UnitCode.get(0);
+					System.out.println("ggggg"+bean.getUnLoad().size()+uinco);
+					String str = message;
+					System.out.println(str);
 				}
 			});
 		}
 
 
+		public static String code;
+		//这里是进行任务的下载
 		public void  testTaskList(){
 			iniSp();
-			TaskMessage message = new TaskMessage();
+			//获取任务列表得到任务
+			List<TaskMessage> unLoad = new TaskList().getUnLoad();
+			 TaskMessage message = unLoad.get(0);
+			 code = message.TaskCode;
 			new RequestNet(mContext).downTask(mContext, message, new BaseCallBack<String>() {
 				
 				@Override
 				public void messageResponse(RequestType requestType, String bean,
 						String message) {
-					// TODO Auto-generated method stub
-					
+					System.out.println(SpUtil.getBoolean(code,false ));
+					System.out.println(bean);
 				}
 			}, null);
 		}
 		
+		//根据任务页数获取任务详情
+		public void testHouseByPotion(){
+			iniSp();
+			//获取任务列表得到任务
+			List<TaskMessage> unLoad = new TaskList().getAlreadLoad();
+			 TaskMessage message = unLoad.get(0);
+			 code = message.TaskCode;
+			 SpUtil.getBoolean(code, false);
+			 //获得任务详情
+			 TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
+			 List<HouseMessage> homeList = taskMyssageData.getHomeList(1);
+			 System.out.println(homeList);
+		}
+		
+		
+		
+		
+		
+		
 public void  testTaskDETAIL(){
 			iniSp();
 	new RequestNet(mContext).getTaskDetail("d", "", "", new BaseCallBack<String>() {
-		
+			
 		@Override
 		public void messageResponse(RequestType requestType, String bean,
 				String message) {

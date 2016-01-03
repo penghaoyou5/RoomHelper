@@ -20,7 +20,7 @@ public class TreeData {
                 List<TreeDataBean.ProblemDescription> problem = getProblem(footRange, "问题");
                 second.get(j).ProblemDescriptionList = problem;
             }
-            root.get(i).childrens = second;
+            root.get(i).Children = second;
         }
         return root;
     }

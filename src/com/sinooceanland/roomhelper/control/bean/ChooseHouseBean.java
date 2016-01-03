@@ -8,6 +8,9 @@ import java.util.List;
  * Details :
  */
 public class ChooseHouseBean {
+    /**
+     * 楼栋号
+     */
     public int build;
     public int buildSize;
     public List<Integer> houseCode;

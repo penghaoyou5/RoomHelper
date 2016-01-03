@@ -32,7 +32,7 @@ public class BigJsonManager extends BaseJsonManager {
 	
 	public BigJsonManager(Context context, String key, String json){
 		super(context,key,json);
-		TaskDetailBean taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
+		taskDetailBean = jsonToBean(obtainJson(), TaskDetailBean.class);
 	}
 	
 	//将解析的大json的Bean返回

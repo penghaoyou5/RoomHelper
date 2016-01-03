@@ -42,7 +42,7 @@ public class BaseJsonManager {
 		T t = null;
 		if(!TextUtils.isEmpty(json)){
 			try{
-				Constructor constructor = t.getClass().getConstructor(Context.class,String.class,String.class);
+				Constructor<T> constructor = clazz.getConstructor(Context.class,String.class,String.class);
 				t = (T)constructor.newInstance(context,key,json);
 			}catch(Exception e){
 				e.printStackTrace();

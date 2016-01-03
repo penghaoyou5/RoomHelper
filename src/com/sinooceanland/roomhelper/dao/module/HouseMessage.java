@@ -1,7 +1,10 @@
 package com.sinooceanland.roomhelper.dao.module;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.sinooceanland.roomhelper.control.constant.SpKey;
+import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
 import com.sinooceanland.roomhelper.dao.base.HouseMessageBaseBean;
 
@@ -24,7 +27,15 @@ public class HouseMessage extends HouseMessageBaseBean {
 		public String SpaceLayoutCode;
 		// TODO:原public List<AttachmentIDS> AttachmentIDS;
 		public List<String> AttachmentIDS;
-
+		public ArrayList<ProblemPicture> getPicture(){
+			ArrayList<ProblemPicture> arrayList = new ArrayList<ProblemPicture>();
+			for (int i = 0; i < AttachmentIDS.size(); i++) {
+				ProblemPicture problemPicture = new ProblemPicture(AttachmentIDS.get(i),SpaceLayoutName,this);
+				arrayList.add(problemPicture);
+			}
+			return arrayList;
+		}
+		
 		// int
 		/**
 		 * 要修改 上次验收问题是否通过 0 未通过 1 通过
@@ -88,11 +99,26 @@ public class HouseMessage extends HouseMessageBaseBean {
 		}
 
 		public String getCheckStauts() {
-			return CheckStauts;
+			if("1".equals(CheckStauts)){
+				return "已通过";
+			}
+			return "未通过";
 		}
 
-		public void setCheckStauts(String checkStauts) {
-			CheckStauts = checkStauts;
+		/**
+		 * 进行验收状态的设置方法
+		 * @return
+		 */
+		public boolean setCheckStauts() {
+			for (int i = 0; i < AttachmentIDS.size(); i++) {
+				String str = AttachmentIDS.get(i);
+				int in = SpUtilCurrentTaskInfo.getInt(str, -1);
+				if(in==-1){
+					return false;
+				}
+			}
+			CheckStauts = "1";
+			return true;
 		}
 	}
 
@@ -169,6 +195,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 
 				public String ProblemDescriptionName;
 				public String ProblemDescriptionCode;
+				
 				public String getProblemDescriptionName() {
 					return ProblemDescriptionName;
 				}

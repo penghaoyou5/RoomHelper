@@ -19,7 +19,7 @@ public class TreeHelper {
             TreeNode rootSmart = formatNode(node, 0, "-1", null);
 
             //将二级bean变换后挂到一级bean上
-            List<TreeDataBean> rootChildrens = node.childrens;
+            List<TreeDataBean> rootChildrens = node.Children;
             List secondSmarts = rootSmart.getChildrens();
             for (TreeDataBean node1 : rootChildrens) {
                 TreeNode secondSmart = formatNode(node1, 1, rootSmart.id, rootSmart);

@@ -10,8 +10,8 @@ import com.sinooceanland.roomhelper.dao.base.ProjectProblemBaseBean;
  * 问题类型选择界面
  */
 public class ProjectProblemBean extends BaseBean {
-	public String SuccessMsg;
-	public String ErrorMsg;
+//	public String SuccessMsg;
+//	public String ErrorMsg;
 	public List<OneFloor> list;
 
 	public class OneFloor extends ProjectProblemBaseBean {

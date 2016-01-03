@@ -1,6 +1,10 @@
 package com.sinooceanland.roomhelper.control.net;
 
+import android.content.Context;
+
 import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.base.BaseNet.BaseCallBack;
+import com.sinooceanland.roomhelper.control.base.BaseNet.ImageCallBack;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 
 /**
@@ -14,7 +18,8 @@ public class UpNet extends BaseNet{
 	 * @param taskMessage 任务信息类
 	 * @param callBack
 	 */
-	public void upTaskMessage(TaskMessage taskMessage,BaseCallBack<String> callBack){
+	public void upTaskMessage(final Context context, final TaskMessage taskMessage,
+			final BaseCallBack<String> callBack,final ImageCallBack imageCallBack){
 		
 	}
 }
