@@ -119,10 +119,10 @@ public class testTTT extends AndroidTestCase {
 			 TaskMessage message = unLoad.get(0);
 			 code = message.TaskCode;
 			 SpUtil.getBoolean(code, false);
-			 //获得任务详情
-			 TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
-			 List<HouseMessage> homeList = taskMyssageData.getHomeList(1);
-			 System.out.println(homeList);
+//			 //获得任务详情
+//			 TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
+//			 List<HouseMessage> homeList = taskMyssageData.getHomeList(1);
+//			 System.out.println(homeList);
 		}
 		
 		
@@ -161,17 +161,17 @@ public void  testTaskDETAIL(){
 //	    }  
 @SuppressWarnings("unused")
 public void testTesDetial(){
-	iniSp();
-	TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, new TaskMessage());
-	ArrayList<ChooseHouseBean> buildingInformation = taskMyssageData.getBuildingInformation();
-	System.out.println(buildingInformation);
-	HouseMessage houseByBuildNameAndHouseName = taskMyssageData.getHouseByBuildNameAndHouseName("", "");
-	System.out.println("测试详情");
-	List<HouseMessage> houseByHouseName = taskMyssageData.getHouseByHouseName("");
-	
-	List<HouseMessage> homeList = taskMyssageData.getHomeList(0);
-	TaskDetailBean taskDetail = new TaskMyssageData(mContext, null).getTaskDetail();
-	String json = BaseNet.getGson().toJson(new TaskDetailBean());
+//	iniSp();
+//	TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, new TaskMessage());
+//	ArrayList<ChooseHouseBean> buildingInformation = taskMyssageData.getBuildingInformation();
+//	System.out.println(buildingInformation);
+//	HouseMessage houseByBuildNameAndHouseName = taskMyssageData.getHouseByBuildNameAndHouseName("", "");
+//	System.out.println("测试详情");
+//	List<HouseMessage> houseByHouseName = taskMyssageData.getHouseByHouseName("");
+//	
+//	List<HouseMessage> homeList = taskMyssageData.getHomeList(0);
+//	TaskDetailBean taskDetail = new TaskMyssageData(mContext, null).getTaskDetail();
+//	String json = BaseNet.getGson().toJson(new TaskDetailBean());
 //	BaseNet.getGson().fromJson(json, TestClassttt.class);
 	
 	

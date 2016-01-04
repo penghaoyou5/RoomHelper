@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -15,6 +14,7 @@ import android.text.TextUtils;
 
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
+import com.sinooceanland.roomhelper.control.bean.ChooseHouseBeanList;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.test.TestNet;
@@ -35,12 +35,12 @@ public class TaskMyssageData {
 	/**
 	 * 最后推出调用  保存json 
 	 */
-	public static void saveModifyBigJson(){
-		for (Map.Entry<String, BigJsonManager> entry : mapBigJson.entrySet()) {
-			BigJsonManager value = entry.getValue();
-			entry.getValue().resetJson(value.beanToJson(value.getTaskDetailBean()));;
-		}
-	}
+//	public static void saveModifyBigJson(){
+//		for (Map.Entry<String, BigJsonManager> entry : mapBigJson.entrySet()) {
+//			BigJsonManager value = entry.getValue();
+//			entry.getValue().resetJson(value.beanToJson(value.getTaskDetailBean()));;
+//		}
+//	}
 	
 	
 	
@@ -86,17 +86,53 @@ public class TaskMyssageData {
 	private TaskMessage taskMessage;
 	private static Context context;
 
+	private static TaskMyssageData myssageData = new TaskMyssageData();
 	/**
 	 * 这是点击任务进入房间列表的类
 	 * @param context
 	 *zz @param taskMessage
 	 */
-	public TaskMyssageData(Context context, TaskMessage taskMessage) {
-		// 存储当前任务信息
+//	public TaskMyssageData(Context context, TaskMessage taskMessage) {
+//		// 存储当前任务信息
+//		SpUtil.putString(SpKey.CURRENTTASKMESSAGE, taskMessage.TaskCode);
+//		this.taskMessage = taskMessage;
+//		this.context = context;
+//		mapBigJson = new HashMap<String, BigJsonManager>();
+//	}
+	private TaskMyssageData(){}
+	
+	/**
+	 * 最后推出调用  保存json 
+	 */
+	public static void saveModifyBigJson(){
+		new Thread(){
+			@Override
+			public void run() {
+				for (Map.Entry<String, BigJsonManager> entry : mapBigJson.entrySet()) {
+					BigJsonManager value = entry.getValue();
+					entry.getValue().resetJson(value.beanToJson(value.getTaskDetailBean()));;
+				}
+			}
+		}.start();
+		
+	}
+
+	public static void saveTaskMessage(Context context, TaskMessage taskMessage){
+		if(myssageData==null){
+			myssageData = new TaskMyssageData();
+		}
 		SpUtil.putString(SpKey.CURRENTTASKMESSAGE, taskMessage.TaskCode);
-		this.taskMessage = taskMessage;
-		this.context = context;
 		mapBigJson = new HashMap<String, BigJsonManager>();
+		myssageData.taskMessage = taskMessage;
+		myssageData.context = context;
+	}
+	
+	public static TaskMyssageData getInstance(){
+		return myssageData;
+	}
+	
+	public String getTaskName(){
+		return taskMessage.TaskName;
 	}
 
 	/**以方法名定义成员计数 是第几页 从1开始*/
@@ -161,7 +197,8 @@ public class TaskMyssageData {
 						}
 					}
 //					messages = bigJsonManager.getTaskList();
-					messages.addAll(bigJsonManager.getTaskList());
+					//TODO:当时怎么写了这句话？？
+//					messages.addAll(bigJsonManager.getTaskList());
 					return true;
 				}
 				return false;
@@ -181,7 +218,8 @@ public class TaskMyssageData {
 		String str = SpUtilCurrentTaskInfo.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
 		//判断是否已经有此任务对应的楼栋列表信息  如果有就直接用
 		if(!TextUtils.isEmpty(str)){
-			return BaseNet.getGson().fromJson(str, ArrayList.class);
+			 ChooseHouseBeanList chooseHouseBeanList = BaseNet.getGson().fromJson(str, ChooseHouseBeanList.class);
+			return chooseHouseBeanList.date;
 		}
 		
 		//这里是进行本地循环查询的方法       循环遍历向集合中添加元素
@@ -210,7 +248,9 @@ public class TaskMyssageData {
 		}
 		
 		//进行列表的存放
-		String json = BaseNet.getGson().toJson(arrayList);
+		ChooseHouseBeanList beanList = new ChooseHouseBeanList();
+		beanList.date = arrayList;
+		String json = BaseNet.getGson().toJson(beanList);
 		SpUtilCurrentTaskInfo.putString(SpKey.getBuildInfoKey(taskMessage.TaskCode), json);
 		return arrayList;
 	}
@@ -290,8 +330,8 @@ public class TaskMyssageData {
 	 * @return 一个房间
 	 */
 	public HouseMessage getHouseByBuildNameAndHouseName(final String buildName,final String Housename){
-		if(BaseNet.isTest)
-		return getHomeList(0).get(0);
+//		if(BaseNet.isTest)  为什么会出错？  角标从一开始
+//		return getHomeList(0).get(0);
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {

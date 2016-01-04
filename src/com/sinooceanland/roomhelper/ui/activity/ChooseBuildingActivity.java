@@ -30,6 +30,7 @@ import com.sinooceanland.roomhelper.ui.testdata.ExpandData;
 import com.sinooceanland.roomhelper.ui.testdata.TaskData;
 import com.sinooceanland.roomhelper.ui.testdata.TestTaskBean;
 import com.sinooceanland.roomhelper.ui.utils.MyProgressDialog;
+import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.weiget.expandlistview.ExpandListControler;
 
 import java.util.ArrayList;
@@ -71,18 +72,18 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
     }
 
     private void initData() {
-        //TODO 这里获取所有房间，并赋值
-        TaskMessage bean = (TaskMessage) getIntent().getBundleExtra("bean").get("bean");
-        setTitle(bean.TaskName);
-        taskMyssageData = new TaskMyssageData(this, bean);
-        mList = taskMyssageData.getHomeList(0);
+         taskMyssageData = TaskMyssageData.getInstance();
+
+        setTitle(taskMyssageData.getTaskName());
+
+        mList = taskMyssageData.getHomeList(1);
         mBuilds = taskMyssageData.getBuildingInformation();
         mStatus = taskMyssageData.getStatus();
     }
 
     private void setTextViewState(TextView tv, String state) {
         //TODO 这里修改判断状态
-        switch (Integer.valueOf(state)) {
+        switch (Integer.valueOf( state)) {
             case 0:
                 tv.setText("未验收");
                 tv.setBackgroundResource(R.drawable.btn_gray2);
@@ -256,7 +257,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (Integer.valueOf(mAdapter.getData().get(position).CheckStauts)) {
+        switch (Integer.valueOf( mAdapter.getData().get(position).CheckStauts)) {
             case 0://未验收
                 HouseMessage houseMessage = mAdapter.getData().get(position);//TODO 这里拿到点击的bean 然后跳转测量房间
                 HouseMessageData.setHouseMessage(houseMessage);
@@ -265,8 +266,8 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
             case 1:
                 HouseMessage houseMessage2 = mAdapter.getData().get(position);//TODO 这里拿到点击的bean 然后跳转测量房间
                 HouseMessageData.setHouseMessage(houseMessage2);
-               // startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
-                startActivity(new Intent(this,CheckAcceptActivity.class));
+                // startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
+                startActivity(new Intent(this, CheckAcceptActivity.class));
                 break;
             case 2:
                 showToast("验收已通过");

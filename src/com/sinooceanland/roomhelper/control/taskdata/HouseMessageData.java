@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.MD5Util;
@@ -23,22 +22,27 @@ public class HouseMessageData {
 
 	private static HouseMessageData data;
 	
-	private HouseMessageData(HouseMessage homMessage) {
-		HouseMessageData.homMessage = homMessage;
-		bigPickturUrl = SpKey.getBigPictureAddress();
-		smallPickturUrl = SpKey.getSmallPictureAddress();
-	}
+//	private HouseMessageData(HouseMessage homMessage) {
+//		HouseMessageData.homMessage = homMessage;
+//		bigPickturUrl = SpKey.getBigPictureAddress();
+//		smallPickturUrl = SpKey.getSmallPictureAddress();
+//	}
+	
+	private HouseMessageData(){}
 
 	/**
-	 * 静态方法为了实时能够调用
+	 * 记录当前进入的房间
 	 * 
 	 * @param homMessage
 	 * @return
 	 */
 	public static HouseMessageData setHouseMessage(HouseMessage homMessage) {
 		if(data==null){
-			data = new HouseMessageData(homMessage);
+			data = new HouseMessageData();
 		}
+		HouseMessageData.homMessage = homMessage;
+		data.bigPickturUrl = SpKey.getBigPictureAddress();
+		data.smallPickturUrl = SpKey.getSmallPictureAddress();
 		return data;
 	}
 	

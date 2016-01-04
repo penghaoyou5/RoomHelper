@@ -18,6 +18,7 @@ import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.control.taskdata.TaskList;
+import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.ui.testdata.TaskData;
 import com.sinooceanland.roomhelper.ui.utils.MyProgressDialog;
 import com.sinooceanland.roomhelper.ui.common.CommonAdapter;
@@ -174,14 +175,14 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener,A
             if(bean.isFinish){
                 //TODO 这里将上传的bean传过去
                 Intent data = new Intent(this, UploadActivity.class);
-
-                data.putExtra("bean",bundle);
+                TaskMyssageData.saveTaskMessage(this, bean);
                 startActivity(data);
             }else {
+                TaskMyssageData.saveTaskMessage(this,bean);
                 Intent data = new Intent(this, ChooseBuildingActivity.class);
-                data.putExtra("bean",bundle);
                 startActivity(data);
             }
+            finish();
         }
         if(isUnLoadSelect){
             //TODO 这里处理下载操作

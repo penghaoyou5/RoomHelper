@@ -37,9 +37,9 @@ public class TestMessageAndDetail extends AndroidTestCase {
 		code = message.TaskCode;
 		SpUtil.getBoolean(code, false);
 		// 获得任务详情
-		TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
-		List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
-		System.out.println(homeList);
+//		TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
+//		List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
+//		System.out.println(homeList);
 	}
 
 	// 这里是进行任务的下载
@@ -72,13 +72,13 @@ public class TestMessageAndDetail extends AndroidTestCase {
 		code = message.TaskCode;
 		SpUtil.getBoolean(code, false);
 		// 获得任务详情
-		TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
-		List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
-		System.out.println(homeList);
+//		TaskMyssageData taskMyssageData = ;
+//		List<HouseMessage> homeList = taskMyssageData.getHomeList(new TaskMyssageData(mContext, message)1, "0");
+//		System.out.println(homeList);
 		
-		ArrayList<ChooseHouseBean> buildingInformation = taskMyssageData.getBuildingInformation();
+//		ArrayList<ChooseHouseBean> buildingInformation = taskMyssageData.getBuildingInformation();
 		
-		System.out.println(buildingInformation);
+//		System.out.println(buildingInformation);
 	}
 	//测试通过
 	public void testTaskSearchByHouse(){
@@ -88,12 +88,12 @@ public class TestMessageAndDetail extends AndroidTestCase {
 		TaskMessage message = unLoad.get(0);
 		code = message.TaskCode;
 		SpUtil.getBoolean(code, false);
-		// 获得任务详情
-		TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
-		List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
-		System.out.println(homeList);
+//		// 获得任务详情
+//		TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
+//		List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
+//		System.out.println(homeList);
 		
-		List<HouseMessage> houseByHouseName = taskMyssageData.getHouseByHouseName("2304");
+		List<HouseMessage> houseByHouseName = null;
 		
 		System.out.println(houseByHouseName);
 		
@@ -108,7 +108,7 @@ public class TestMessageAndDetail extends AndroidTestCase {
 			code = message.TaskCode;
 			SpUtil.getBoolean(code, false);
 			// 获得任务详情
-			TaskMyssageData taskMyssageData = new TaskMyssageData(mContext, message);
+			TaskMyssageData taskMyssageData = null;
 			List<HouseMessage> homeList = taskMyssageData.getHomeList(1, "0");
 			System.out.println(homeList);
 			
