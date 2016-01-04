@@ -74,7 +74,7 @@ public class RequestNet extends BaseNet {
 	public void taskList(final BaseCallBack<TaskList> callBack) {
 		
 		RequestParams requestParams = new RequestParams();
-		requestParams.add("userid", SpUtil.getString(SpKey.getUerId(), ""));
+		requestParams.add("userid", SpKey.getUerId());
 		baseRequest(requestParams, NetUrl.TASK_LIST,
 				new BaseCallBack<TaskListBean>() {
 

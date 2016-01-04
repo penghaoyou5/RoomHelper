@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sinooceanland.roomhelper.R;
 
@@ -73,6 +74,10 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected int getColor(int colorId){
         return getResources().getColor(colorId);
+    }
+
+    public void showToast(String toast){
+        Toast.makeText(this,toast,Toast.LENGTH_SHORT).show();
     }
 
 }

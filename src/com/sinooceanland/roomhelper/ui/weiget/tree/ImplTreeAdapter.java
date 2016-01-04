@@ -16,7 +16,6 @@ import java.util.List;
  * Details :
  */
 public class ImplTreeAdapter extends ABSTreeAdapter {
-
     /**
      * @param tree
      * @param context

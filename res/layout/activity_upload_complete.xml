@@ -5,11 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <View
+
+    <include
         android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/colorBlue" />
+        layout="@layout/title" />
 
     <View
         android:id="@+id/v"
@@ -19,19 +18,31 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="188.5dp"
         android:background="@drawable/loading_process" />
+
+    <View
+        android:visibility="invisible"
+        android:id="@+id/vv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="188.5dp"
+        />
     <TextView
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="上传完成"
-        android:layout_below="@id/v"
+        android:text="正在上传"
+        android:layout_below="@id/vv"
         android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
         />
 
     <Button
+        android:id="@+id/btn_complete"
         android:layout_below="@id/tv"
         android:layout_marginTop="83dp"
         style="@style/btn_default"
-        android:text="上传完成" />
+        android:enabled="false"
+        android:text="正在上传" />
 </RelativeLayout>

@@ -39,6 +39,13 @@ public class SDUtils {
                 + File.separator;
     }
 
+
+    public static String createFolderInSD(String folderName){
+        File scaleFile = new File(getSDCardPath()+folderName);
+        if(!scaleFile.exists()) scaleFile.mkdir();
+        return scaleFile.getAbsolutePath()+File.separator;
+    }
+
     /**
      * 获取SD卡的剩余容量 单位byte
      *
@@ -85,6 +92,16 @@ public class SDUtils {
      */
     public static String getRootDirectoryPath() {
         return Environment.getRootDirectory().getAbsolutePath();
+    }
+
+
+    public static String getScaleFolder(){
+       return createFolderInSD("scale");
+    }
+
+
+    public static String getRealBitmapFolder(){
+        return createFolderInSD("realBitmap");
     }
 
 

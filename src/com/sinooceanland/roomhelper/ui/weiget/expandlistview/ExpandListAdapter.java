@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.sinooceanland.roomhelper.R;
+import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
 import com.sinooceanland.roomhelper.ui.common.CommonAdapter;
 import com.sinooceanland.roomhelper.ui.common.ViewHolder;
 
@@ -15,36 +16,33 @@ import java.util.List;
  * Version : 1
  * Details :
  */
-public class ExpandListAdapter extends CommonAdapter<String> {
+public class ExpandListAdapter extends CommonAdapter<ChooseHouseBean> {
 
     private int checkPosition = -1;
     private View preView;
 
-    public ExpandListAdapter(Context context, List<String> list, int layoutId) {
+    public ExpandListAdapter(Context context, List<ChooseHouseBean> list, int layoutId) {
         super(context, list, layoutId);
     }
 
     @Override
-    protected void getView(ViewHolder holder, String bean,int position) {
-        holder.setText(R.id.tv, bean);
+    protected void getView(ViewHolder holder, ChooseHouseBean bean,int position) {
+        holder.setText(R.id.tv, String.valueOf(bean.build));
+        holder.setText(R.id.tv_right,String.valueOf(bean.buildSize));
         if(checkPosition == position){
-            holder.getConvertView().setBackgroundDrawable(getDrawable(R.drawable.outline_press));
+            holder.getConvertView().setBackgroundResource(R.drawable.outline_press);
         }else {
-            holder.getConvertView().setBackgroundDrawable(getDrawable(R.drawable.outline_normal));
+            holder.getConvertView().setBackgroundResource(R.drawable.outline_normal);
         }
-    }
-
-    private Drawable getDrawable(int id) {
-        return mContext.getResources().getDrawable(id);
     }
 
     public void setCheckPosition(int position,View convertView){
         this.checkPosition = position;
         if(preView!=null){
-            preView.setBackgroundDrawable(getDrawable(R.drawable.outline_normal));
+            preView.setBackgroundResource(R.drawable.outline_normal);
         }
         preView = convertView;
-        preView.setBackgroundDrawable(getDrawable(R.drawable.outline_press));
+        preView.setBackgroundResource(R.drawable.outline_press);
     }
 
 

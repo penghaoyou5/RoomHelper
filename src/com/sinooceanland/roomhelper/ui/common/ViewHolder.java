@@ -1,6 +1,7 @@
 package com.sinooceanland.roomhelper.ui.common;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -53,10 +54,16 @@ public class ViewHolder {
         iv.setImageResource(drawableId);
         return this;
     }
+    public ViewHolder setImage(int ViewId,Bitmap bitmap){
+        ImageView iv = (ImageView)getView(ViewId);
+        iv.setImageBitmap(bitmap);
+        return this;
+    }
 
     public ViewHolder setBackgroundResource(int ViewId,int resid){
         getView(ViewId).setBackgroundResource(resid);
         return this;
     }
+
 
 }

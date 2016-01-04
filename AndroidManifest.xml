@@ -24,24 +24,34 @@
   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
+        android:name="com.sinooceanland.roomhelper.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-          <activity android:name="com.sinooceanland.roomhelper.ui.activity.MainActivity" >
+         >
+             <activity android:name=".ui.activity.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.TestExpandActivity"/>
-        <activity android:name=".ui.activity.TestTreeActivity"/>
+        <activity android:name=".ui.activity.TreeActivity"/>
         <activity android:name=".ui.activity.TaskActivity"/>
+        <activity android:name=".ui.activity.TakePhotoActivity"
+            android:launchMode="singleTask" android:screenOrientation="landscape"
+            />
         <activity android:name=".ui.activity.ChooseBuildingActivity"
             android:windowSoftInputMode="stateHidden"
             />
+        <activity android:name=".ui.activity.UploadCompleteActivity"/>
+        <activity android:name=".ui.activity.UploadActivity"/>
+
         <activity android:name=".ui.activity.StartActivity"/>
+        <activity android:name=".ui.activity.CheckAcceptActivity"/>
+        <activity android:name=".ui.activity.CheckAcceptContentActivity"
+            android:launchMode="singleTask" android:screenOrientation="landscape"
+            />
         <receiver android:name=".ui.receiver.NetworkConnectChangedReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

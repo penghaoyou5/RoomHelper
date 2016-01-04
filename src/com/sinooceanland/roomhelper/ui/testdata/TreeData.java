@@ -1,6 +1,7 @@
 package com.sinooceanland.roomhelper.ui.testdata;
 
 import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
+import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean.ProblemDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class TreeData {
     }
 
     private List<TreeDataBean.ProblemDescription> getProblem(int range,String name){
-        ArrayList<TreeDataBean.ProblemDescription> result = new ArrayList<TreeDataBean.ProblemDescription>();
+        ArrayList<TreeDataBean.ProblemDescription> result = new ArrayList<ProblemDescription>();
         for(int i=0;i<range;i++){
             TreeDataBean.ProblemDescription problem = new TreeDataBean.ProblemDescription();
             problem.ProblemDescriptionCode = name+" ID"+i;

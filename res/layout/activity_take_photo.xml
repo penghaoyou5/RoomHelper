@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <RelativeLayout
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorBlue">
+
+
+                <TextView
+                    android:id="@+id/tv_title_left"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="18dp"
+                    android:drawableLeft="@drawable/back"
+                    android:text="上一布局"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    android:textColor="@color/colorWhite"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_title_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="17sp" />
+
+                <ImageButton
+                    android:visibility="gone"
+                    android:padding="20dp"
+                    android:id="@+id/ib_right"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="21dp"
+                    android:background="@null"
+                    android:src="@drawable/pre" />
+
+
+                <TextView
+                    android:id="@+id/tv_title_right"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:drawableRight="@drawable/pre"
+                    android:text="下一布局"
+                    android:gravity="center"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="5dp"
+                    android:textColor="@color/colorWhite"
+                    />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_title_complete"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="18dp"
+                    android:text="完成"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="请添加布局照片"
+                android:textSize="20sp"
+                android:layout_height="wrap_content" />
+
+            <android.support.v4.view.ViewPager
+                android:layout_below="@id/title"
+                android:id="@+id/vp_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/black_transparent">
+
+                <TextView
+                    android:id="@+id/tv_left"
+                    style="@style/add_question"
+                    android:layout_marginLeft="17dp"
+                    android:drawableLeft="@drawable/s"
+                    android:text="重拍" />
+
+                <TextView
+                    android:id="@+id/tv_center"
+                    style="@style/add_question"
+                    android:layout_centerInParent="true"
+                    android:drawableLeft="@drawable/ok"
+                    android:text="确认" />
+
+                <TextView
+                    android:id="@+id/tv_right"
+                    style="@style/add_question"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="17dp"
+                    android:drawableLeft="@drawable/wen"
+                    android:text="添加问题" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_delete"
+                    style="@style/add_question"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="17dp"
+                    android:text="删除照片" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_tackphoto"
+            android:layout_width="100dp"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/ib_back"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="23.5dp"
+                android:background="@null"
+                android:src="@drawable/back1" />
+
+            <ImageButton
+                android:id="@+id/ib_take_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:src="@drawable/ca" />
+
+
+            <TextView
+                android:clickable="true"
+                android:id="@+id/tv_add"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="添加布局照片"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_alignParentBottom="true"
+                android:drawableTop="@drawable/add"
+              />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -20,4 +20,17 @@ public class TaskData {
         }
         return arr;
     }
+
+
+  /*  public static List<TestTaskBean> getList(int size){
+        ArrayList<TestTaskBean> arr = new ArrayList<>();
+        for(int i=0;i<size;i++){
+            TestTaskBean bean = new TestTaskBean();
+            bean.name="name"+i;
+            bean.state="state"+i;
+            if(i%2==0) bean.isLoad =true;
+            arr.add(bean);
+        }
+        return arr;
+    }*/
 }

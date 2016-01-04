@@ -44,7 +44,7 @@ public class TreeNode {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other)                                      //先检查是否其自反性，后比较other是否为空。这样效率高
+        if (this == other) //先检查是否其自反性，后比较other是否为空。这样效率高
             return true;
         if (other == null)
             return false;

@@ -157,6 +157,7 @@ public abstract class ABSTreeAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (mNodes==null) return 0;
         return mNodes.size();
     }
 

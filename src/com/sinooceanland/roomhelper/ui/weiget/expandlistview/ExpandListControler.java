@@ -6,6 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sinooceanland.roomhelper.R;
+import com.sinooceanland.roomhelper.ui.common.CommonAdapter;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class ExpandListControler {
     private Context mContext;
     private ExpandListAdapter mLeftAdapter;
-    private ExpandListAdapter mRightAdapter;
+    private ExpandRightListAdapter mRightAdapter;
     private ListView mLv_left;
     private ListView mLv_right;
     private MyOnItemClickListener leftListener;
@@ -44,7 +45,7 @@ public class ExpandListControler {
         mLv_left = (ListView) doubleView.findViewById(R.id.lv_left);
         mLv_right = (ListView) doubleView.findViewById(R.id.lv_right);
         mLeftAdapter = new ExpandListAdapter(mContext, null, R.layout.item_pop);
-        mRightAdapter = new ExpandListAdapter(mContext, null, R.layout.item_pop);
+        mRightAdapter = new ExpandRightListAdapter(mContext, null, R.layout.item_pop2);
         mLv_left.setAdapter(mLeftAdapter);
         mLv_right.setAdapter(mRightAdapter);
         mLv_left.setOnItemClickListener(new DoubleOnItemClickListener(Position.left));
@@ -64,11 +65,12 @@ public class ExpandListControler {
             switch (this.position) {
                 case left:
                     mLeftAdapter.setCheckPosition(position,view);
-                    leftListener.onItemClick(parent, view, position, id);
+                    leftListener.onItemClick(parent, view, position, id,0);
                     break;
                 case right:
-                    rightListener.onItemClick(parent, view, position, id);
+                    List<Object> data = mRightAdapter.getData();
 
+                    rightListener.onItemClick(parent, view, position, id,data.get(position));
                     break;
             }
         }
@@ -85,7 +87,7 @@ public class ExpandListControler {
         }
     }
 
-    private void showListView(ExpandListAdapter adapter, List data, boolean isFlush) {
+    private void showListView(CommonAdapter adapter, List data, boolean isFlush) {
         if (isFlush) {
             adapter.setData(data);
             adapter.notifyDataSetInvalidated();
@@ -108,8 +110,8 @@ public class ExpandListControler {
         left, right
     }
 
-    public interface MyOnItemClickListener {
-        void onItemClick(AdapterView<?> parent, View view, int position, long id);
+    public interface MyOnItemClickListener<T> {
+        void onItemClick(AdapterView<?> parent, View view, int position, long id,T bean);
     }
 
     public void dissmissDoubleList() {
@@ -117,7 +119,7 @@ public class ExpandListControler {
     }
 
     public boolean hasData(Position position) {
-        ExpandListAdapter adapter = null;
+        CommonAdapter adapter = null;
         switch (position) {
             case left:
                 adapter =  mLeftAdapter;

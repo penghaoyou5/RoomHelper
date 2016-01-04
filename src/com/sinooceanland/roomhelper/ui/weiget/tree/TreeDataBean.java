@@ -16,7 +16,6 @@ public class TreeDataBean {
     public String EnginTypeFullName;
 
     public List<TreeDataBean> Children;
-    
 
     public List<String> AttachmentIDS;
     public String CheckRemark;

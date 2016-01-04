@@ -6,6 +6,8 @@
     <color name="white">#FFF</color>
     <color name="outline">#f0f0f0</color>
     <color name="colorBlue">#018ecd</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="colorGreen">#4eb900</color>
     <color name="colorGray">#FAFAFA</color>
     <color name="textColor">#999999</color>
     <color name="colorWhite">#FFFFFF</color>
