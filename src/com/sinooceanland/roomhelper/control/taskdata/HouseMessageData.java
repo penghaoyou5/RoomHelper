@@ -12,13 +12,14 @@ import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList;
+import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList;
 
 public class HouseMessageData {
 
 	// 这是保存homMessage 数据 为了保持始终一个引用初始化后能拿到所以静态
 	private static HouseMessage homMessage;
-	private String bigPickturUrl;
-	private String smallPickturUrl;
+//	private String bigPickturUrl;
+//	private String smallPickturUrl;
 
 	private static HouseMessageData data;
 	
@@ -41,8 +42,8 @@ public class HouseMessageData {
 			data = new HouseMessageData();
 		}
 		HouseMessageData.homMessage = homMessage;
-		data.bigPickturUrl = SpKey.getBigPictureAddress();
-		data.smallPickturUrl = SpKey.getSmallPictureAddress();
+//		data.bigPickturUrl = SpKey.getBigPictureAddress();
+//		data.smallPickturUrl = SpKey.getSmallPictureAddress();
 		return data;
 	}
 	
@@ -184,7 +185,7 @@ public class HouseMessageData {
 				return infos;//如果图片为空返回null
 			// 循环便利图片获得所有图片信息进行处理返回
 			for (int j = 0; j < attachmentIDS.size(); j++) {
-				String uri = attachmentIDS.get(i);
+				String uri = attachmentIDS.get(j);
 				//根据照片名获得一切信息  如果已经经过了照片存储那么信息一定不为空
 				String inf = SpUtilCurrentTaskInfo.getString(uri, "");
 				PictureInfo info = BaseNet.getGson().fromJson(inf, PictureInfo.class);
@@ -220,11 +221,11 @@ public class HouseMessageData {
 		}
 		
 		public String getBigPictureUri() {
-			return bigPickturUrl+pictureUri;
+			return SpKey.getBigPictureAddress()+pictureUri;
 		}
 		
 		public String getSmallPictureUri() {
-			return smallPickturUrl+pictureUri;
+			return SpKey.getSmallPictureAddress()+pictureUri;
 		}
 		
 		public boolean isSure() {
@@ -233,7 +234,8 @@ public class HouseMessageData {
 
 		public void setSure(boolean isSure) {
 			this.isSure = isSure;
-			SpUtilCurrentTaskInfo.putString(pictureUri, "");
+			String json = BaseNet.getGson().toJson(this);
+			SpUtilCurrentTaskInfo.putString(pictureUri, json);
 		}
 
 		public ProbleamInfo getProblem() {
@@ -242,7 +244,8 @@ public class HouseMessageData {
 
 		public void setProblem(ProbleamInfo problem) {
 			this.problem = problem;
-			SpUtilCurrentTaskInfo.putString(pictureUri, "");
+			String json = BaseNet.getGson().toJson(this);
+			SpUtilCurrentTaskInfo.putString(pictureUri, json);
 		}
 
 		public String getPictureUri() {
@@ -278,18 +281,18 @@ public class HouseMessageData {
 		public String ProblemDescriptionCode;
 	}
 	
-	//TODO:请求结果
-	public List<HouseMessage> getHomeList(int page,String checkedStatue){
-		return null;
-	}
-	
-	public void initSpaceLayoutIsFinish(){
-		
-	}
-	
-	public void setCurrentHomeFinish(){
-		
-	}
+//	//TODO:请求结果
+//	public List<HouseMessage> getHomeList(int page,String checkedStatue){
+//		return null;
+//	}
+//	
+//	public void initSpaceLayoutIsFinish(){
+//		
+//	}
+//	
+//	public void setCurrentHomeFinish(){
+//		
+//	}
 	
 
 	/**
@@ -321,9 +324,111 @@ public class HouseMessageData {
 		 return homMessage.LastCheckProblemList;
 	}
 	
+	/**
+	 * 当点击拍照完成时调用的方法
+	 * @return
+	 */
 	public String setCheckStautsSure(){
 		homMessage.CheckStauts  = "2";
+		
+		//进行数据转换
+		savePicture();
+		System.out.println(homMessage);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				//当完成时遍历保存有问题的照片
+			}
+		}).start();
+		
 		return "2";
 	}
+//========================================================================================	
+	/**
+	 * 根据照片进行循环遍历存储有问题的照片
+	 * 要对每个
+	 */
+	public void savePicture(){
+		//得到空间布局的辅助类
+		SpaceLayoutListHelper layoutListHelper = getSpaceLayoutList();
+		List<SpaceLayoutList> spaceLayoutList = layoutListHelper.getSpaceLayoutList();
+		int size = spaceLayoutList.size();
+		for (int i = 0; i < size; i++) {
+			SpaceLayoutList spaceLayoutList2 = spaceLayoutList.get(i);
+			
+			//得到问题布局
+			List<EnginTypeList> enginTypeList = spaceLayoutList.get(i).EnginTypeList;
+			//进行问题布局初始化
+			if(enginTypeList==null){
+				enginTypeList = new ArrayList<HouseMessage.SpaceLayoutList.EnginTypeList>();
+			}			
+			
+			//得到对应id下的图片对象 
+			List<PictureInfo> potion = layoutListHelper.getPotion(i);
+			for (int j = 0; j < potion.size(); j++) {
+				PictureInfo pictureInfo = potion.get(j);
+				ProbleamInfo problem = pictureInfo.problem;
+				//若有问题进行问题的添加
+				if(problem!=null){					
+					//对列表进行问题添加的方法
+					addProbleamInfoToEnginTypeList(enginTypeList,problem,spaceLayoutList2,pictureInfo.getPictureUri());
+				}
+			}
+			
+		}
+		
+	}
 	
+	public void addProbleamInfoToEnginTypeList(List<EnginTypeList> enginTypeList, ProbleamInfo problem, SpaceLayoutList spaceLayoutList, String pictureNme){
+		//列表中是否已存在第一层的问题 存在就直接
+		EnginTypeList typeList = null;
+		for (int i = 0; i < enginTypeList.size(); i++) {
+			EnginTypeList typeListItem = enginTypeList.get(i);
+			if(typeListItem.EnginTypeCode.equals(problem.EnginTypeCode)){
+				typeList = typeListItem;
+				break;
+			}
+		}
+		
+		//不存在直接添加 第一层问题编码
+		if(typeList==null){
+			typeList = spaceLayoutList.new EnginTypeList();
+			typeList.EnginTypeCode = problem.EnginTypeCode;
+			enginTypeList.add(typeList);
+		}
+		
+		
+		//进行第三层问题编码添加
+		List<ProblemDescriptionList> problemDescriptionList = typeList.ProblemDescriptionList;
+		if(problemDescriptionList==null){
+			 problemDescriptionList = typeList.ProblemDescriptionList = new ArrayList<HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList>();
+		}
+		
+		
+		ProblemDescriptionList descriptionList = null;
+		for (int i = 0; i < problemDescriptionList.size(); i++) {
+			ProblemDescriptionList problemDescriptionListItem = problemDescriptionList.get(i);
+			if(problemDescriptionListItem.equals(problem.ProblemDescriptionCode)){
+				descriptionList = problemDescriptionListItem;
+				break;
+			}
+		}
+		
+		//如果第三层没有这个问题进行添加
+		if(descriptionList==null){
+			descriptionList = typeList.new ProblemDescriptionList();
+			descriptionList.ProblemDescriptionCode = problem.ProblemDescriptionCode;
+			descriptionList.ProblemDescriptionName = problem.ProblemDescriptionName;
+			problemDescriptionList.add(descriptionList);
+		}
+		//进行图片的添加
+		List<String> attachmentIDS = typeList.AttachmentIDS;
+		if(attachmentIDS==null){
+			attachmentIDS = typeList.AttachmentIDS = new ArrayList<String>();
+		}
+		
+		if(!attachmentIDS.contains(pictureNme))
+		attachmentIDS.add(pictureNme);
+	}
 }
