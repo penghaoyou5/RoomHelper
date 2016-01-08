@@ -3,6 +3,7 @@ package com.sinooceanland.roomhelper.control.net;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
@@ -47,7 +48,8 @@ public class RequestNet extends BaseNet {
 	public void login(final String username, String password,
 			final BaseCallBack<LoginBean> callBack) {
 		RequestParams requestParams = new RequestParams();
-		requestParams.add("username", username);
+//		requestParams.add("username", username);
+		requestParams.add("username", "v-gouying");
 		requestParams.add("password", password);
 		baseRequest(requestParams, NetUrl.LOGIN, new BaseCallBack<LoginBean>() {
 
@@ -59,6 +61,7 @@ public class RequestNet extends BaseNet {
 					SpUtil.putString(SpKey.USERINAME, username);
 					// 根据用户名保存用户id
 					SpUtil.putString(username, bean.userID);
+					Log.e("gggg", message);
 				}
 				callBack.messageResponse(requestType, bean, message);
 			}
@@ -110,7 +113,7 @@ public class RequestNet extends BaseNet {
 	}
 
 	int requestCount;
-
+	int responceCount;
 	/**
 	 * 获取模板明细 并进行存根据任务信息进行任务的下载
 	 * 
@@ -123,10 +126,13 @@ public class RequestNet extends BaseNet {
 			final BaseCallBack<String> callBack,final ImageCallBack imageCallBack) {
 		//这是请求正在请求中的次数
 		requestCount = 0;
+		responceCount=0;
 		for (int i = 0; i < taskMessage.BuildingList.size(); i++) {
 			final BuildingList buildingList = taskMessage.BuildingList.get(i);
 			for (int j = 0; j < buildingList.UnitCode.size(); j++) {
 				requestCount++;
+				System.out.println("requestCount"+requestCount);
+//				if(requestCount>=1)return;
 				final String UnitCode = buildingList.UnitCode.get(j);
 				getTaskDetail(taskMessage.TaskCode, buildingList.BuildingCode,
 						UnitCode, new BaseCallBack<String>() {
@@ -134,8 +140,9 @@ public class RequestNet extends BaseNet {
 							public void messageResponse(
 									RequestType requestType, String bean,
 									String message) {
+								System.out.println("bean"+bean);
 								if (requestType == RequestType.messagetrue) {
-									requestCount--;
+									responceCount++;
 									String key = taskMessage.TaskCode + "+"+ buildingList.BuildingCode
 											+ "+" + UnitCode;
 									BigJsonManager bigJsonManager = new BigJsonManager(context,
@@ -147,7 +154,7 @@ public class RequestNet extends BaseNet {
 									List<HouseMessage> taskList2 = findManagerByKey.getTaskList();
 									System.out.println("完成测试");
 									
-									if (requestCount <= 0) {
+									if (requestCount == responceCount) {
 										SpUtil.putBoolean(taskMessage.TaskCode, true);
 										callBack.messageResponse(requestType,
 												"下载成功", "下载成功");

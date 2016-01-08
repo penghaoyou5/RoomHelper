@@ -170,8 +170,6 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener,A
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(isLoadSelect){
             TaskMessage bean = mLoadList.get(position);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("bean",bean);
             if(bean.isFinish){
                 //TODO 这里将上传的bean传过去
                 Intent data = new Intent(this, UploadActivity.class);

@@ -2,7 +2,12 @@ package com.sinooceanland.roomhelper.control.base;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
 
@@ -27,6 +32,7 @@ import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
 import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
+import com.sinooceanland.roomhelper.ui.utils.SDUtils;
 
 /**
  * @author peng 进行网络请求的基类
@@ -85,6 +91,11 @@ public class BaseNet {
 	public static interface ImageCallBack {
 		void imageResponse(RequestType requestType, int count, int current);
 	}
+	
+	// 这是进行图片下载的回调
+		public static interface JsonCallBack {
+			void jsonResponse(RequestType requestType, int count, int current);
+		}
 
 	private static AsyncHttpClient httpClient;
 
@@ -116,7 +127,7 @@ public class BaseNet {
 
 	Class cla;
 	public static boolean dateProblem;
-	public static boolean isTest = true;
+	public static boolean isTest = false;
 	public <T extends BaseBean> void baseRequest(RequestParams requestParams,
 			final String url, final BaseCallBack<T> callback, final Class<T> beanClass) {
 		cla = beanClass;
@@ -182,7 +193,7 @@ public class BaseNet {
 				str = "{\"message\":\"\",\"code\":0,\"list\":[{\"TaskCode\":\"041cb848-523c-4cc7-8e59-07f3645212e6\",\"buildingList\":[{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24178\",\"UnitCode\":[\"31C24C65-0226-4D40-9239-191A63106E13\",\"31C24C65-0226-4D40-9239-191A63106E16\"]},{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24179\",\"UnitCode\":[\"31C24C65-0226-4D40-9239-191A63106E14\",\"31C24C65-0226-4D40-9239-191A63106E15\"]}],\"TaskName\":\"肖大爷测试专用\"},{\"TaskCode\":\"041cb848-523c-4cc7-8e59-07f3645212e6\",\"TaskName\":\"肖大爷测试专用\"}]}";
 			//任务详情 没有上次验收问题
 			}else if(url.equals(NetUrl.TASK_DETAIL)){
-				str = GetAssertUtil.readAssertResource(SpUtil.mContext, "taskdetail.txt");
+				str = GetAssertUtil.readAssertResource(SpUtil.mContext, "taskdetail_haveduogefangjiatxt");
 //				str = "{\"SuccessMsg\":\"\",\"ErrorMsg\":0,\"TaskState\":0,\"list\":[{\"BuildingCode\":\"A152D0E9-1270-43A0-97A8-539F0DC24178\",\"PreBuildingName\":\"18\",\"ActBuildingName\":\"18\",\"UnitCode\":\"31C24C65-0226-4D40-9239-191A63106E13\",\"PreUnitName\":\"2\",\"ActUnitName\":\"2\",\"HouseCode\":\"034E777D-95E9-43BD-AB3A-86F74C355AB7\",\"PreHouseName\":\"2302\",\"ActHouseName\":\"2302\",\"PreHouseFullName\":\"18#2-2302\",\"ActHouseFullName\":\"18#2-2302\",\"PropertTypeName\":\"普通房\",\"OwnerNames\":\"\",\"CheckRound\":2,\"SpaceLayoutList\":[{\"SpaceLayoutCode\":2,\"SpaceLayoutName\":\"套内空间\",\"SpaceLayoutFullName\":\"套内空间\"}]}]}";
 //				new BigJsonManager(SpUtil.mContext,"test", str);
 //				str= BaseNet.getGson().toJson(new TaskDetailBean());
@@ -212,8 +223,31 @@ public class BaseNet {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
 							byte[] responseBody) {
+//						System.out.println("ggg"+responseBody);
+//						String string = responseBody.toString();
+//						
+//						System.out.println("ggg"+string);
+//						new InputStreamReader(in, charset);
+//						getGson().fromJson(json, classOfT)
+						File file = new File(SDUtils.getSDCardPath()+"roomhelper.txt");
+						boolean exists = file.exists();
+						if(!exists){
+							try {
+								file.createNewFile();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 						String json = new String(responseBody);
-
+						PrintStream out = null;
+						try {
+							out = new PrintStream(new FileOutputStream(file));
+							out.print(json);
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+						
+						System.out.println("json"+json);
 						// 暂时没有区分消息的成功与失败
 						callback.messageResponse(RequestType.messagetrue, json,
 								json);

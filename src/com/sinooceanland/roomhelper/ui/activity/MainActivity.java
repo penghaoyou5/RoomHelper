@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
                 String account = TextUtil.getString(et_account);
                 String password = TextUtil.getString(et_password);
                 //TODO 这个该删掉
-//                startActivity(new Intent(MainActivity.this, TaskActivity.class));
+                startActivity(new Intent(MainActivity.this, TaskActivity.class));
                 requestNet.login(account, password, MainActivity.this);
             }
         });
@@ -70,6 +70,8 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
             startActivity(new Intent(MainActivity.this, TaskActivity.class));
             SpUtils.putString(MainActivity.this, ACCOUNT, TextUtil.getString(et_account)).commit();
             finish();
+        }else {
+            showToast("账号密码错误");
         }
 
     }

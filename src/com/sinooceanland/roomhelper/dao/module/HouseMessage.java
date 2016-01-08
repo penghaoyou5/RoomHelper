@@ -127,7 +127,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 	 */
 	public static class SpaceLayoutList extends BaseBean {
 		public String SpaceLayoutFullName;
-		public int SpaceLayoutCode;
+		public String SpaceLayoutCode;
 		public String SpaceLayoutName;
 		// TODO:原public List<AttachmentIDS> AttachmentIDS;
 		/**
@@ -145,11 +145,11 @@ public class HouseMessage extends HouseMessageBaseBean {
 			SpaceLayoutFullName = spaceLayoutFullName;
 		}
 
-		public int getSpaceLayoutCode() {
+		public String getSpaceLayoutCode() {
 			return SpaceLayoutCode;
 		}
 
-		public void setSpaceLayoutCode(int spaceLayoutCode) {
+		public void setSpaceLayoutCode(String spaceLayoutCode) {
 			SpaceLayoutCode = spaceLayoutCode;
 		}
 

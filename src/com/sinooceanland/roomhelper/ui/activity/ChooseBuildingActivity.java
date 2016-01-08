@@ -1,12 +1,9 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -14,28 +11,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.bean.ChooseHouseBean;
-import com.sinooceanland.roomhelper.control.bean.TaskListBean;
-import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData;
 import com.sinooceanland.roomhelper.control.taskdata.StatusBean;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.ui.common.CommonAdapter;
 import com.sinooceanland.roomhelper.ui.common.ViewHolder;
-import com.sinooceanland.roomhelper.ui.testdata.ExpandData;
-import com.sinooceanland.roomhelper.ui.testdata.TaskData;
-import com.sinooceanland.roomhelper.ui.testdata.TestTaskBean;
 import com.sinooceanland.roomhelper.ui.utils.MyProgressDialog;
-import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.weiget.expandlistview.ExpandListControler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jackson on 2015/12/17.
@@ -61,8 +50,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
     private MyProgressDialog mDialog;
 
 
-    private String tempCheckStatue = "-1";
-
+    private boolean mIsSearch =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +71,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
 
     private void setTextViewState(TextView tv, String state) {
         //TODO 这里修改判断状态
-        switch (Integer.valueOf( state)) {
+        switch (Integer.parseInt(state)) {
             case 0:
                 tv.setText("未验收");
                 tv.setBackgroundResource(R.drawable.btn_gray2);
@@ -114,15 +102,18 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (start >= 2) {
                     //TODO 这里去查询输入数据
+                    mIsSearch = true;
                     String msg = s.toString();
                     mDialog.showDialog(ChooseBuildingActivity.this);
                     List<HouseMessage> houseByHouseName = taskMyssageData.getHouseByHouseName(msg);
                     mDialog.dismissDialog();
-                    if (houseByHouseName == null && houseByHouseName.size() == 0) {
+                    if (houseByHouseName == null || houseByHouseName.size() == 0) {
                         mTv_msg.setVisibility(View.VISIBLE);
                         mAdapter.setData(null);
                         mAdapter.notifyDataSetChanged();
+
                     } else {
+                        mTv_msg.setVisibility(View.GONE);
                         mAdapter.setData(houseByHouseName);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -131,6 +122,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
                     mTv_msg.setVisibility(View.GONE);
                     mAdapter.setData(mList);
                     mAdapter.notifyDataSetChanged();
+                    mIsSearch = false;
                 }
             }
 
@@ -231,6 +223,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
         mRl_content.addView(mDoubleListView);
     }
 
+    private String checkStatu = "-1";
     private void initRightView() {
         mRightControler = new ExpandListControler(this);
         mDoubleListView = mRightControler.getDoubleListView(
@@ -244,9 +237,10 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id, StatusBean bean) {
                         mRightControler.dissmissDoubleList();
-                        //TODO 这里写点击右边的搜索内容
-                        List<HouseMessage> statueList = taskMyssageData.getListByStatue(mList, bean.id);
-                        mAdapter.setData(statueList);
+                        checkStatu = bean.id;
+                        mLoadTime = 1;
+                        mList = taskMyssageData.getHomeList(mLoadTime, checkStatu);
+                        mAdapter.setData(mList);
                         mAdapter.notifyDataSetChanged();
                     }
                 });
@@ -257,7 +251,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (Integer.valueOf( mAdapter.getData().get(position).CheckStauts)) {
+        switch (Integer.parseInt(mAdapter.getData().get(position).CheckStauts)) {
             case 0://未验收
                 HouseMessage houseMessage = mAdapter.getData().get(position);//TODO 这里拿到点击的bean 然后跳转测量房间
                 HouseMessageData.setHouseMessage(houseMessage);
@@ -284,15 +278,17 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private int loadTime = 0;
+    private int mLoadTime = 1;
 
     //--------滑动监听
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(mIsSearch)return;
         if (scrollState == SCROLL_STATE_IDLE) {//滑动停止了
             if (view.getLastVisiblePosition() == view.getCount() - 1) {//滑动到底部了
-                loadTime++;
-                mList.addAll(mList.size() - 1, taskMyssageData.getHomeList(loadTime));
+                mLoadTime++;
+                List<HouseMessage> statueList = taskMyssageData.getListByStatue(mList, checkStatu);
+                mList.addAll(mList.size() - 1, statueList);
                 mAdapter.setData(mList);
                 mAdapter.notifyDataSetChanged();
             }

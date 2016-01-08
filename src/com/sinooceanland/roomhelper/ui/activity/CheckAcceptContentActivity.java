@@ -39,8 +39,8 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
     }
 
     private void initListener() {
-         findViewById(R.id.btn_yes).setOnClickListener(this);
-       findViewById(R.id.btn_no).setOnClickListener(this);
+        findViewById(R.id.btn_yes).setOnClickListener(this);
+        findViewById(R.id.btn_no).setOnClickListener(this);
     }
 
     private void initData() {
@@ -56,8 +56,6 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
         vp_content = (ViewPager)findViewById(R.id.vp_content);
         vp_content.setAdapter(mAdapter);
         vp_content.setOnPageChangeListener(this);
-        Button btn_yes = (Button) findViewById(R.id.btn_yes);
-        Button btn_no = (Button) findViewById(R.id.btn_no);
     }
 
     @Override
@@ -69,8 +67,9 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_yes:
-                boolean sure2 = mAdapter.getDatas().get(mCurrentPage).setPictureIsSure(0);
                 CheckViewPagerAdapter.ViewHolder holder = (CheckViewPagerAdapter.ViewHolder) vp_content.findViewById(mCurrentPage).getTag();
+               if(holder.tv_state.getText().toString().equals("YES"))return;
+                boolean sure2 = mAdapter.getDatas().get(mCurrentPage).setPictureIsSure(0);
                 holder.tv_state.setText("YES");
                 holder.tv_state.setVisibility(View.VISIBLE);
                 if(sure2){
@@ -78,8 +77,9 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
                 }
                 break;
             case R.id.btn_no:
-                boolean sure = mAdapter.getDatas().get(mCurrentPage).setPictureIsSure(1);
                 CheckViewPagerAdapter.ViewHolder holder2 = (CheckViewPagerAdapter.ViewHolder) vp_content.findViewById(mCurrentPage).getTag();
+                if(holder2.tv_state.getText().toString().equals("NO"))return;
+                boolean sure = mAdapter.getDatas().get(mCurrentPage).setPictureIsSure(1);
                 holder2.tv_state.setText("NO");
                 holder2.tv_state.setVisibility(View.VISIBLE);
                 if(sure){

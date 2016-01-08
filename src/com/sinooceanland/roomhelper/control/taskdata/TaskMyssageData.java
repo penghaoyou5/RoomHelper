@@ -260,6 +260,9 @@ public class TaskMyssageData {
 		List<HouseMessage> taskList = bigJsonManager.getTaskList();
 		for (int i = 0; i < taskList.size(); i++) {
 			HouseMessage houseMessage = taskList.get(i);
+			if(TextUtils.isEmpty(houseMessage.ActBuildingName)||TextUtils.isEmpty(houseMessage.ActHouseName)){
+				return;
+			}
 			Integer actBuildingName = Integer
 					.valueOf(houseMessage.ActBuildingName);
 			Integer actHouseName = Integer.valueOf(houseMessage.ActHouseName);
@@ -373,5 +376,34 @@ public class TaskMyssageData {
 			}
 		};
 		return messages;
+	}
+	
+	/**
+	 * @return
+	 * 判断当前的任务是否已经完成
+	 * 对每个房间进行循环遍历
+	 */
+	boolean isFinish;
+	public boolean  currentTaskIsFinish(){
+		isFinish = true;
+		new TasMessagetUtil(taskMessage) {
+			@Override
+			public boolean forKey(String key) {
+				BigJsonManager bigJsonManager = getBigJsonNoAddMap(key);
+				List<HouseMessage> taskList = bigJsonManager.getTaskList();
+				for (int i = 0; i < taskList.size(); i++) {
+					HouseMessage houseMessage = taskList.get(i);
+					if(!"2".equals(houseMessage.CheckStauts)){
+						isFinish = false;
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+		if(isFinish){
+			SpUtil.putBoolean(taskMessage.TaskCode+SpKey.TASKSTATUE, true);
+		}
+		return isFinish;
 	}
 }

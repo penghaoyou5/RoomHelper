@@ -132,19 +132,19 @@ public class testTTT extends AndroidTestCase {
 		
 public void  testTaskDETAIL(){
 			iniSp();
-	new RequestNet(mContext).getTaskDetail("d", "", "", new BaseCallBack<String>() {
+	new RequestNet(mContext).getTaskDetail("7f96e07e-1c63-4cfa-9af1-e7160faec91b", "D605C84C-E1CB-408A-AA98-385244FCFA4D", "C3932158-29E4-4DF4-9194-41DBAC865CAF", new BaseCallBack<String>() {
 			
 		@Override
 		public void messageResponse(RequestType requestType, String bean,
 				String message) {
 			TaskDetailBean fromJson = BaseNet.getGson().fromJson(bean, TaskDetailBean.class);
-			System.out.println(fromJson);
+			System.out.println("mmmmm"+fromJson);
 		}
 	});
 	
-	TaskMyssageData.getBigJson("");
+//	TaskMyssageData.getBigJson("");
 	
-		}
+}
 	
 	
 //	 public void testAdd() throws Exception {  

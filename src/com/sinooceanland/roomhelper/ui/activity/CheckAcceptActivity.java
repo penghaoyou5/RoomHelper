@@ -83,6 +83,7 @@ public class CheckAcceptActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()){
             case R.id.btn_check:
                 startActivity(new Intent(this,TakePhotoActivity.class));
+                finish();
                 break;
 
         }

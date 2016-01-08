@@ -16,6 +16,7 @@ import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData;
 import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData.*;
+import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.ui.UIContacts;
 import com.sinooceanland.roomhelper.ui.adapter.MyViewPagerAdapter;
 import com.sinooceanland.roomhelper.ui.utils.BitmapUtils;
@@ -287,7 +288,7 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 initBottom();
                 break;
             case R.id.tv_title_complete:
-                if(!currentPicIsSure())return;
+                if(!isCurrentLayoutSure())return;
                 HouseMessageData houseMessageData = HouseMessageData.getInstance();
                 houseMessageData.setCheckStautsSure();
                 startActivity(new Intent(this,ChooseBuildingActivity.class));
@@ -467,6 +468,7 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void finish() {
         super.finish();
+        TaskMyssageData.saveModifyBigJson();
         vp_content.setAdapter(null);
         mAdapter = null;
     }
@@ -477,6 +479,7 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
 
         ViewHolder holder = (ViewHolder) getCurrentView().getTag();
         holder.tv.setText(question);
+        holder.tv.setVisibility(View.VISIBLE);
     }
 
     /**

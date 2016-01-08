@@ -183,9 +183,15 @@ public final class R {
         public static final int app_name=0x7f060000;
     }
     public static final class style {
-        public static final int add_question=0x7f070001;
         /**  Base application theme. 
+     <item name="android:windowNoTitle">true</item>
+    <item name="android:foreground">#FF000000</item>
+    <item name="android:background">#FFFFFFFF</item>
+     <item name="android:textColor">@color/transparent</item>
+    <item name="android:textSize">14sp</item> 
          */
-        public static final int btn_default=0x7f070000;
+        public static final int CustomTheme=0x7f070000;
+        public static final int add_question=0x7f070002;
+        public static final int btn_default=0x7f070001;
     }
 }
