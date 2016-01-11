@@ -33,6 +33,21 @@ public class SpKey {
 		return SpUtil.getString(CURRENTTASKMESSAGE, "");
 	}
 	
+	/**
+	 * @return  当前任务已经完成的房间数
+	 * 可能回传回来已经有已完成房间
+	 */
+	public static final String getTaskHouseFinalCount(){
+		return SpUtil.getString(CURRENTTASKMESSAGE, "")+"houseFinalCount";
+	}
+	
+	/**
+	 * @return  当前任务的房间总数
+	 */
+	public static final String getTaskHouseCount(){
+		return SpUtil.getString(CURRENTTASKMESSAGE, "")+"houseCount";
+	}
+	
 	/**当前进入的某个工程*/
 	public static final String BUILDINFO = "BuildInfo";
 	public static final String getBuildInfoKey(String taskCode){

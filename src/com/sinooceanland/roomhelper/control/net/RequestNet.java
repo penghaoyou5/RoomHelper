@@ -3,6 +3,7 @@ package com.sinooceanland.roomhelper.control.net;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
@@ -27,14 +28,13 @@ import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
  * @author peng 主要进行网络请求与文件下载的类
  */
 public class RequestNet extends BaseNet {
-	
-	
 
 	private Context context;
 
-	public RequestNet(Context context){
+	public RequestNet(Context context) {
 		this.context = context;
 	}
+
 	/**
 	 * 进行登陆的方法
 	 * 
@@ -48,7 +48,7 @@ public class RequestNet extends BaseNet {
 	public void login(final String username, String password,
 			final BaseCallBack<LoginBean> callBack) {
 		RequestParams requestParams = new RequestParams();
-//		requestParams.add("username", username);
+		// requestParams.add("username", username);
 		requestParams.add("username", "v-gouying");
 		requestParams.add("password", password);
 		baseRequest(requestParams, NetUrl.LOGIN, new BaseCallBack<LoginBean>() {
@@ -75,7 +75,7 @@ public class RequestNet extends BaseNet {
 	 *            请求回掉 获得TaskList
 	 */
 	public void taskList(final BaseCallBack<TaskList> callBack) {
-		
+
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("userid", SpKey.getUerId());
 		baseRequest(requestParams, NetUrl.TASK_LIST,
@@ -86,8 +86,7 @@ public class RequestNet extends BaseNet {
 							TaskListBean bean, String message) {
 						if (requestType == RequestType.messagetrue) {
 							// 使用用户id存储任务列表
-							SpUtil.putString(SpKey.getUerId(),
-								message);
+							SpUtil.putString(SpKey.getUerId(), message);
 						}
 						callBack.messageResponse(requestType, new TaskList(),
 								message);
@@ -114,6 +113,7 @@ public class RequestNet extends BaseNet {
 
 	int requestCount;
 	int responceCount;
+
 	/**
 	 * 获取模板明细 并进行存根据任务信息进行任务的下载
 	 * 
@@ -123,16 +123,17 @@ public class RequestNet extends BaseNet {
 	 *            请求回掉 若全部成功则成功 有一个失败则进行失败回掉
 	 */
 	public void downTask(final Context context, final TaskMessage taskMessage,
-			final BaseCallBack<String> callBack,final ImageCallBack imageCallBack) {
-		//这是请求正在请求中的次数
+			final BaseCallBack<String> callBack,
+			final ImageCallBack imageCallBack) {
+		// 这是请求正在请求中的次数
 		requestCount = 0;
-		responceCount=0;
+		responceCount = 0;
 		for (int i = 0; i < taskMessage.BuildingList.size(); i++) {
 			final BuildingList buildingList = taskMessage.BuildingList.get(i);
 			for (int j = 0; j < buildingList.UnitCode.size(); j++) {
 				requestCount++;
-				System.out.println("requestCount"+requestCount);
-//				if(requestCount>=1)return;
+				System.out.println("requestCount" + requestCount);
+				// if(requestCount>=1)return;
 				final String UnitCode = buildingList.UnitCode.get(j);
 				getTaskDetail(taskMessage.TaskCode, buildingList.BuildingCode,
 						UnitCode, new BaseCallBack<String>() {
@@ -140,27 +141,33 @@ public class RequestNet extends BaseNet {
 							public void messageResponse(
 									RequestType requestType, String bean,
 									String message) {
-								System.out.println("bean"+bean);
+								System.out.println("bean" + bean);
 								if (requestType == RequestType.messagetrue) {
 									responceCount++;
-									String key = taskMessage.TaskCode + "+"+ buildingList.BuildingCode
-											+ "+" + UnitCode;
-									BigJsonManager bigJsonManager = new BigJsonManager(context,
-											key, bean);
-									
-									//TODO:只让利强写一个只根据键存值的方法
-									List<HouseMessage> taskList = bigJsonManager.getTaskList();
-									BigJsonManager findManagerByKey = BaseJsonManager.findManagerByKey(context, key, BigJsonManager.class);
-									List<HouseMessage> taskList2 = findManagerByKey.getTaskList();
+									String key = taskMessage.TaskCode + "+"
+											+ buildingList.BuildingCode + "+"
+											+ UnitCode;
+									BigJsonManager bigJsonManager = new BigJsonManager(
+											context, key, bean);
+
+									// TODO:只让利强写一个只根据键存值的方法
+									List<HouseMessage> taskList = bigJsonManager
+											.getTaskList();
+									BigJsonManager findManagerByKey = BaseJsonManager
+											.findManagerByKey(context, key,
+													BigJsonManager.class);
+									List<HouseMessage> taskList2 = findManagerByKey
+											.getTaskList();
 									System.out.println("完成测试");
-									
+
 									if (requestCount == responceCount) {
-										SpUtil.putBoolean(taskMessage.TaskCode, true);
+										SpUtil.putBoolean(taskMessage.TaskCode,
+												true);
 										callBack.messageResponse(requestType,
 												"下载成功", "下载成功");
 										System.gc();
-										//TODO:开始进行图片下载  这是以后做的
-//										downLoadImage(taskMessage,imageCallBack);
+										// TODO:开始进行图片下载 这是以后做的
+										// downLoadImage(taskMessage,imageCallBack);
 									}
 								} else {
 									callBack.messageResponse(requestType, bean,
@@ -180,75 +187,104 @@ public class RequestNet extends BaseNet {
 	 *            请求回掉
 	 */
 	public void getprojectProblemByNet(final BaseCallBack<TreeDataBean> callBack) {
-		baseStringRequest(new RequestParams(), NetUrl.PROJECT_PROBLEM,
-				new BaseCallBack<String>() {
+		String str = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
+		if(!TextUtils.isEmpty(str)){
+			//如果缓存已经存在就不进行网络请求
+			TreeDataBean problemBean = getGson().fromJson(str, TreeDataBean.class);
+			callBack.messageResponse(RequestType.messagetrue,
+					problemBean, null);
+			return;
+		}
+		getStringRequest(NetUrl.PROJECT_PROBLEM, new BaseCallBack<String>() {
 
-					@Override
-					public void messageResponse(RequestType requestType,
-							String bean, String message) {
-						if(BaseNet.isTest){
-							bean = message = GetAssertUtil.readAssertResource(context, "problemList");
-						}
-						TreeDataBean problemBean = null;
-						if (requestType == RequestType.messagetrue) {
-							SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
-							problemBean = getGson().fromJson(bean, TreeDataBean.class);
-						}
-						callBack.messageResponse(requestType, problemBean, message);
-					}
-				});
+			@Override
+			public void messageResponse(RequestType requestType, String bean,
+					String message) {
+				TreeDataBean problemBean = null;
+				
+				if (requestType == RequestType.messagetrue) {
+					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
+				} else {
+					bean = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
+				}
+				
+				
+				if (!TextUtils.isEmpty(bean)) {
+					problemBean = getGson().fromJson(bean, TreeDataBean.class);
+					callBack.messageResponse(RequestType.messagetrue,
+							problemBean, message);
+				} else {
+					callBack.messageResponse(RequestType.messagefalse, problemBean, message);
+				}
+
+			}
+		});
 	}
-	int imagecurrent ;
-	int imagecount ;
+
+	int imagecurrent;
+	int imagecount;
+
 	/**
 	 * 进行图片的下载
-	 * @param taskMessage 
+	 * 
+	 * @param taskMessage
 	 * @param imageCallBack
 	 */
-	public void  downLoadImage(TaskMessage taskMessage, final ImageCallBack imageCallBack){
-		 new TasMessagetUtil(taskMessage) {
-			
+	public void downLoadImage(TaskMessage taskMessage,
+			final ImageCallBack imageCallBack) {
+		new TasMessagetUtil(taskMessage) {
+
 			@Override
 			public boolean forKey(String key) {
-				BigJsonManager bigJsonManager = BaseJsonManager.findManagerByKey(context, key,BigJsonManager.class);
+				BigJsonManager bigJsonManager = BaseJsonManager
+						.findManagerByKey(context, key, BigJsonManager.class);
 				List<HouseMessage> taskList = bigJsonManager.getTaskList();
 				for (int i = 0; i < taskList.size(); i++) {
 					HouseMessage houseMessage = taskList.get(i);
-					List<LastCheckProblemList> lastCheckProblemList = houseMessage.getLastCheckProblemList();
+					List<LastCheckProblemList> lastCheckProblemList = houseMessage
+							.getLastCheckProblemList();
 					for (int j = 0; j < lastCheckProblemList.size(); j++) {
-						List<String> attachmentIDS = lastCheckProblemList.get(j).AttachmentIDS;
+						List<String> attachmentIDS = lastCheckProblemList
+								.get(j).AttachmentIDS;
 						for (int k = 0; k < attachmentIDS.size(); k++) {
 							imagecount++;
-							downOneImage(attachmentIDS.get(k),new BaseCallBack<String>() {
+							downOneImage(attachmentIDS.get(k),
+									new BaseCallBack<String>() {
 
-								@Override
-								public void messageResponse(
-										RequestType requestType, String bean,
-										String message) {
-									if(requestType==RequestType.messagetrue){
-										imagecurrent++;
-										imageCallBack.imageResponse(RequestType.loading, imagecount, imagecurrent);
-										if(imagecurrent<=0){
-											imageCallBack.imageResponse(RequestType.messagetrue, imagecount, imagecurrent);
+										@Override
+										public void messageResponse(
+												RequestType requestType,
+												String bean, String message) {
+											if (requestType == RequestType.messagetrue) {
+												imagecurrent++;
+												imageCallBack.imageResponse(
+														RequestType.loading,
+														imagecount,
+														imagecurrent);
+												if (imagecurrent <= 0) {
+													imageCallBack
+															.imageResponse(
+																	RequestType.messagetrue,
+																	imagecount,
+																	imagecurrent);
+												}
+											}
 										}
-									}
-								}
-							});
-							
+									});
+
 						}
-						
+
 					}
 				}
 				return false;
 			}
 		};
 	}
-	
-	
+
 	/**
 	 * 获得图片文件
 	 */
-	public void downOneImage(String id,BaseCallBack<String> callBack) {
+	public void downOneImage(String id, BaseCallBack<String> callBack) {
 		baseDownImage(id, NetUrl.PICTURE_DOWN, callBack);
 	}
 }

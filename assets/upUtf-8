@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>远洋接口文档详细接口</title>
+</head>
+<body>
+<form  action="http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/CallBackPerCheckInfo" method="post" >
+data: <input type="text" name="data" value="{"SuccessMsg":"true","ErrorMsg":"","Code":"369f9841-27e9-4d12-9e5c-0798379567fe","TaskCode":"67fb45b5-ed6c-46ab-97b5-9036514d9990","list":[{"BuildingCode":"D605C84C-E1CB-408A-AA98-385244FCFA4D","PreBuildingName":"2-地上","ActBuildingName":"","UnitCode":"02EF2EB2-E672-491D-A1A3-27FAF4E9991D","PreUnitName":"2","ActUnitName":"","HouseCode":"DD007DCD-9944-4EC0-9164-4039BA781923","PreHouseName":"302","ActHouseName":"","PreHouseFullName":"2-地上#2-302","ActHouseFullName":"#-","PropertTypeName":"普通房","OwnerNames":"推荐人","CheckRound":1,"SpaceLayoutList":[{"SpaceLayoutCode":"5C6CD334-F4A8-4A52-B9BE-4D4161879CC9","SpaceLayoutName":"卧室","SpaceLayoutFullName":"楼内-套内空间-卧室","EnginTypeList":[],"AttachmentIDS":[]},{"SpaceLayoutCode":"4D2AE771-78CC-4EE2-AD11-BA831ACE9686","SpaceLayoutName":"起居室","SpaceLayoutFullName":"楼内-套内空间-起居室","EnginTypeList":[],"AttachmentIDS":[]},{"SpaceLayoutCode":"797A3F58-559D-4808-82A9-4650EB37BC7D","SpaceLayoutName":"厨房","SpaceLayoutFullName":"楼内-套内空间-厨房","EnginTypeList":[],"AttachmentIDS":[]},{"SpaceLayoutCode":"4503763B-8177-45CA-952F-143201CA5393","SpaceLayoutName":"卫生间","SpaceLayoutFullName":"楼内-套内空间-卫生间","EnginTypeList":[],"AttachmentIDS":[]},{"SpaceLayoutCode":"34AA2FAB-D611-4272-8EF0-D716FFB54948","SpaceLayoutName":"阳台","SpaceLayoutFullName":"楼内-套内空间-阳台","EnginTypeList":[],"AttachmentIDS":[]}],"_lastCheckProblemList":[],"LastCheckProblemList":[],"SaleRecordCode":"A3A03DEC-5581-4B72-805E-2CCF885A6FD1","CheckStauts":0}]}" /> <br/>
+<input type="submit" value = "提交">
+</form>
+</body>
+</html>

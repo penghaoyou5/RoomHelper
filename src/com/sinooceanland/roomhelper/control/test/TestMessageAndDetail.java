@@ -25,6 +25,13 @@ public class TestMessageAndDetail extends AndroidTestCase {
 		SpUtil.init(mContext);
 		SpUtilCurrentTaskInfo.init(mContext);
 	}
+	
+	public void testUpMessage(){
+		
+	}
+	
+	
+	
 
 	String code;
 

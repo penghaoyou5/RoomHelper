@@ -11,7 +11,8 @@ public class ChooseHouseBean {
     /**
      * 楼栋号
      */
-    public int build;
+    public String build;
     public int buildSize;
-    public List<Integer> houseCode;
+    public List<String> houseCode;
+    public List<String> OnlyHouseCode;
 }

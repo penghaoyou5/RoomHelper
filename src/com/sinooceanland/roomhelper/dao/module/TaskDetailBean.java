@@ -15,7 +15,9 @@ public class TaskDetailBean extends BaseBean {
 	public int finishState = 0;
 	public int uploadState = 0;
 	public String TaskState;
-	
+	public String Code;
+	public String TaskCode;
+	public String UserId;
 	
 	public String getTaskState() {
 		return TaskState;

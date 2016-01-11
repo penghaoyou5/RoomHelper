@@ -13,7 +13,6 @@ import com.sinooceanland.roomhelper.dao.base.HouseMessageBaseBean;
  */
 public class HouseMessage extends HouseMessageBaseBean {
 	public String PropertTypeName;
-	public String ActBuildingName;
 	public String SaleRecordCode;
 	public List<LastCheckProblemList> LastCheckProblemList;
 	public List<SpaceLayoutList> SpaceLayoutList;
@@ -270,11 +269,11 @@ public class HouseMessage extends HouseMessageBaseBean {
 	}
 
 	public String getActBuildingName() {
-		return ActBuildingName;
+		return PreBuildingName;
 	}
 
 	public void setActBuildingName(String actBuildingName) {
-		ActBuildingName = actBuildingName;
+		PreBuildingName = actBuildingName;
 	}
 
 	public String getSaleRecordCode() {

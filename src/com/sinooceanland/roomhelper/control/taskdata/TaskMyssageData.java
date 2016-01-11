@@ -208,6 +208,8 @@ public class TaskMyssageData {
 	}
 
 
+	//已经完成的房间数
+	int haveFinishouse = 0;
 	/**
 	 * 得到楼栋信息的双级列表 第一层楼栋信息 第二层房间信息
 	 * 
@@ -218,12 +220,12 @@ public class TaskMyssageData {
 		String str = SpUtilCurrentTaskInfo.getString(SpKey.getBuildInfoKey(taskMessage.TaskCode), null);
 		//判断是否已经有此任务对应的楼栋列表信息  如果有就直接用
 		if(!TextUtils.isEmpty(str)){
-			 ChooseHouseBeanList chooseHouseBeanList = BaseNet.getGson().fromJson(str, ChooseHouseBeanList.class);
+			ChooseHouseBeanList chooseHouseBeanList = BaseNet.getGson().fromJson(str, ChooseHouseBeanList.class);
 			return chooseHouseBeanList.date;
 		}
 		
 		//这里是进行本地循环查询的方法       循环遍历向集合中添加元素
-		final Map<Integer, TreeSet<Integer>> map = new TreeMap<Integer, TreeSet<Integer>>();
+		final Map<String, ArrayList<String>> map = new TreeMap<String, ArrayList<String>>();
 		new TasMessagetUtil(taskMessage) {
 			@Override
 			public boolean forKey(String key) {
@@ -235,14 +237,24 @@ public class TaskMyssageData {
 		ArrayList<ChooseHouseBean> arrayList = new ArrayList<ChooseHouseBean>();
 		
 		
-		Iterator<Integer> it = map.keySet().iterator();
+		Iterator<String> it = map.keySet().iterator();
 		while (it.hasNext()) {
 			//it.next()得到的是key，tm.get(key)得到obj
-			Integer key = it.next();
-			TreeSet<Integer> value = map.get(key);
+			String key = it.next();
+			ArrayList<String> value = map.get(key);
 			ChooseHouseBean bean = new ChooseHouseBean();
 			bean.build = key;
-			bean.houseCode = new ArrayList<Integer>(value);
+//			bean.houseCode = new ArrayList<String>(value);
+			for (int i = 0; i < value.size(); i++) {
+				String strValue = value.get(i);
+				String[] split = strValue.split("fengexian");
+				if(bean.houseCode==null||bean.houseCode.size()==0){
+					bean.houseCode = new ArrayList<String>();
+					bean.OnlyHouseCode = new ArrayList<String>();
+				}
+				bean.houseCode.add(split[0]);
+				bean.OnlyHouseCode.add(split[1]);
+			}
 			bean.buildSize = bean.houseCode.size();
 			arrayList.add(bean);
 		}
@@ -252,23 +264,29 @@ public class TaskMyssageData {
 		beanList.date = arrayList;
 		String json = BaseNet.getGson().toJson(beanList);
 		SpUtilCurrentTaskInfo.putString(SpKey.getBuildInfoKey(taskMessage.TaskCode), json);
+		SpUtilCurrentTaskInfo.putInt(SpKey.getTaskHouseFinalCount(),haveFinishouse);
 		return arrayList;
 	}
 
-	private void addChooseHouse(Map<Integer, TreeSet<Integer>> map, String key) {
+	private void addChooseHouse(Map<String, ArrayList<String>> map, String key) {
 		BigJsonManager bigJsonManager = getBigJsonNoAddMap(key);
+		bigJsonManager.getTaskDetailBean().UserId = SpKey.getUerId();
+		bigJsonManager.resetJson(BaseNet.getGson().toJson(bigJsonManager.getTaskDetailBean()));
 		List<HouseMessage> taskList = bigJsonManager.getTaskList();
 		for (int i = 0; i < taskList.size(); i++) {
 			HouseMessage houseMessage = taskList.get(i);
-			if(TextUtils.isEmpty(houseMessage.ActBuildingName)||TextUtils.isEmpty(houseMessage.ActHouseName)){
-				return;
+			if("2".equals(houseMessage.CheckStauts)){
+				haveFinishouse++;
 			}
-			Integer actBuildingName = Integer
-					.valueOf(houseMessage.ActBuildingName);
-			Integer actHouseName = Integer.valueOf(houseMessage.ActHouseName);
-			TreeSet<Integer> treeSet = map.get(actBuildingName);
+			if(TextUtils.isEmpty(houseMessage.PreBuildingName)||TextUtils.isEmpty(houseMessage.PreHouseName)){
+				break;
+			}
+			String actBuildingName = houseMessage.PreBuildingName;
+			String actHouseName = houseMessage.PreUnitName+"-"+houseMessage.PreHouseName+"fengexian"+houseMessage.HouseCode;
+			
+			ArrayList<String> treeSet = map.get(actBuildingName);
 			if (treeSet == null) {
-				treeSet = new TreeSet<Integer>();
+				treeSet = new ArrayList<String>();
 				map.put(actBuildingName, treeSet);
 			}
 			treeSet.add(actHouseName);
@@ -332,7 +350,7 @@ public class TaskMyssageData {
 	 * @param Housename 房间号
 	 * @return 一个房间
 	 */
-	public HouseMessage getHouseByBuildNameAndHouseName(final String buildName,final String Housename){
+	public HouseMessage getHouseByBuildNameAndHouseName(final ChooseHouseBean bean,final int position){
 //		if(BaseNet.isTest)  为什么会出错？  角标从一开始
 //		return getHomeList(0).get(0);
 		new TasMessagetUtil(taskMessage) {
@@ -342,7 +360,8 @@ public class TaskMyssageData {
 				List<HouseMessage> taskList = jsonManager.getTaskList();
 				for (int i = 0; i < taskList.size(); i++) {
 					HouseMessage houseMessage = taskList.get(i);
-					if(buildName.equals( houseMessage.ActBuildingName)&&Housename.equals(houseMessage.ActHouseName)){
+//					if(buildName.equals( houseMessage.PreBuildingName)&&Housename.equals(houseMessage.PreHouseName)){
+					if(bean.OnlyHouseCode.get(position).equals(houseMessage.HouseCode)){
 						message = houseMessage;
 						return true;
 					}
@@ -367,9 +386,8 @@ public class TaskMyssageData {
 				List<HouseMessage> taskList = jsonManager.getTaskList();
 				for (int i = 0; i < taskList.size(); i++) {
 					HouseMessage houseMessage = taskList.get(i);
-					if(Housename.equals(houseMessage.ActHouseName)){
+					if(houseMessage.PreHouseFullName.contains(Housename)){
 						messages.add(houseMessage);
-						return false;
 					}
 				}
 				return false;
@@ -405,5 +423,9 @@ public class TaskMyssageData {
 			SpUtil.putBoolean(taskMessage.TaskCode+SpKey.TASKSTATUE, true);
 		}
 		return isFinish;
+	}
+	
+	public TaskMessage getTaskMessage(){
+		return taskMessage;
 	}
 }

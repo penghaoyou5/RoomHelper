@@ -5,39 +5,40 @@ package com.sinooceanland.roomhelper.dao.base;
  * 房屋信息的基类
  */
 public abstract class HouseMessageBaseBean extends BaseBean {
+	public String ActBuildingName;
 	public String PreBuildingName;
-	public String ActHouseName;
 	public String PreHouseName;
+	public String ActHouseName;
 	//int
 	public String CheckRound;
 	public String HouseCode;
 	
-	public String PreHouseFullName;
-	public String PreUnitName;
-	public String BuildingCode;
-	public String ActUnitName;
 	public String ActHouseFullName;
+	public String ActUnitName;
+	public String BuildingCode;
+	public String PreUnitName;
+	public String PreHouseFullName;
 	public String UnitCode;
 	//int
 	public String CheckStauts;
 	public String OwnerNames;
 	public String getPreBuildingName() {
-		return PreBuildingName;
+		return ActBuildingName;
 	}
 	public void setPreBuildingName(String preBuildingName) {
-		PreBuildingName = preBuildingName;
+		ActBuildingName = preBuildingName;
 	}
 	public String getActHouseName() {
-		return ActHouseName;
-	}
-	public void setActHouseName(String actHouseName) {
-		ActHouseName = actHouseName;
-	}
-	public String getPreHouseName() {
 		return PreHouseName;
 	}
+	public void setActHouseName(String actHouseName) {
+		PreHouseName = actHouseName;
+	}
+	public String getPreHouseName() {
+		return ActHouseName;
+	}
 	public void setPreHouseName(String preHouseName) {
-		PreHouseName = preHouseName;
+		ActHouseName = preHouseName;
 	}
 	public String getCheckRound() {
 		return CheckRound;
@@ -52,16 +53,16 @@ public abstract class HouseMessageBaseBean extends BaseBean {
 		HouseCode = houseCode;
 	}
 	public String getPreHouseFullName() {
-		return PreHouseFullName;
+		return ActHouseFullName;
 	}
 	public void setPreHouseFullName(String preHouseFullName) {
-		PreHouseFullName = preHouseFullName;
+		ActHouseFullName = preHouseFullName;
 	}
 	public String getPreUnitName() {
-		return PreUnitName;
+		return ActUnitName;
 	}
 	public void setPreUnitName(String preUnitName) {
-		PreUnitName = preUnitName;
+		ActUnitName = preUnitName;
 	}
 	public String getBuildingCode() {
 		return BuildingCode;
@@ -70,16 +71,16 @@ public abstract class HouseMessageBaseBean extends BaseBean {
 		BuildingCode = buildingCode;
 	}
 	public String getActUnitName() {
-		return ActUnitName;
+		return PreUnitName;
 	}
 	public void setActUnitName(String actUnitName) {
-		ActUnitName = actUnitName;
+		PreUnitName = actUnitName;
 	}
 	public String getActHouseFullName() {
-		return ActHouseFullName;
+		return PreHouseFullName;
 	}
 	public void setActHouseFullName(String actHouseFullName) {
-		ActHouseFullName = actHouseFullName;
+		PreHouseFullName = actHouseFullName;
 	}
 	public String getUnitCode() {
 		return UnitCode;

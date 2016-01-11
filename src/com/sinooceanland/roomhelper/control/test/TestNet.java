@@ -23,10 +23,10 @@ public class TestNet {
 	private static HouseMessage homeMessage(int i) {
 		HouseMessage houseMessage = new HouseMessage();
 		
-		houseMessage.ActBuildingName = "18";
-		houseMessage.ActHouseName = "2302"+i;
-		houseMessage.ActUnitName="2";
-		houseMessage.ActHouseFullName = "18#2-230"+i;
+		houseMessage.PreBuildingName = "18";
+		houseMessage.PreHouseName = "2302"+i;
+		houseMessage.PreUnitName="2";
+		houseMessage.PreHouseFullName = "18#2-230"+i;
 		houseMessage.PropertTypeName = "普通房";
 		houseMessage.CheckRound = "2";
 		houseMessage.SpaceLayoutList = new ArrayList<HouseMessage.SpaceLayoutList>();

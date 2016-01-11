@@ -137,7 +137,7 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
         mAdapter = new CommonAdapter<HouseMessage>(this, mList, R.layout.item_choose_building) {
             @Override
             protected void getView(ViewHolder holder, HouseMessage bean, int position) {
-                holder.setText(R.id.tv_room, bean.ActHouseName);
+                holder.setText(R.id.tv_room, bean.PreHouseFullName);
                 TextView tv_state = holder.<TextView>getView(R.id.tv_state);
                 setTextViewState(tv_state, bean.CheckStauts);
             }
@@ -193,31 +193,34 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
     }
 
 
-    private int tempBuild = -1;
+    private String tempBuild = "";
+    private ChooseHouseBean chooseHouseBean;
 
     private void initLeftView() {
         mLeftControler = new ExpandListControler(this);
         mDoubleListView = mLeftControler.getDoubleListView(
                 new ExpandListControler.MyOnItemClickListener<Object>() {
-                    @Override
+                   
+
+					@Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id, Object bean) {
-                        //TODO 这里写点击后出现的数据，用来展示二级菜单
-                        ChooseHouseBean chooseHouseBean = mBuilds.get(position);
+                        chooseHouseBean = mBuilds.get(position);
                         tempBuild = chooseHouseBean.build;
                         mLeftControler.showListView(ExpandListControler.Position.right, chooseHouseBean.houseCode, true);
                     }
                 },
-                new ExpandListControler.MyOnItemClickListener<Integer>() {
+                new ExpandListControler.MyOnItemClickListener<String>() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id, Integer bean) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id, String bean) {
                         mLeftControler.dissmissDoubleList();
                         //TODO 这里写点击704房间的搜索
                         HouseMessage houseMessage = taskMyssageData.getHouseByBuildNameAndHouseName(
-                                String.valueOf(tempBuild),
-                                String.valueOf(bean));
+                        		chooseHouseBean,
+                        		position);
                         ArrayList<HouseMessage> arr = new ArrayList<HouseMessage>();
                         arr.add(houseMessage);
                         mAdapter.setData(arr);
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
         mRl_content.addView(mDoubleListView);
@@ -287,7 +290,8 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
         if (scrollState == SCROLL_STATE_IDLE) {//滑动停止了
             if (view.getLastVisiblePosition() == view.getCount() - 1) {//滑动到底部了
                 mLoadTime++;
-                List<HouseMessage> statueList = taskMyssageData.getListByStatue(mList, checkStatu);
+//                List<HouseMessage> statueList = taskMyssageData.getListByStatue(mList, checkStatu);
+                List<HouseMessage> statueList = taskMyssageData.getHomeList(mLoadTime, checkStatu);
                 mList.addAll(mList.size() - 1, statueList);
                 mAdapter.setData(mList);
                 mAdapter.notifyDataSetChanged();

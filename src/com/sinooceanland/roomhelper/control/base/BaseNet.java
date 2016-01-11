@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 
 import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,8 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.ResponseHandlerInterface;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
@@ -176,7 +180,7 @@ public class BaseNet {
 					public void onFailure(int statusCode, Header[] headers,
 							byte[] responseBody, Throwable error) {
 						callback.messageResponse(RequestType.connectFailure,
-								null, new String(responseBody));
+								null, null);
 					}
 				});
 	}
@@ -223,31 +227,7 @@ public class BaseNet {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
 							byte[] responseBody) {
-//						System.out.println("ggg"+responseBody);
-//						String string = responseBody.toString();
-//						
-//						System.out.println("ggg"+string);
-//						new InputStreamReader(in, charset);
-//						getGson().fromJson(json, classOfT)
-						File file = new File(SDUtils.getSDCardPath()+"roomhelper.txt");
-						boolean exists = file.exists();
-						if(!exists){
-							try {
-								file.createNewFile();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
 						String json = new String(responseBody);
-						PrintStream out = null;
-						try {
-							out = new PrintStream(new FileOutputStream(file));
-							out.print(json);
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						}
-						
-						System.out.println("json"+json);
 						// 暂时没有区分消息的成功与失败
 						callback.messageResponse(RequestType.messagetrue, json,
 								json);
@@ -257,7 +237,7 @@ public class BaseNet {
 					public void onFailure(int statusCode, Header[] headers,
 							byte[] responseBody, Throwable error) {
 						callback.messageResponse(RequestType.connectFailure,
-								null, new String(responseBody));
+								null,null);
 					}
 				});
 	}
@@ -288,9 +268,38 @@ public class BaseNet {
 					public void onFailure(int statusCode, Header[] headers,
 							byte[] responseBody, Throwable error) {
 						callback.messageResponse(RequestType.connectFailure,
-								null, new String(responseBody));
+								null, null);
 					}
 				});
 
 	}
+	
+	
+	
+	
+	
+	//==================================增加get请求	直接根据请求地址进行回调
+	public void getStringRequest(String url,
+			final BaseCallBack<String> callback){
+		getAsyncHttpClient().get(url,new AsyncHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				String json = new String(arg2);
+				callback.messageResponse(RequestType.messagetrue, json,
+						json);
+			}
+			
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
+				callback.messageResponse(RequestType.connectFailure,
+						null, null);
+			}
+		});
+		
+	}
+	
+	
+	
+	
 }

@@ -33,9 +33,9 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         TextView tv_state = (TextView) findViewById(R.id.tv_state);
         TextView tv_name = (TextView) findViewById(R.id.tv_name);
         TextView tv_count = (TextView) findViewById(R.id.tv_count);
-        tv_project.setText(houseMessage.ActHouseFullName);
-        tv_pre_room.setText(houseMessage.PreHouseName);
-        tv_true_room.setText(houseMessage.ActHouseName);
+        tv_project.setText(houseMessage.PreHouseFullName);
+        tv_pre_room.setText(houseMessage.ActHouseName);
+        tv_true_room.setText(houseMessage.PreHouseName);
         tv_state.setText(houseMessage.PropertTypeName);
         tv_name.setText(houseMessage.OwnerNames);
         tv_count.setText(houseMessage.CheckRound);

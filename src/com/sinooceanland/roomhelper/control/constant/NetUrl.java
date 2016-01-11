@@ -31,7 +31,7 @@ public class NetUrl {
 	/**
 	 * 获取工程问题
 	 */
-	public static final String PROJECT_PROBLEM = BASEURL +"";
+	public static final String PROJECT_PROBLEM = "http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/GetPreCheckEnginTypeInfos";
 	
 	/**
 	 * 进行照片的下载

@@ -23,6 +23,11 @@ public  class TaskMessage extends BaseBean implements Parcelable {
      * 任务是否已经完成 true已完成 false 未完成
      */
     public String TaskName;
+    
+    /**
+     * 时间
+     */
+    public String CreateTime;
 
     /**
      * 0等待上传 1.正在上传

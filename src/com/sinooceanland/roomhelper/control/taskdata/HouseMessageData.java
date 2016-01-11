@@ -7,6 +7,7 @@ import java.util.List;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.MD5Util;
+import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
@@ -310,10 +311,10 @@ public class HouseMessageData {
 			return preUrl;
 		}
 		String pictureUri;
-		if(homMessage==null||homMessage.ActHouseFullName==null){
+		if(homMessage==null||homMessage.PreHouseFullName==null){
 			pictureUri =System.currentTimeMillis()+ layoutCode;
 		}else{
-			pictureUri = System.currentTimeMillis() +SpKey.getCurrentTaskMessage()+  homMessage.ActHouseFullName;
+			pictureUri = System.currentTimeMillis() +SpKey.getCurrentTaskMessage()+  homMessage.PreHouseFullName;
 		}
 
 		preUrl = MD5Util.GetMD5Code(pictureUri);
@@ -330,6 +331,16 @@ public class HouseMessageData {
 	 */
 	public String setCheckStautsSure(){
 		homMessage.CheckStauts  = "2";
+		//进行已完成房间数增加
+		int finishCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseFinalCount(),0)+1;
+		SpUtilCurrentTaskInfo.putInt(SpKey.getTaskHouseFinalCount(),finishCount);
+		
+		int houseCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseCount(), 0);
+		//房间全部已完成  则工程全部已完成
+		if(finishCount>=houseCount){
+			SpUtil.putBoolean( TaskMyssageData.getInstance().getTaskMessage().TaskCode+SpKey.TASKSTATUE, true);
+			return "2";
+		}
 		
 		//进行数据转换
 		savePicture();

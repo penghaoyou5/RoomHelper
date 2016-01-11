@@ -2,6 +2,7 @@ package com.sinooceanland.roomhelper.control.net;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import android.content.Context;
@@ -11,6 +12,8 @@ import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
+import com.sinooceanland.roomhelper.control.test.testTTT;
+import com.sinooceanland.roomhelper.control.util.EscapeUnescape;
 import com.sinooceanland.roomhelper.control.util.FileUtils;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
@@ -55,7 +58,8 @@ public class UpNet extends BaseNet{
 		requestCount=0;
 		requestCurrentProgress = 0;
 		this.callBack = callBack;
-		upImage();
+//		upImage();
+		upLoadAllJson();
 	}
 	
 	
@@ -69,6 +73,8 @@ public class UpNet extends BaseNet{
 				//TODO:只让利强写一个只根据键存值的方法
 				TaskDetailBean taskDetailBean = bigJsonManager.getTaskDetailBean();
 				String json = getGson().toJson(taskDetailBean);
+				 json = EscapeUnescape.escape(json);
+				 testTTT.saveFile(json);
 				upLoadJson(context, json);
 				return false;
 			}
