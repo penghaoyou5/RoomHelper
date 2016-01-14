@@ -61,7 +61,7 @@ public class SpKey {
 	 */
 	private static final String getPictureAddress(String load){
 		if(SDUtils.isSDCardEnable()){
-			return SDUtils.getSDCardPath()+getUerId()+File.separator+getCurrentTaskMessage()+File.separator+load+File.separator;
+			return SDUtils.getSDCardPath()+"RoomHelper"+File.separator+getUerId()+File.separator+getCurrentTaskMessage()+File.separator+load+File.separator;
 		}
 		return null;
 	}

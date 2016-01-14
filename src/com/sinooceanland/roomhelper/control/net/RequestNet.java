@@ -30,6 +30,7 @@ import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
 public class RequestNet extends BaseNet {
 
 	private Context context;
+	private static final int ProCount = 5;
 
 	public RequestNet(Context context) {
 		this.context = context;
@@ -48,8 +49,7 @@ public class RequestNet extends BaseNet {
 	public void login(final String username, String password,
 			final BaseCallBack<LoginBean> callBack) {
 		RequestParams requestParams = new RequestParams();
-		// requestParams.add("username", username);
-		requestParams.add("username", "v-gouying");
+		 requestParams.add("username", username);
 		requestParams.add("password", password);
 		baseRequest(requestParams, NetUrl.LOGIN, new BaseCallBack<LoginBean>() {
 
@@ -180,32 +180,59 @@ public class RequestNet extends BaseNet {
 		}
 	}
 
+	private int problemCount = 0;
+	
+	
+	public void initprojectProblemByNe(){
+		problemCount++;Log.e("jinxing ",problemCount+"" );
+		getStringRequest(NetUrl.PROJECT_PROBLEM, new BaseCallBack<String>() {
+			@Override
+			public void messageResponse(RequestType requestType, String bean,
+					String message) {
+				if (requestType == RequestType.messagetrue) {
+					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
+				} else if(problemCount<=ProCount){
+					initprojectProblemByNe();
+					return;
+				}
+			}
+		});
+	}
+	
+	public void getprojectProblemByNet(final BaseCallBack<TreeDataBean> callBack) {
+		getprojectProblemByNet(callBack, true);
+	}
 	/**
 	 * 进行网络请求 获取工程问题
 	 * 
 	 * @param callBack
 	 *            请求回掉
+	 * @param useCache
+	 * 				true 使用缓存 false 不管怎样都要进行网络请求
 	 */
-	public void getprojectProblemByNet(final BaseCallBack<TreeDataBean> callBack) {
-		String str = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
-		if(!TextUtils.isEmpty(str)){
-			//如果缓存已经存在就不进行网络请求
-			TreeDataBean problemBean = getGson().fromJson(str, TreeDataBean.class);
-			callBack.messageResponse(RequestType.messagetrue,
-					problemBean, null);
-			return;
+	public void getprojectProblemByNet(final BaseCallBack<TreeDataBean> callBack,boolean useCache) {
+		if (useCache) {
+			String str = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
+			if (!TextUtils.isEmpty(str)) {
+				// 如果缓存已经存在就不进行网络请求
+				TreeDataBean problemBean = getGson().fromJson(str, TreeDataBean.class);
+				callBack.messageResponse(RequestType.messagetrue, problemBean, null);
+				return;
+			}
 		}
+		problemCount++;
 		getStringRequest(NetUrl.PROJECT_PROBLEM, new BaseCallBack<String>() {
 
 			@Override
 			public void messageResponse(RequestType requestType, String bean,
 					String message) {
 				TreeDataBean problemBean = null;
-				
 				if (requestType == RequestType.messagetrue) {
 					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
-				} else {
-					bean = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
+				} else if(problemCount<=ProCount){
+					getprojectProblemByNet(callBack,false);
+					return;
+//					bean = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
 				}
 				
 				
