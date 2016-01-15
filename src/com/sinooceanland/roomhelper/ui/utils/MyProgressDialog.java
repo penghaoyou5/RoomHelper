@@ -12,6 +12,7 @@ public class MyProgressDialog {
 
 
     private ProgressDialog m_pDialog;
+    private boolean isShowing =false;
 
     public  MyProgressDialog showDialog(Context context){
 
@@ -29,6 +30,7 @@ public class MyProgressDialog {
         // 设置ProgressDialog 是否可以按退回按键取消
         m_pDialog.setCancelable(true);
         m_pDialog.show();
+        isShowing = true;
         return this;
     }
 
@@ -57,5 +59,10 @@ public class MyProgressDialog {
 
     public void dismissDialog(){
         m_pDialog.dismiss();
+        isShowing = false;
+    }
+
+    public boolean isShowing(){
+        return isShowing;
     }
 }

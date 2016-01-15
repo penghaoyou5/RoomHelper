@@ -34,44 +34,6 @@ import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
 
 
 public class testTTT extends AndroidTestCase {
-	public void testProblemNessw(){
-		iniSp();
-		System.out.println("ggggggghhh");
-	
-		new RequestNet(mContext).initprojectProblemByNe();
-	}
-	
-	public void testProblemNew(){
-		iniSp();
-		System.out.println("ggggggghhh");
-		new RequestNet(mContext).getprojectProblemByNet(new BaseCallBack<TreeDataBean>() {
-
-			@Override
-			public void messageResponse(RequestType requestType, TreeDataBean bean, String message) {
-				// TODO Auto-generated method stub
-				System.out.println("ggggggg"+message);
-			}
-		});
-//		getprojectProblemByNet
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	public void testUserId(){
 		iniSp();

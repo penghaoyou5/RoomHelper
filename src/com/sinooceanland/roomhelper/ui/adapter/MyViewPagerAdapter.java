@@ -46,14 +46,12 @@ public class MyViewPagerAdapter extends PagerAdapter { //显示的数据
 
     @Override
     public int getCount() {
-        Log.e("test", "getCount ");
         if(datas==null) return 0;
         return this.datas.size();
     }
 
     @Override
     public int getItemPosition(Object object) {
-        Log.e("test", "getItemPosition ");
         return super.getItemPosition(object);
     }
 
@@ -85,7 +83,8 @@ public class MyViewPagerAdapter extends PagerAdapter { //显示的数据
         viewHolder.iv.setImageBitmap(BitmapUtils.createBitmap(bean.getSmallPictureUri()));
 
        // container.addView(convertView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        container.addView(convertView,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        container.addView(convertView,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        container.addView(convertView);
         convertView.setId(position);
         return convertView;
     }
@@ -96,11 +95,11 @@ public class MyViewPagerAdapter extends PagerAdapter { //显示的数据
         View contentView = (View) object;
         container.removeView(contentView);
         this.mViewCache.add(contentView);
+        Log.e("test","size:"+mViewCache.size());
     }
 
     @Override
     public boolean isViewFromObject(View view, Object o) {
-        Log.e("test", "isViewFromObject ");
         return view == o;
     }
 
@@ -109,7 +108,4 @@ public class MyViewPagerAdapter extends PagerAdapter { //显示的数据
         public ImageView iv;
     }
 
-    public void removeView(int position){
-
-    }
 }

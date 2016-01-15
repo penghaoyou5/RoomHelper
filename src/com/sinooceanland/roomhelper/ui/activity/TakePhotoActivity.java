@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +20,8 @@ import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData.*;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.ui.UIContacts;
 import com.sinooceanland.roomhelper.ui.adapter.MyViewPagerAdapter;
+import com.sinooceanland.roomhelper.ui.camera.CameraSurfaceView;
+import com.sinooceanland.roomhelper.ui.camera.ICameraFinish;
 import com.sinooceanland.roomhelper.ui.utils.BitmapUtils;
 import com.sinooceanland.roomhelper.ui.adapter.MyViewPagerAdapter.ViewHolder;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.*;
@@ -31,8 +34,10 @@ import java.util.List;
  * Version : 1
  * Details :
  */
-public class TakePhotoActivity extends BaseActivity implements View.OnClickListener,ViewPager.OnPageChangeListener {
+public class TakePhotoActivity extends BaseActivity implements View.OnClickListener,ViewPager.OnPageChangeListener,ICameraFinish {
 
+
+    private CameraSurfaceView mSurface;
 
     public void test(){
 //获得布局列表
@@ -95,6 +100,47 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
         initData();
         initView();
         initListener();
+        initCamera();
+        setViewPagerState();
+    }
+
+    private void initCamera() {
+        mSurface = (CameraSurfaceView)findViewById(R.id.surface);
+        mSurface.initConfig(this);
+    }
+
+
+    @Override
+    public void cameraFinish() {
+        vp_content.setVisibility(View.VISIBLE);
+        if(isChongpai){
+            isChongpai = false;
+          //  PictureInfo pictureInfo = mPictureList.get(mCurrentPicPosition);
+           /* Bitmap bitmap = getBitmapFromUrl(pictureInfo.getBigPictureUri());
+            BitmapUtils.saveScalePhoto(bitmap,new File(pictureInfo.getSmallPictureUri()));*/
+            mAdapter = new MyViewPagerAdapter(mPictureList,this);
+            vp_content.setAdapter(mAdapter);
+            vp_content.setCurrentItem(mCurrentPicPosition);
+        }else {
+            //1将数据压缩后保存下来 2将ui的data数据进行更新
+            PictureInfo pictureInfo = mSpaceHelper.newInstancePictureInfo(mCurrentLayoutPosition, getPictureName(true));
+            //Bitmap bitmap = BitmapUtils.getSmallBitmap(getPictureName(true));
+
+            //BitmapUtils.saveScalePhoto(bitmap,getPictureName(true));
+            //bitmap.recycle();
+
+            mPictureList.add(pictureInfo);
+            mAdapter.setDatas(mPictureList);
+            vp_content.setCurrentItem(mPictureList.size() - 1);
+            setBottomState(pictureInfo);
+        }
+        new Thread(){
+            @Override
+            public void run() {
+                SystemClock.sleep(300);
+                isPhotoing = false;
+            }
+        }.start();
     }
 
     private SpaceLayoutListHelper mSpaceHelper;
@@ -123,8 +169,7 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
         tv_title_complete = (TextView) findViewById(R.id.tv_title_complete);
         tv_title_left = (TextView) findViewById(R.id.tv_title_left);
         tv_title_right = (TextView) findViewById(R.id.tv_title_right);
-        initBottom();
-        setTitle(mLayoutList.get(mCurrentLayoutPosition).getSpaceLayoutName());
+       // initBottom();
         initTitleView();
     }
 
@@ -134,10 +179,9 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
         boolean hasPicture = datas.size()!=0;
         if(hasPicture){
             PictureInfo pictureInfo = datas.get(0);
-            findViewById(R.id.rl_bottom).setVisibility(View.VISIBLE);
             setBottomState(pictureInfo);
         }else {
-            findViewById(R.id.rl_bottom).setVisibility(View.GONE);
+            setBottomState(BottomState.miss);
         }
     }
 
@@ -180,6 +224,20 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
             case miss:
                 findViewById(R.id.rl_bottom).setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    private void setViewPagerState(){
+        List<PictureInfo> list = mAdapter.getDatas();
+        if(list==null || list.size()==0){
+            vp_content.setVisibility(View.INVISIBLE);
+            setBottomState(BottomState.miss);
+        }else {
+            vp_content.setVisibility(View.VISIBLE);
+            if(list.size()>1){
+                vp_content.setCurrentItem(list.size()-1);
+            }
+            setBottomState(mPictureList.get(mCurrentPicPosition));
         }
     }
 
@@ -230,13 +288,9 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 mPictureList = getPictrueList(mCurrentLayoutPosition);
                 mAdapter = new MyViewPagerAdapter(mPictureList,this);
                 vp_content.setAdapter(mAdapter);
-                setTitle(mLayoutList.get(mCurrentLayoutPosition).getSpaceLayoutName());
+
                 initTitleView();
-                if(mPictureList.size()==0){
-                    setBottomState(BottomState.miss);
-                }else {
-                    setBottomState(mPictureList.get(mCurrentPicPosition));
-                }
+                setViewPagerState();
                 break;
 
             case R.id.tv_title_right://下一布局
@@ -247,22 +301,21 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 mPictureList = getPictrueList(mCurrentLayoutPosition);
                 mAdapter = new MyViewPagerAdapter(mPictureList,this);
                 vp_content.setAdapter(mAdapter);
-                setTitle(mLayoutList.get(mCurrentLayoutPosition).getSpaceLayoutName());
                 initTitleView();
-                if(mPictureList.size()==0){
-                    setBottomState(BottomState.miss);
-                }else {
-                    setBottomState(mPictureList.get(mCurrentPicPosition));
-                }
+                setViewPagerState();
                 break;
 
             case R.id.tv_left://重拍
                 isChongpai = true;
-                takePhoto(mPictureList.get(mCurrentPicPosition).getBigPictureUri());
+                vp_content.setVisibility(View.INVISIBLE);
+                setBottomState(BottomState.miss);
                 break;
             case R.id.tv_center://确定
                 setBottomState(BottomState.delete);
                 mPictureList.get(mCurrentPicPosition).setSure(true);
+                vp_content.setVisibility(View.INVISIBLE);
+                setBottomState(BottomState.miss);
+                isChongpai = false;
                 break;
             case R.id.tv_right://添加问题
                 startActivityForResult(new Intent(this, TreeActivity.class), UIContacts.REQUEST_CODE_QUESTION);
@@ -271,13 +324,31 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 startActivity(new Intent(this, ChooseBuildingActivity.class));
                 finish();
                 break;
-            case R.id.ib_take_photo:
-                if(!currentPicIsSure())return;
-                takePhoto(SpKey.getBigPictureAddress(), getPictureName(false));
+            case R.id.ib_take_photo://拍照
+                if(mAdapter.getDatas().size()!=0 &&  vp_content.getVisibility() == View.VISIBLE){
+                    if(!currentPicIsSure())return;
+                    vp_content.setVisibility(View.INVISIBLE);
+                    setBottomState(BottomState.miss);
+                    return;
+                }
+                if(isChongpai){
+                    PictureInfo pictureInfo = mPictureList.get(mCurrentPicPosition);
+                    takePhoto(pictureInfo.getPictureUri());
+                    setBottomState(pictureInfo);
+                }else {
+                    if(!currentPicIsSure())return;
+                    takePhoto(getPictureName(false));
+                }
                 break;
-            case R.id.tv_add:
-                if(!currentPicIsSure())return;
-                takePhoto(SpKey.getBigPictureAddress(), getPictureName(false));
+            case R.id.tv_add://查看布局照片
+                vp_content.setVisibility(View.VISIBLE);
+                if(mPictureList==null || mPictureList.size()==0){
+                    setBottomState(BottomState.miss);
+                }else {
+                    setBottomState(mPictureList.get(mCurrentPicPosition));
+                }
+                /*if(!currentPicIsSure())return;
+                takePhoto(getPictureName(false));*/
                 break;
             case R.id.tv_delete://删除当前照片， 删除bean里数据 删除本地文件
                 mSpaceHelper.deletePicture(mCurrentLayoutPosition, mPictureList.get(mCurrentPicPosition));
@@ -298,6 +369,7 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initTitleView(){
+        setTitle(mLayoutList.get(mCurrentLayoutPosition).getSpaceLayoutName());
         if(mLayoutList.size()==1){
             tv_title_left.setVisibility(View.GONE);
             tv_title_complete.setVisibility(View.VISIBLE);
@@ -327,7 +399,6 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
             showToast("请添加照片");
             return false;
         }
-        //
         for(PictureInfo pic:mPictureList){
             //2 照片必须都是确定的
             if(!pic.isSure()){
@@ -338,12 +409,22 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 i++;
             }
         }
+        //3有且只有一张没有问题的照片
         if(i==0){
-            showToast("至少有一张没有问题照片");
+            showToast("必须有一张没有问题照片");
+            return false;
+        }
+        if(i>1){
+            showToast("只能有一张没有问题照片");
+            return false;
+        }
+        if(i!=1){
+            showToast("有且只有一张没有问题照片");
             return false;
         }else {
             return true;
         }
+
     }
 
     private boolean currentPicIsSure(){
@@ -356,26 +437,31 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
         }
         return true;
     }
-
-    public void takePhoto(String path, String fileName) {//通过照相机拍照
+    private boolean isPhotoing = false;
+    public void takePhoto(String picName) {//拍照
+        if(isPhotoing)return;
+        isPhotoing = true;
+        mSurface.doTakePicture(picName);
+       /*
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//要打开的应用
         File out = new File(path,fileName);
         Uri uri = Uri.fromFile(out);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,//设置拍照存储路径
                 uri);
         intent.putExtra("return-data", false);
-        startActivityForResult(intent, UIContacts.REQUEST_CODE_CARMER);//回调里拿数据
+        startActivityForResult(intent, UIContacts.REQUEST_CODE_CARMER);//回调里拿数据*/
     }
 
-    public void takePhoto(String path) {//通过照相机拍照
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//要打开的应用
+  /*  public void takePhoto(String path) {//重拍
+        mSurface.doTakePicture(path);
+      *//*  Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//要打开的应用
         File out = new File(path);
         Uri uri = Uri.fromFile(out);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,//设置拍照存储路径
                 uri);
         intent.putExtra("return-data", false);
-        startActivityForResult(intent, UIContacts.REQUEST_CODE_CARMER);//回调里拿数据
-    }
+        startActivityForResult(intent, UIContacts.REQUEST_CODE_CARMER);//回调里拿数据*//*
+    }*/
 
     private Bitmap getBitmapFromUrl(String url) {
         Bitmap bitmap = BitmapUtils.createBitmapThumbnail(url);

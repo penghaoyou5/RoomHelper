@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,7 +56,7 @@ public class BitmapUtils {
     }
 
     private static int computeInitialSampleSize(BitmapFactory.Options options,
-                                               int minSideLength, int maxNumOfPixels) {
+                                                int minSideLength, int maxNumOfPixels) {
         double w = options.outWidth;
         double h = options.outHeight;
         int lowerBound = (maxNumOfPixels == -1) ? 1 :
@@ -80,23 +82,22 @@ public class BitmapUtils {
 
 
     /**
-     *
      * @param filePath 传入图片地址
      * @return 返回压缩后的Bitmap
      */
-    public static Bitmap createBitmapThumbnail(String filePath){
+    public static Bitmap createBitmapThumbnail(String filePath) {
         Bitmap bitmap = null;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, opts);//将图片的宽高放到opts中
-       // opts.inSampleSize = computeSampleSize(opts, -1,(int)0.5*width*height );
+        // opts.inSampleSize = computeSampleSize(opts, -1,(int)0.5*width*height );
         //opts.inSampleSize = computeSampleSize(opts, -1,width*height );
-        opts.inSampleSize = computeSampleSize(opts, -1,1024*1024 );
+        opts.inSampleSize = computeSampleSize(opts, -1, 1024 * 1024);
         opts.inJustDecodeBounds = false;
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         try {
             bitmap = BitmapFactory.decodeFile(filePath, opts);
-        }catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
         }
         return bitmap;
@@ -142,23 +143,24 @@ public class BitmapUtils {
 
     /**
      * 将路径下的图片转成bitmap
+     *
      * @param filePath
      * @return
      */
-    public static Bitmap createBitmap(String filePath){
-       return BitmapFactory.decodeFile(filePath);
+    public static Bitmap createBitmap(String filePath) {
+        return BitmapFactory.decodeFile(filePath);
     }
 
     /**
      * 存储缩放的图片
      */
-    public static void saveScalePhoto(Bitmap bitmap,String name) {
+    public static void saveScalePhoto(Bitmap bitmap, String name) {
         // 文件夹路径
         FileOutputStream fos = null;
-        File file =  new File(SpKey.getSmallPictureAddress(),name);
+        File file = new File(SpKey.getSmallPictureAddress(), name);
         try {
             fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -171,13 +173,15 @@ public class BitmapUtils {
         }
     }
 
-
-    public static void saveScalePhoto(Bitmap bitmap,File file) {
+    public static void saveScalePhoto(Bitmap bitmap, File file) {
         // 文件夹路径
+        if(file.exists()){
+            file.delete();
+        }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -190,9 +194,66 @@ public class BitmapUtils {
         }
     }
 
-    public boolean  deleteBitmap(String filePath){
+    public boolean deleteBitmap(String filePath) {
         File file = new File(filePath);
         return file.delete();
     }
 
+
+
+//------------------------1月13日  存取图片操作
+    public static void saveBitmap(byte[] bytes, String picName){
+        //获得存储路径
+        String bitPath = SpKey.getBigPictureAddress();
+        String smallPath = SpKey.getSmallPictureAddress();
+        //存储大图
+        saveBigBitmap(bytes, bitPath, picName);
+        //将大图转换成压缩后的Bitmap
+        Bitmap bitmap =  createBitmapThumbnail(bitPath+picName);
+        //存小图
+        saveScalePhoto(bitmap,new File(smallPath,picName));
+        bitmap.recycle();
+    }
+
+
+    public static Bitmap getSmallBitmap(String picName){
+        String smallPath = SpKey.getSmallPictureAddress();
+        return getBitmap(smallPath,picName);
+    }
+
+
+    public static Bitmap getBigBitmap(String picName){
+        String bigPath = SpKey.getBigPictureAddress();
+        return getBitmap(bigPath,picName);
+    }
+
+
+    private static Bitmap getBitmap(String path,String picName){
+        String absolutePath = new File(path, picName).getAbsolutePath();
+        return BitmapFactory.decodeFile(absolutePath);
+    }
+
+    private static void saveBigBitmap(byte[] bytes, String path,String picName) {
+        File file = new File(path, picName);
+        BufferedOutputStream bos = null;
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(file));
+            bos.write(bytes, 0, bytes.length);
+            bos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bos != null)
+                    bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

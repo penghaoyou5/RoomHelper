@@ -6,15 +6,17 @@
     <color name="white">#FFF</color>
     <color name="outline">#f0f0f0</color>
     <color name="colorBlue">#018ecd</color>
+    <color name="colorBlue_transparent">#a0018ecd</color>
     <color name="colorRed">#ff0000</color>
     <color name="colorGreen">#4eb900</color>
     <color name="colorGray">#FAFAFA</color>
     <color name="textColor">#999999</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite_transparent">#a0FFFFFF</color>
     <color name="textColor2">#666666</color>
     <color name="colorBlack">#333333</color>
     <color name="buttonColorGray">#f0f0f0</color>
     <color name="transparent">#00000000</color>
-    <color name="black_transparent">#d0000000</color>
+    <color name="black_transparent">#a0000000</color>
     <color name="line">#e9e9e9</color>
 </resources>

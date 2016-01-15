@@ -11,22 +11,24 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int black_transparent=0x7f04000f;
-        public static final int buttonColorGray=0x7f04000d;
+        public static final int black_transparent=0x7f040011;
+        public static final int buttonColorGray=0x7f04000f;
         public static final int colorAccent=0x7f040002;
-        public static final int colorBlack=0x7f04000c;
+        public static final int colorBlack=0x7f04000e;
         public static final int colorBlue=0x7f040005;
-        public static final int colorGray=0x7f040008;
-        public static final int colorGreen=0x7f040007;
+        public static final int colorBlue_transparent=0x7f040006;
+        public static final int colorGray=0x7f040009;
+        public static final int colorGreen=0x7f040008;
         public static final int colorPrimary=0x7f040000;
         public static final int colorPrimaryDark=0x7f040001;
-        public static final int colorRed=0x7f040006;
-        public static final int colorWhite=0x7f04000a;
-        public static final int line=0x7f040010;
+        public static final int colorRed=0x7f040007;
+        public static final int colorWhite=0x7f04000b;
+        public static final int colorWhite_transparent=0x7f04000c;
+        public static final int line=0x7f040012;
         public static final int outline=0x7f040004;
-        public static final int textColor=0x7f040009;
-        public static final int textColor2=0x7f04000b;
-        public static final int transparent=0x7f04000e;
+        public static final int textColor=0x7f04000a;
+        public static final int textColor2=0x7f04000d;
+        public static final int transparent=0x7f040010;
         public static final int white=0x7f040003;
     }
     public static final class dimen {
@@ -86,70 +88,72 @@ public final class R {
     }
     public static final class id {
         public static final int btn_check=0x7f080005;
-        public static final int btn_complete=0x7f080039;
-        public static final int btn_left=0x7f080011;
-        public static final int btn_login=0x7f08001a;
+        public static final int btn_complete=0x7f08003c;
+        public static final int btn_left=0x7f080014;
+        public static final int btn_login=0x7f08001d;
         public static final int btn_no=0x7f080003;
-        public static final int btn_right=0x7f080012;
-        public static final int btn_start=0x7f080021;
-        public static final int btn_upload=0x7f080035;
+        public static final int btn_right=0x7f080015;
+        public static final int btn_start=0x7f080024;
+        public static final int btn_upload=0x7f080038;
         public static final int btn_yes=0x7f080002;
-        public static final int button1=0x7f080031;
-        public static final int et_account=0x7f080016;
-        public static final int et_password=0x7f080019;
-        public static final int et_serch=0x7f080007;
-        public static final int ib_back=0x7f08002d;
-        public static final int ib_left=0x7f08003d;
-        public static final int ib_right=0x7f080024;
-        public static final int ib_take_photo=0x7f08002e;
-        public static final int image_show=0x7f080032;
-        public static final int iv=0x7f08003a;
-        public static final int iv_image=0x7f080033;
-        public static final int ll_choose=0x7f080008;
-        public static final int ll_title=0x7f080010;
-        public static final int lv=0x7f080013;
+        public static final int button1=0x7f080034;
+        public static final int et_account=0x7f080019;
+        public static final int et_password=0x7f08001c;
+        public static final int et_serch=0x7f08000a;
+        public static final int ib_back=0x7f080030;
+        public static final int ib_left=0x7f080006;
+        public static final int ib_right=0x7f080008;
+        public static final int ib_take_photo=0x7f080031;
+        public static final int image_show=0x7f080035;
+        public static final int iv=0x7f08003d;
+        public static final int iv_image=0x7f080036;
+        public static final int iv_left=0x7f08003f;
+        public static final int ll_choose=0x7f08000b;
+        public static final int ll_title=0x7f080013;
+        public static final int lv=0x7f080016;
         public static final int lv_content=0x7f080004;
-        public static final int lv_left=0x7f08003f;
-        public static final int lv_right=0x7f080040;
-        public static final int lv_room_content=0x7f08000e;
-        public static final int rl_account=0x7f080014;
-        public static final int rl_bottom=0x7f080027;
-        public static final int rl_choose=0x7f080009;
-        public static final int rl_content=0x7f08000d;
-        public static final int rl_password=0x7f080017;
-        public static final int rl_search=0x7f080006;
-        public static final int rl_state=0x7f08000b;
-        public static final int rl_tackphoto=0x7f08002c;
+        public static final int lv_left=0x7f080041;
+        public static final int lv_right=0x7f080042;
+        public static final int lv_room_content=0x7f080011;
+        public static final int rl_account=0x7f080017;
+        public static final int rl_bottom=0x7f08002a;
+        public static final int rl_choose=0x7f08000c;
+        public static final int rl_content=0x7f080010;
+        public static final int rl_password=0x7f08001a;
+        public static final int rl_search=0x7f080009;
+        public static final int rl_state=0x7f08000e;
+        public static final int rl_tackphoto=0x7f08002f;
+        public static final int surface=0x7f080025;
         public static final int title=0x7f080000;
-        public static final int tv=0x7f080038;
-        public static final int tv_account=0x7f080015;
-        public static final int tv_add=0x7f08002f;
-        public static final int tv_center=0x7f080029;
-        public static final int tv_choose_state=0x7f08000c;
-        public static final int tv_content=0x7f080034;
-        public static final int tv_count=0x7f080020;
-        public static final int tv_delete=0x7f08002b;
-        public static final int tv_left=0x7f080028;
-        public static final int tv_load=0x7f08000a;
-        public static final int tv_msg=0x7f08000f;
-        public static final int tv_name=0x7f08001f;
-        public static final int tv_password=0x7f080018;
-        public static final int tv_pre_room=0x7f08001c;
-        public static final int tv_project=0x7f08001b;
-        public static final int tv_right=0x7f08002a;
-        public static final int tv_room=0x7f08003b;
-        public static final int tv_state=0x7f08001e;
-        public static final int tv_title_ZXCVBNM=0x7f08003e;
-        public static final int tv_title_complete=0x7f080026;
-        public static final int tv_title_left=0x7f080022;
-        public static final int tv_title_name=0x7f080023;
-        public static final int tv_title_right=0x7f080025;
-        public static final int tv_true_room=0x7f08001d;
-        public static final int tv_unload=0x7f080030;
-        public static final int tv_upload_state=0x7f08003c;
-        public static final int v=0x7f080036;
+        public static final int tv=0x7f08003b;
+        public static final int tv_account=0x7f080018;
+        public static final int tv_add=0x7f080032;
+        public static final int tv_center=0x7f08002c;
+        public static final int tv_choose_state=0x7f08000f;
+        public static final int tv_content=0x7f080037;
+        public static final int tv_count=0x7f080023;
+        public static final int tv_delete=0x7f08002e;
+        public static final int tv_left=0x7f08002b;
+        public static final int tv_load=0x7f08000d;
+        public static final int tv_msg=0x7f080012;
+        public static final int tv_name=0x7f080022;
+        public static final int tv_password=0x7f08001b;
+        public static final int tv_pre_room=0x7f08001f;
+        public static final int tv_project=0x7f08001e;
+        public static final int tv_right=0x7f08002d;
+        public static final int tv_room=0x7f08003e;
+        public static final int tv_state=0x7f080021;
+        public static final int tv_title_ZXCVBNM=0x7f080007;
+        public static final int tv_title_complete=0x7f080029;
+        public static final int tv_title_left=0x7f080026;
+        public static final int tv_title_name=0x7f080027;
+        public static final int tv_title_right=0x7f080028;
+        public static final int tv_true_room=0x7f080020;
+        public static final int tv_unload=0x7f080033;
+        public static final int tv_upload_state=0x7f080040;
+        public static final int v=0x7f080039;
         public static final int vp_content=0x7f080001;
-        public static final int vv=0x7f080037;
+        public static final int vv=0x7f08003a;
     }
     public static final class layout {
         public static final int activity_check_accept_content=0x7f030000;
@@ -184,13 +188,12 @@ public final class R {
     }
     public static final class style {
         /**  Base application theme. 
-     <item name="android:windowNoTitle">true</item>
-    <item name="android:foreground">#FF000000</item>
-    <item name="android:background">#FFFFFFFF</item>
-     <item name="android:textColor">@color/transparent</item>
-    <item name="android:textSize">14sp</item> 
+ Customize your theme here. 
+         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item> 
          */
-        public static final int CustomTheme=0x7f070000;
+        public static final int AppTheme=0x7f070000;
         public static final int add_question=0x7f070002;
         public static final int btn_default=0x7f070001;
     }

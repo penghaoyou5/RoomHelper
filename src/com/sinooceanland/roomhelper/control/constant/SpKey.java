@@ -23,16 +23,16 @@ public class SpKey {
 	}
 	/**工程问题*/
 	public static final String PROJECTPROBLEM = "rojectProblem";
-	
+
 	/**工程问题*/
 	public static final String TASKSTATUE = "taskStatue";
-	
+
 	/**当前进入的某个工程  这是用当前的任务名taskcode 进行区分的*/
 	public static final String CURRENTTASKMESSAGE = "currentTaskMessage";
 	public static final String getCurrentTaskMessage(){
 		return SpUtil.getString(CURRENTTASKMESSAGE, "");
 	}
-	
+
 	/**
 	 * @return  当前任务已经完成的房间数
 	 * 可能回传回来已经有已完成房间
@@ -40,32 +40,42 @@ public class SpKey {
 	public static final String getTaskHouseFinalCount(){
 		return SpUtil.getString(CURRENTTASKMESSAGE, "")+"houseFinalCount";
 	}
-	
+
 	/**
 	 * @return  当前任务的房间总数
 	 */
 	public static final String getTaskHouseCount(){
 		return SpUtil.getString(CURRENTTASKMESSAGE, "")+"houseCount";
 	}
-	
+
 	/**当前进入的某个工程*/
 	public static final String BUILDINFO = "BuildInfo";
 	public static final String getBuildInfoKey(String taskCode){
 		return taskCode + BUILDINFO;
 	}
-	
+
 	/**
 	 * 大图片文件夹路径
 	 * @param load
 	 * @return
 	 */
 	private static final String getPictureAddress(String load){
+		StringBuilder sb = new StringBuilder();
 		if(SDUtils.isSDCardEnable()){
-			return SDUtils.getSDCardPath()+"RoomHelper"+File.separator+getUerId()+File.separator+getCurrentTaskMessage()+File.separator+load+File.separator;
+			sb.append(SDUtils.getSDCardPath());
+			sb.append("RoomHelper");
+			sb.append(File.separator);
+			sb.append(getUerId());
+			sb.append(File.separator);
+			sb.append(getCurrentTaskMessage());
+			sb.append(File.separator);
+			sb.append(load);
+			sb.append(File.separator);
+			return sb.toString();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @return 未压缩图片路径
 	 */
@@ -88,7 +98,7 @@ public class SpKey {
 		}
 		return file.getAbsolutePath()+File.separator;
 	}
-	
+
 	/**
 	 * @return 验收有问题路径
 	 */
@@ -103,8 +113,8 @@ public class SpKey {
 		}
 		return file.getAbsolutePath()+File.separator;
 	}
-	
-	
+
+
 //	private static final String TASKDITAIL = "TaskDetail";
 //	public static final String getTaskDetail(){
 //		return null;

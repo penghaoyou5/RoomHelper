@@ -23,38 +23,44 @@ public class HouseMessageData {
 //	private String smallPickturUrl;
 
 	private static HouseMessageData data;
-	
+
 //	private HouseMessageData(HouseMessage homMessage) {
 //		HouseMessageData.homMessage = homMessage;
 //		bigPickturUrl = SpKey.getBigPictureAddress();
 //		smallPickturUrl = SpKey.getSmallPictureAddress();
 //	}
-	
+
 	private HouseMessageData(){}
 
 	/**
 	 * 记录当前进入的房间
-	 * 
+	 *
 	 * @param homMessage
 	 * @return
 	 */
-	public static HouseMessageData setHouseMessage(HouseMessage homMessage) {
+	public static HouseMessageData setHouseMessage(final HouseMessage homMessage) {
 		if(data==null){
 			data = new HouseMessageData();
 		}
 		HouseMessageData.homMessage = homMessage;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				TaskMyssageData.releaseOtherBigjson(homMessage);
+			}
+		}).start();
 //		data.bigPickturUrl = SpKey.getBigPictureAddress();
 //		data.smallPickturUrl = SpKey.getSmallPictureAddress();
 		return data;
 	}
-	
+
 	public static HouseMessageData getInstance(){
 		return data;
 	}
 
 	/**
 	 * 得到HouseMessage 对象
-	 * 
+	 *
 	 * @return
 	 */
 	public HouseMessage getHouseMessage() {
@@ -63,7 +69,7 @@ public class HouseMessageData {
 
 	/**
 	 * 点击布局名称调用 空间布局列表 里面的EnginTypeList集合代表了图片数据
-	 * 
+	 *
 	 * @return
 	 */
 	public SpaceLayoutListHelper getSpaceLayoutList() {
@@ -91,22 +97,22 @@ public class HouseMessageData {
 		public List<SpaceLayoutList> getSpaceLayoutList() {
 			return homMessage.SpaceLayoutList;
 		}
-		
+
 		/**
 		 * 这是进行图片保存的类
 		 */
 		public void savePickInfo(){
-			
+
 		}
 
-		
+
 		/**
 		 * 增加图片信息 或者修改图片信息
 		 * @param layoutPotion 是第几个布局？
 		 * @param imageName 图片名
 		 * @param sure 是否确认
 		 * @param pinfo 问题
-		 * @return 
+		 * @return
 		 */
 		public PictureInfo addPictureInfoOrModify(int layoutPotion,String imageName,boolean sure,ProbleamInfo proinfo){
 			//得到布局
@@ -118,7 +124,7 @@ public class HouseMessageData {
 			if(!attachmentIDS.contains(imageName)){
 				attachmentIDS.add(imageName);
 			}
-			
+
 			PictureInfo pictureInfo = new PictureInfo();
 			pictureInfo.pictureUri = imageName;
 			pictureInfo.isSure = sure;
@@ -127,7 +133,7 @@ public class HouseMessageData {
 			SpUtilCurrentTaskInfo.putString(imageName, json);
 			return pictureInfo;
 		}
-		
+
 		public PictureInfo newInstancePictureInfo(int layoutPotion,String imageName){
 			//得到布局
 			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(layoutPotion);
@@ -143,7 +149,7 @@ public class HouseMessageData {
 			SpUtilCurrentTaskInfo.putString(imageName, json);
 			return pictureInfo;
 		}
-		
+
 		//这是进行图片删除的方法
 		public void deletePicture(int layoutPotion,PictureInfo pictureInfo){
 			SpaceLayoutList spaceLayoutList = homMessage.SpaceLayoutList.get(layoutPotion);
@@ -154,7 +160,7 @@ public class HouseMessageData {
 			new File(pictureInfo.getBigPictureUri()).deleteOnExit();
 			new File(pictureInfo.getSmallPictureUri()).deleteOnExit();
 		}
-		
+
 		/**
 		 * 通过图片名得到图片信息
 		 * @param pictureName
@@ -167,7 +173,7 @@ public class HouseMessageData {
 		}
 		/**
 		 * 根据空间布局返回图片列表信息
-		 * 
+		 *
 		 * @param i
 		 * @return
 		 */
@@ -195,7 +201,7 @@ public class HouseMessageData {
 //				PictureInfo info = new PictureInfo();
 //				info.bigPictureUri = bigPickturUrl + uri;
 //				info.smallPictureUri = smallPickturUrl + uri;
-				
+
 
 //				// 因为一个照片对应一个问题 所以只能，一个问题列表中只有一个照片
 //				if (enginTypeLists != null && enginTypeLists.size() > 0) {
@@ -220,15 +226,15 @@ public class HouseMessageData {
 		public void setPictureUri(String pictureUri){
 			this.pictureUri = pictureUri;
 		}
-		
+
 		public String getBigPictureUri() {
 			return SpKey.getBigPictureAddress()+pictureUri;
 		}
-		
+
 		public String getSmallPictureUri() {
 			return SpKey.getSmallPictureAddress()+pictureUri;
 		}
-		
+
 		public boolean isSure() {
 			return isSure;
 		}
@@ -259,7 +265,7 @@ public class HouseMessageData {
 		private ProbleamInfo problem;
 		public void  setPictureProbleam(String EnginTypeCode,String ProblemDescriptionCode,String ProblemDescriptionName){
 			if(problem==null)
-			problem = new ProbleamInfo();
+				problem = new ProbleamInfo();
 			problem.EnginTypeCode = EnginTypeCode;
 			problem.ProblemDescriptionCode = ProblemDescriptionCode;
 			problem.ProblemDescriptionName = ProblemDescriptionName;
@@ -267,7 +273,7 @@ public class HouseMessageData {
 //		public String problem;
 	}
 	public static class ProbleamInfo{
-		
+
 		/**
 		 * 第一层问题的编码 
 		 */
@@ -281,7 +287,7 @@ public class HouseMessageData {
 		 */
 		public String ProblemDescriptionCode;
 	}
-	
+
 //	//TODO:请求结果
 //	public List<HouseMessage> getHomeList(int page,String checkedStatue){
 //		return null;
@@ -294,11 +300,11 @@ public class HouseMessageData {
 //	public void setCurrentHomeFinish(){
 //		
 //	}
-	
+
 
 	/**
 	 * 进行照片的保存
-	 * 
+	 *
 	 * @return
 	 */
 	public String saveAttachmentIDS(SpaceLayoutList layoutList, File file) {
@@ -322,9 +328,28 @@ public class HouseMessageData {
 	}
 
 	public List<LastCheckProblemList> getProblemList(){
-		 return homMessage.LastCheckProblemList;
+		return homMessage.LastCheckProblemList;
 	}
-	
+
+
+	/**
+	 * 当点击拍照完成时调用的方法
+	 * @return
+	 */
+	public String setCheckStautsFalse(){
+		homMessage.CheckStauts  = "0";
+		//进行已完成房间数增加
+		int finishCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseFinalCount(),0)-1;
+		SpUtilCurrentTaskInfo.putInt(SpKey.getTaskHouseFinalCount(),finishCount);
+
+//		int houseCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseCount(), 0);
+		//房间全部已完成  则工程全部已完成
+//		if(finishCount>=houseCount){
+//			SpUtil.putBoolean( TaskMyssageData.getInstance().getTaskMessage().TaskCode+SpKey.TASKSTATUE, true);
+		return "0";
+//		}
+	}
+
 	/**
 	 * 当点击拍照完成时调用的方法
 	 * @return
@@ -334,25 +359,25 @@ public class HouseMessageData {
 		//进行已完成房间数增加
 		int finishCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseFinalCount(),0)+1;
 		SpUtilCurrentTaskInfo.putInt(SpKey.getTaskHouseFinalCount(),finishCount);
-		
+
 		int houseCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseCount(), 0);
 		//房间全部已完成  则工程全部已完成
 		if(finishCount>=houseCount){
 			SpUtil.putBoolean( TaskMyssageData.getInstance().getTaskMessage().TaskCode+SpKey.TASKSTATUE, true);
 			return "2";
 		}
-		
+
 		//进行数据转换
 		savePicture();
 		System.out.println(homMessage);
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				//当完成时遍历保存有问题的照片
 			}
 		}).start();
-		
+
 		return "2";
 	}
 //========================================================================================	
@@ -367,30 +392,30 @@ public class HouseMessageData {
 		int size = spaceLayoutList.size();
 		for (int i = 0; i < size; i++) {
 			SpaceLayoutList spaceLayoutList2 = spaceLayoutList.get(i);
-			
+
 			//得到问题布局
 			List<EnginTypeList> enginTypeList = spaceLayoutList.get(i).EnginTypeList;
 			//进行问题布局初始化
 			if(enginTypeList==null){
 				enginTypeList = new ArrayList<HouseMessage.SpaceLayoutList.EnginTypeList>();
-			}			
-			
+			}
+
 			//得到对应id下的图片对象 
 			List<PictureInfo> potion = layoutListHelper.getPotion(i);
 			for (int j = 0; j < potion.size(); j++) {
 				PictureInfo pictureInfo = potion.get(j);
 				ProbleamInfo problem = pictureInfo.problem;
 				//若有问题进行问题的添加
-				if(problem!=null){					
+				if(problem!=null){
 					//对列表进行问题添加的方法
 					addProbleamInfoToEnginTypeList(enginTypeList,problem,spaceLayoutList2,pictureInfo.getPictureUri());
 				}
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public void addProbleamInfoToEnginTypeList(List<EnginTypeList> enginTypeList, ProbleamInfo problem, SpaceLayoutList spaceLayoutList, String pictureNme){
 		//列表中是否已存在第一层的问题 存在就直接
 		EnginTypeList typeList = null;
@@ -401,22 +426,22 @@ public class HouseMessageData {
 				break;
 			}
 		}
-		
+
 		//不存在直接添加 第一层问题编码
 		if(typeList==null){
 			typeList = spaceLayoutList.new EnginTypeList();
 			typeList.EnginTypeCode = problem.EnginTypeCode;
 			enginTypeList.add(typeList);
 		}
-		
-		
+
+
 		//进行第三层问题编码添加
 		List<ProblemDescriptionList> problemDescriptionList = typeList.ProblemDescriptionList;
 		if(problemDescriptionList==null){
-			 problemDescriptionList = typeList.ProblemDescriptionList = new ArrayList<HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList>();
+			problemDescriptionList = typeList.ProblemDescriptionList = new ArrayList<HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList>();
 		}
-		
-		
+
+
 		ProblemDescriptionList descriptionList = null;
 		for (int i = 0; i < problemDescriptionList.size(); i++) {
 			ProblemDescriptionList problemDescriptionListItem = problemDescriptionList.get(i);
@@ -425,7 +450,7 @@ public class HouseMessageData {
 				break;
 			}
 		}
-		
+
 		//如果第三层没有这个问题进行添加
 		if(descriptionList==null){
 			descriptionList = typeList.new ProblemDescriptionList();
@@ -438,8 +463,8 @@ public class HouseMessageData {
 		if(attachmentIDS==null){
 			attachmentIDS = typeList.AttachmentIDS = new ArrayList<String>();
 		}
-		
+
 		if(!attachmentIDS.contains(pictureNme))
-		attachmentIDS.add(pictureNme);
+			attachmentIDS.add(pictureNme);
 	}
 }

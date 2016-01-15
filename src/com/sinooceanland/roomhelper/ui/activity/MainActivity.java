@@ -12,6 +12,7 @@ import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.utils.TextUtil;
+import com.victor.loading.rotate.RotateLoading;
 
 
 public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<LoginBean> {
@@ -42,7 +43,8 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
     private void initData() {
         String account = SpUtils.getString(this, ACCOUNT);
         //String password = SpUtils.getString(this, PASSWORD);
-        et_account.setText(account);
+//        et_account.setText(account);
+        et_account.setText("v-xiaoliang");
         requestNet = new RequestNet(this);
     }
 
@@ -52,9 +54,8 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
             public void onClick(View v) {
                 String account = TextUtil.getString(et_account);
                 String password = TextUtil.getString(et_password);
-                //TODO 这个该删掉
-                startActivity(new Intent(MainActivity.this, TaskActivity.class));
-                requestNet.login(account, password, MainActivity.this);
+               requestNet.login(account, password, MainActivity.this);
+                btn_login.setEnabled(false);
             }
         });
     }
@@ -66,9 +67,12 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
 
     @Override
     public void messageResponse(BaseNet.RequestType requestType, LoginBean bean, String message) {
+        btn_login.setEnabled(true);
         if(requestType== requestType.messagetrue){
             startActivity(new Intent(MainActivity.this, TaskActivity.class));
             SpUtils.putString(MainActivity.this, ACCOUNT, TextUtil.getString(et_account)).commit();
+
+            requestNet.initprojectProblemByNe();
             finish();
         }else {
             showToast("账号密码错误");

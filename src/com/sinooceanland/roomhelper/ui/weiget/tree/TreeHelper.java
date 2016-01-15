@@ -26,6 +26,10 @@ public class TreeHelper {
 
                 //将problem挂到二级bean上
                 List<TreeDataBean.ProblemDescription> problems = node1.ProblemDescriptionList;
+
+                if(problems==null ||problems.size()==0){
+                    secondSmart.isQuestion = true;
+                }
                 List footSmarts = secondSmart.getChildrens();
                 for (TreeDataBean.ProblemDescription problem : problems) {
                     TreeNode footSmart = formatProblem2Node(problem, secondSmart.id, secondSmart);

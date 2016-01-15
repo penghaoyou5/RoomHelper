@@ -38,7 +38,7 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 进行登陆的方法
-	 * 
+	 *
 	 * @param username
 	 *            用户名
 	 * @param password
@@ -47,15 +47,15 @@ public class RequestNet extends BaseNet {
 	 *            请求回掉
 	 */
 	public void login(final String username, String password,
-			final BaseCallBack<LoginBean> callBack) {
+					  final BaseCallBack<LoginBean> callBack) {
 		RequestParams requestParams = new RequestParams();
-		 requestParams.add("username", username);
+		requestParams.add("username", username);
 		requestParams.add("password", password);
 		baseRequest(requestParams, NetUrl.LOGIN, new BaseCallBack<LoginBean>() {
 
 			@Override
 			public void messageResponse(RequestType requestType,
-					LoginBean bean, String message) {
+										LoginBean bean, String message) {
 				if (requestType == RequestType.messagetrue) {
 					// 如果登陆成功保存现有的用户名
 					SpUtil.putString(SpKey.USERINAME, username);
@@ -70,7 +70,7 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取任务列表 并进行存储
-	 * 
+	 *
 	 * @param callBack
 	 *            请求回掉 获得TaskList
 	 */
@@ -83,7 +83,7 @@ public class RequestNet extends BaseNet {
 
 					@Override
 					public void messageResponse(RequestType requestType,
-							TaskListBean bean, String message) {
+												TaskListBean bean, String message) {
 						if (requestType == RequestType.messagetrue) {
 							// 使用用户id存储任务列表
 							SpUtil.putString(SpKey.getUerId(), message);
@@ -96,14 +96,14 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取模板明细
-	 * 
+	 *
 	 * @param PreCheckArrangeDateCode
 	 * @param BuildingCode
 	 * @param UnitCode
 	 * @param callBack
 	 */
 	public void getTaskDetail(String PreCheckArrangeDateCode,
-			String BuildingCode, String UnitCode, BaseCallBack<String> callBack) {
+							  String BuildingCode, String UnitCode, BaseCallBack<String> callBack) {
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("PreCheckArrangeDateCode", PreCheckArrangeDateCode);
 		requestParams.add("BuildingCode", BuildingCode);
@@ -116,15 +116,15 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取模板明细 并进行存根据任务信息进行任务的下载
-	 * 
+	 *
 	 * @param taskMessage
 	 *            任务消息le
 	 * @param callBack
 	 *            请求回掉 若全部成功则成功 有一个失败则进行失败回掉
 	 */
 	public void downTask(final Context context, final TaskMessage taskMessage,
-			final BaseCallBack<String> callBack,
-			final ImageCallBack imageCallBack) {
+						 final BaseCallBack<String> callBack,
+						 final ImageCallBack imageCallBack) {
 		// 这是请求正在请求中的次数
 		requestCount = 0;
 		responceCount = 0;
@@ -167,7 +167,7 @@ public class RequestNet extends BaseNet {
 												"下载成功", "下载成功");
 										System.gc();
 										// TODO:开始进行图片下载 这是以后做的
-										// downLoadImage(taskMessage,imageCallBack);
+										 downLoadImage(taskMessage,imageCallBack);
 									}
 								} else {
 									callBack.messageResponse(requestType, bean,
@@ -181,14 +181,14 @@ public class RequestNet extends BaseNet {
 	}
 
 	private int problemCount = 0;
-	
-	
+
+
 	public void initprojectProblemByNe(){
-		problemCount++;Log.e("jinxing ",problemCount+"" );
+		problemCount++;
 		getStringRequest(NetUrl.PROJECT_PROBLEM, new BaseCallBack<String>() {
 			@Override
 			public void messageResponse(RequestType requestType, String bean,
-					String message) {
+										String message) {
 				if (requestType == RequestType.messagetrue) {
 					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
 				} else if(problemCount<=ProCount){
@@ -198,13 +198,13 @@ public class RequestNet extends BaseNet {
 			}
 		});
 	}
-	
+
 	public void getprojectProblemByNet(final BaseCallBack<TreeDataBean> callBack) {
 		getprojectProblemByNet(callBack, true);
 	}
 	/**
 	 * 进行网络请求 获取工程问题
-	 * 
+	 *
 	 * @param callBack
 	 *            请求回掉
 	 * @param useCache
@@ -225,7 +225,7 @@ public class RequestNet extends BaseNet {
 
 			@Override
 			public void messageResponse(RequestType requestType, String bean,
-					String message) {
+										String message) {
 				TreeDataBean problemBean = null;
 				if (requestType == RequestType.messagetrue) {
 					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
@@ -234,8 +234,8 @@ public class RequestNet extends BaseNet {
 					return;
 //					bean = SpUtil.getString(SpKey.PROJECTPROBLEM, "");
 				}
-				
-				
+
+
 				if (!TextUtils.isEmpty(bean)) {
 					problemBean = getGson().fromJson(bean, TreeDataBean.class);
 					callBack.messageResponse(RequestType.messagetrue,
@@ -253,12 +253,12 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 进行图片的下载
-	 * 
+	 *
 	 * @param taskMessage
 	 * @param imageCallBack
 	 */
 	public void downLoadImage(TaskMessage taskMessage,
-			final ImageCallBack imageCallBack) {
+							  final ImageCallBack imageCallBack) {
 		new TasMessagetUtil(taskMessage) {
 
 			@Override

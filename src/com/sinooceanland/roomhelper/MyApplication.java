@@ -15,6 +15,13 @@ public class MyApplication extends Application {
     public MyApplication(){
         SpUtil.init(this);
         SpUtilCurrentTaskInfo.init(this);
+
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+       /* CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());*/
+    }
 }

@@ -3,6 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.sinooceanland.roomhelper.ui.camera.CameraSurfaceView
+        android:id="@+id/surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:visibility="invisible"
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +28,7 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@color/colorBlue">
+                android:background="@color/colorBlue_transparent">
 
 
                 <TextView
@@ -86,20 +97,15 @@
 
             </RelativeLayout>
 
-            <TextView
+           <!-- <TextView
                 android:layout_width="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="请添加布局照片"
                 android:textSize="20sp"
-                android:layout_height="wrap_content" />
-
-            <android.support.v4.view.ViewPager
-                android:layout_below="@id/title"
-                android:id="@+id/vp_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content" />-->
 
             <RelativeLayout
+                android:visibility="invisible"
                 android:id="@+id/rl_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -141,6 +147,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:background="@color/colorWhite_transparent"
             android:id="@+id/rl_tackphoto"
             android:layout_width="100dp"
             android:layout_height="match_parent">
@@ -168,7 +175,7 @@
                 android:id="@+id/tv_add"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:text="添加布局照片"
+                android:text="查看布局照片"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_alignParentBottom="true"

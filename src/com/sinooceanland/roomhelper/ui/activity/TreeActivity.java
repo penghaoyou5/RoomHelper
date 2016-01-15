@@ -2,6 +2,7 @@ package com.sinooceanland.roomhelper.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.sinooceanland.roomhelper.R;
@@ -24,12 +25,16 @@ public class TreeActivity extends BaseActivity implements ABSTreeAdapter.OnTreeN
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setTitle("选择问题");
         initData();
     }
 
     private void initData() {
+
+
         new RequestNet(this).getprojectProblemByNet(new BaseNet.BaseCallBack<TreeDataBean>() {
             @Override
             public void messageResponse(BaseNet.RequestType requestType, TreeDataBean bean, String message) {
@@ -56,13 +61,23 @@ public class TreeActivity extends BaseActivity implements ABSTreeAdapter.OnTreeN
     @Override
     public void onClick(TreeNode node, int position) {
         if(node.isQuestion){
-            Intent intent = new Intent();
-            intent.putExtra("question3",node.name);
-            intent.putExtra("questionCode3",node.id);
-            intent.putExtra("question1",node.parentNode.parentNode.name);
-            intent.putExtra("questionCode1",node.parentNode.parentNode.id);
-            setResult(RESULT_OK, intent);
-            finish();
+            if(node.level==2){
+                Intent intent = new Intent();
+                intent.putExtra("question3",node.name);
+                intent.putExtra("questionCode3",node.id);
+                intent.putExtra("question1",node.parentNode.parentNode.name);
+                intent.putExtra("questionCode1",node.parentNode.parentNode.id);
+                setResult(RESULT_OK, intent);
+                finish();
+            }else if(node.level==1){
+                Intent intent = new Intent();
+                intent.putExtra("question3",node.name);
+                intent.putExtra("questionCode3",node.id);
+                intent.putExtra("question1",node.parentNode.name);
+                intent.putExtra("questionCode1",node.parentNode.id);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
     }
 }
