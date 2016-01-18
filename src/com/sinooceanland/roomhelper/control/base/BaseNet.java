@@ -1,42 +1,25 @@
 package com.sinooceanland.roomhelper.control.base;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.ResponseHandlerInterface;
-import com.loopj.android.http.TextHttpResponseHandler;
-import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
-import com.sinooceanland.roomhelper.control.taskdata.TaskList;
-import com.sinooceanland.roomhelper.control.test.TestNet;
 import com.sinooceanland.roomhelper.control.util.FileUtils;
 import com.sinooceanland.roomhelper.control.util.GetAssertUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
-import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
-import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
-import com.sinooceanland.roomhelper.ui.utils.SDUtils;
 
 /**
  * @author peng 进行网络请求的基类
@@ -117,6 +100,8 @@ public class BaseNet {
 	public static AsyncHttpClient getAsyncHttpClient() {
 		if (httpClient == null) {
 			httpClient = new AsyncHttpClient();
+			httpClient.setTimeout(20000);
+			httpClient.setMaxConnections(1000);
 		}
 		return httpClient;
 	}
@@ -222,29 +207,44 @@ public class BaseNet {
 
 	public void baseDownImage(final String id, String url,
 			final BaseCallBack<String> callback) {
+		File file = new File(SpKey.getProblemPictureAddress(), id);
+		if(file.exists()){
+			//如果图片已经存在就进行成功回调
+			callback.messageResponse(RequestType.messagetrue,
+					null, null);
+			return;
+		}
+		
 		RequestParams requestParams = new RequestParams();
-		requestParams.add("id", id);
-		getAsyncHttpClient().post(url, requestParams,
+//		requestParams.add("id", id);
+		url = url+id;
+		getAsyncHttpClient().get(url, requestParams,
 				new AsyncHttpResponseHandler() {
 
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
-							byte[] responseBody) {
-						 if(statusCode==200){  
-		                     BitmapFactory factory=new BitmapFactory();  
-		                     Bitmap bitmap=factory.decodeByteArray(responseBody, 0, responseBody.length);  
-		                     //保存图片
-		                     File file = FileUtils.getOrNewImageFile(SpKey.getProblemPictureAddress(), id);
-		                     FileUtils.write2file(file, responseBody);
-		                     
-		                 }  
-						 callback.messageResponse(RequestType.messagetrue,
-									null, new String(responseBody));
+										  byte[] responseBody) {
+						if (statusCode == 200) {
+							BitmapFactory factory = new BitmapFactory();
+							Bitmap bitmap = factory.decodeByteArray(responseBody, 0, responseBody.length);
+							//保存图片
+							File file = FileUtils.getOrNewImageFile(SpKey.getProblemPictureAddress(), id);
+//							FileUtils.write2file(file, responseBody);
+							try {
+								FileUtils.saveFile(bitmap,file);
+							}catch (Exception e){
+
+							}
+
+
+						}
+						callback.messageResponse(RequestType.messagetrue,
+								null, new String(responseBody));
 					}
 
 					@Override
 					public void onFailure(int statusCode, Header[] headers,
-							byte[] responseBody, Throwable error) {
+										  byte[] responseBody, Throwable error) {
 						callback.messageResponse(RequestType.connectFailure,
 								null, null);
 					}

@@ -36,8 +36,8 @@ public class NetUrl {
 	/**
 	 * 进行照片的下载
 	 */
-	public static final String PICTURE_DOWN = "http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/DownLoad";
-	
+//	public static final String PICTURE_DOWN = "http://mtest.sinooceanland.com/HouseAcceptance/HouseAcceptance/DownLoad";
+	public static final String PICTURE_DOWN = "http://mtest.sinooceanland.com/HouseAcceptance/image/";
 	/**
 	 * 进行文件的上传
 	 */

@@ -15,6 +15,11 @@ import android.content.SharedPreferences;
  */
 public class SpUtilCurrentTaskInfo {
 
+	public static void  clear(){
+		getSharedPref().edit().clear().commit();
+	}
+
+
 	private static Context mContext;
 
 	public static void init(Context context){

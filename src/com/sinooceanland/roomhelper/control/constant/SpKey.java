@@ -111,7 +111,8 @@ public class SpKey {
 		if(!file.exists()){
 			boolean mkdirs = file.mkdirs();
 		}
-		return file.getAbsolutePath()+File.separator;
+//		return file.getAbsolutePath()+File.separator;
+		return fileName;
 	}
 
 

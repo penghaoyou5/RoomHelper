@@ -6,22 +6,26 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
+import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.control.test.testTTT;
 import com.sinooceanland.roomhelper.control.util.EscapeUnescape;
 import com.sinooceanland.roomhelper.control.util.FileUtils;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
+import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
 import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
+import com.sinooceanland.roomhelper.ui.camera.util.FileUtil;
 
 /**
  * @author peng
@@ -58,14 +62,12 @@ public class UpNet extends BaseNet{
 		requestCount=0;
 		requestCurrentProgress = 0;
 		this.callBack = callBack;
-//		upImage();
-		upLoadAllJson();
+		upImage();
+//		upLoadAllJson();
 	}
-	
 	
 	private void upLoadAllJson(){
 		new TasMessagetUtil(taskMessage){
-			
 			@Override
 			public boolean forKey(String key) {
 				requestCount++;
@@ -73,7 +75,7 @@ public class UpNet extends BaseNet{
 				//TODO:只让利强写一个只根据键存值的方法
 				TaskDetailBean taskDetailBean = bigJsonManager.getTaskDetailBean();
 				String json = getGson().toJson(taskDetailBean);
-				 json = EscapeUnescape.escape(json);
+//				 json = EscapeUnescape.escape(json);
 				 testTTT.saveFile(json);
 				upLoadJson(context, json);
 				return false;
@@ -102,8 +104,12 @@ public class UpNet extends BaseNet{
 					String message) {
 				if(requestType == RequestType.messagetrue){
 					requestCurrentProgress++;
-					if(requestCount==0){
+					if(requestCount==requestCurrentProgress){
 						callBack.jsonResponse(RequestType.messagetrue, requestCount, requestCurrentProgress);
+						SpUtilCurrentTaskInfo.clear();
+						TaskMyssageData.getInstance().clearJson();
+						SpUtil.putBoolean(taskMessage.TaskCode, false);
+						SpUtil.putBoolean(taskMessage.TaskCode + SpKey.TASKSTATUE, false);
 					}
 					callBack.jsonResponse(RequestType.loading, requestCount, requestCurrentProgress);
 				}else{
@@ -135,7 +141,7 @@ public class UpNet extends BaseNet{
 				final File fileImage = listFiles[i];
 				RequestParams requestParams = new RequestParams();
 				try {
-					requestParams.put(fileImage.getName(), fileImage);
+					requestParams.put("file", fileImage);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -145,10 +151,17 @@ public class UpNet extends BaseNet{
 							BaseBean bean, String message) {
 						if(requestType==RequestType.messagetrue){
 							imageProgress++;
-							fileImage.deleteOnExit();
+							try {
+								fileImage.deleteOnExit();
+								FileUtils.deletefile(fileImage.getAbsolutePath());
+							}catch (Exception e){
+
+							}
+							Log.e("imageNum",imageCount+"---"+imageProgress);
 							if(imageCount == imageProgress){
 								//上传完成 进行文件删除
 								try {
+									FileUtils.deletefile(SpKey.getBigPictureAddress());
 									FileUtils.deletefile(file.getAbsolutePath());
 								} catch (Exception e) {
 									e.printStackTrace();

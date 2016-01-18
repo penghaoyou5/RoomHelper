@@ -34,6 +34,39 @@ import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
 
 
 public class testTTT extends AndroidTestCase {
+
+	public void testBeijing(){
+
+
+
+	}
+
+
+	public void test(){
+		iniSp();
+		RequestParams requestParams = new RequestParams();
+		String Imgurl =  SDUtils.getSDCardPath()+"testim.jpg";
+		File file = new File(Imgurl);
+		System.out.println("bean" + "testim.jpg");
+		boolean isex  = file.exists();
+		try {
+			requestParams.put("testim.jpg", file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		new RequestNet(mContext).
+		baseRequest(requestParams, NetUrl.PICTURE_UP, new BaseCallBack<BaseBean>(){
+
+			@Override
+			public void messageResponse(RequestType requestType, BaseBean bean,
+					String message) {
+				System.out.println("bean"+bean);
+			}
+			
+		},BaseBean.class) ;
+		
+	}
 	
 	public void testUserId(){
 		iniSp();
@@ -126,6 +159,7 @@ public class testTTT extends AndroidTestCase {
 			@Override
 			public void jsonResponse(RequestType requestType, int count, int current) {
 				// TODO Auto-generated method stub
+				System.out.println("dd");
 				
 			}
 		}, new ImageCallBack() {
@@ -324,4 +358,7 @@ public void testTesDetial(){
 	
 	
 }
+
+
+
 }
