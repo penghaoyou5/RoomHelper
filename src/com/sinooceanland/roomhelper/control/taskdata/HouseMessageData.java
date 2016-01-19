@@ -331,6 +331,7 @@ public class HouseMessageData {
 	}
 
 	public boolean haveProblemList(){
+<<<<<<< HEAD
 		boolean  openProblem = homMessage.LastCheckProblemList!=null&&homMessage.LastCheckProblemList.size()>0;
 		if(openProblem){
 			f:for (int i = 0;i<homMessage.LastCheckProblemList.size();i++){
@@ -345,6 +346,9 @@ public class HouseMessageData {
 		}
 
 		return openProblem;
+=======
+		return homMessage.LastCheckProblemList!=null&&homMessage.LastCheckProblemList.size()>0;
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 	}
 
 

@@ -1,13 +1,18 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import com.sinooceanland.roomhelper.R;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import com.sinooceanland.roomhelper.R;
 
+=======
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 /**
  * Created by Jackson on 2015/12/15.
  * Version : 1

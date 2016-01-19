@@ -329,6 +329,7 @@ public class RequestNet extends BaseNet {
 				imageAfterLoad(taskMessage, imageCallBack,
 						imageUrls.get(i));
 			}
+<<<<<<< HEAD
 			
 		}
 	}
@@ -337,6 +338,16 @@ public class RequestNet extends BaseNet {
 	private void imageAfterLoad(final TaskMessage taskMessage,
 			final ImageCallBack imageCallBack,
 			String imageur) {
+=======
+
+		}
+	}
+
+
+	private void imageAfterLoad(final TaskMessage taskMessage,
+								final ImageCallBack imageCallBack,
+								String imageur) {
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 		downOneImage(imageur,
 				new BaseCallBack<String>() {
 

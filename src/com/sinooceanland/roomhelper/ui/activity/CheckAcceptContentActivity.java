@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
+<<<<<<< HEAD
+=======
+import android.widget.Button;
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 import android.widget.TextView;
 
 import com.sinooceanland.roomhelper.R;
@@ -47,6 +51,11 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
         LastCheckProblemList lastCheckProblem = instance.getProblemList().get(position);
         mProblemList = lastCheckProblem.getPicture();
         mAdapter = new CheckViewPagerAdapter(mProblemList, this);
+<<<<<<< HEAD
+=======
+        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_msg.setText(lastCheckProblem.EnginTypeFullName);
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
     }
 
     private void initView() {

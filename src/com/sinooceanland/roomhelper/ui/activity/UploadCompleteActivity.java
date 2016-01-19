@@ -1,16 +1,24 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import com.sinooceanland.roomhelper.R;
+import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.net.UpNet;
+import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
+
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+<<<<<<< HEAD
 import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.net.UpNet;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 
+=======
+>>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 /**
  * Created by Jackson on 2015/12/18.
  * Version : 1
