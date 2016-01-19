@@ -55,9 +55,9 @@ public class BaseJsonManager {
 	//定义共用的保存json数据的方法
 	//优化保存json的方法，json存在就不保存了
 	private void saveJson(String json){
-		if(TextUtils.isEmpty(obtainJson())){
+//		if(TextUtils.isEmpty(obtainJson())){
 			resetJson(json);
-		}
+//		}
 	}
 	
 	//获取托管的json数据

@@ -61,23 +61,13 @@ public class TreeActivity extends BaseActivity implements ABSTreeAdapter.OnTreeN
     @Override
     public void onClick(TreeNode node, int position) {
         if(node.isQuestion){
-            if(node.level==2){
-                Intent intent = new Intent();
-                intent.putExtra("question3",node.name);
-                intent.putExtra("questionCode3",node.id);
-                intent.putExtra("question1",node.parentNode.parentNode.name);
-                intent.putExtra("questionCode1",node.parentNode.parentNode.id);
-                setResult(RESULT_OK, intent);
-                finish();
-            }else if(node.level==1){
-                Intent intent = new Intent();
-                intent.putExtra("question3",node.name);
-                intent.putExtra("questionCode3",node.id);
-                intent.putExtra("question1",node.parentNode.name);
-                intent.putExtra("questionCode1",node.parentNode.id);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+            Intent intent = new Intent();
+            intent.putExtra("question3",node.name);
+            intent.putExtra("questionCode3",node.id);
+            intent.putExtra("question1",node.parentNode.name);
+            intent.putExtra("questionCode1",node.parentNode.id);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 }

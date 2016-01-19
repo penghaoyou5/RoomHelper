@@ -22,7 +22,7 @@ public abstract class TasMessagetUtil {
 			for (int j = 0; j < waiUnitCode.size(); j++) {
 				final String UnitCode = buildingList.UnitCode.get(j);
 				boolean forKey = forKey(taskMessage.TaskCode + "+"+ buildingList.BuildingCode+ "+" + UnitCode);
-				if(true)return;
+				if(forKey)return;
 			}
 		}
 	}

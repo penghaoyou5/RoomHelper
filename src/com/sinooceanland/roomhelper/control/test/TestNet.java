@@ -14,7 +14,6 @@ public class TestNet {
 
 		for (int i = 0; i < 50; i++) {
 			taskDetailBean.list.add(homeMessage(i));
-			
 		}
 //		String json = BaseNet.getGson().toJson(taskDetailBean);
 		return taskDetailBean;

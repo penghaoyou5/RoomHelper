@@ -1,12 +1,16 @@
 package com.sinooceanland.roomhelper.dao.module;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sinooceanland.roomhelper.control.constant.SpKey;
+import com.sinooceanland.roomhelper.control.util.CreateGUID;
 import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
 import com.sinooceanland.roomhelper.dao.base.HouseMessageBaseBean;
+import com.sinooceanland.roomhelper.ui.utils.TextUtil;
 
 /**
  * @author peng 房屋信息
@@ -14,6 +18,8 @@ import com.sinooceanland.roomhelper.dao.base.HouseMessageBaseBean;
 public class HouseMessage extends HouseMessageBaseBean {
 	public String PropertTypeName;
 	public String SaleRecordCode;
+	public String Code;
+	public boolean localIsFinish;//判断本地操作是否已完成
 	public List<LastCheckProblemList> LastCheckProblemList;
 	public List<SpaceLayoutList> SpaceLayoutList;
 
@@ -24,17 +30,24 @@ public class HouseMessage extends HouseMessageBaseBean {
 		public String PreCheckCode;
 		public String ProPretTypeName;
 		public String SpaceLayoutCode;
+		public String EnginTypeCode;
+		public String EnginTypeName;
+		public String EnginTypeFullName;
+		public String EngineeringCategoryCode;
+		public String EngineeringCategoryName;
+
 		// TODO:原public List<AttachmentIDS> AttachmentIDS;
 		public List<String> AttachmentIDS;
 		public ArrayList<ProblemPicture> getPicture(){
 			ArrayList<ProblemPicture> arrayList = new ArrayList<ProblemPicture>();
 			for (int i = 0; i < AttachmentIDS.size(); i++) {
 				ProblemPicture problemPicture = new ProblemPicture(AttachmentIDS.get(i),SpaceLayoutName,this);
+				problemPicture.setProblemPictures(arrayList);
 				arrayList.add(problemPicture);
 			}
 			return arrayList;
 		}
-		
+
 		// int
 		/**
 		 * 要修改 上次验收问题是否通过 0 未通过 1 通过
@@ -104,22 +117,30 @@ public class HouseMessage extends HouseMessageBaseBean {
 			return "未通过";
 		}
 
+
+
 		/**
-		 * 进行验收状态的设置方法
+		 * 进行验收状态的设置方法  设置为确认
 		 * @return
 		 */
-		public boolean setCheckStauts() {
-			for (int i = 0; i < AttachmentIDS.size(); i++) {
-				String str = AttachmentIDS.get(i);
-				int in = SpUtilCurrentTaskInfo.getInt(str, -1);
-				if(in==-1){
-					return false;
-				}
+		public boolean setCheckStauts(CheckedStatue state) {
+//			for (int i = 0; i < AttachmentIDS.size(); i++) {
+//				String str = AttachmentIDS.get(i);
+//				int in = SpUtilCurrentTaskInfo.getInt(str, -1);
+//				if(in==-1){
+//					return false;
+//				}
+//			}
+			if(!TextUtils.equals(CheckStauts,state.getState())){
+				CheckStauts = String.valueOf(state.getState());
+				return true;
 			}
-			CheckStauts = "1";
-			return true;
+			return false;
 		}
 	}
+
+
+
 
 	/**
 	 * @author peng 布局类 例如 厨房这一级
@@ -128,6 +149,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 		public String SpaceLayoutFullName;
 		public String SpaceLayoutCode;
 		public String SpaceLayoutName;
+
 		// TODO:原public List<AttachmentIDS> AttachmentIDS;
 		/**
 		 * 要修改 要是修改的字段 看看接口文档，json格式可能不太一样 表示布局空间内所有图片
@@ -135,7 +157,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 		public List<String> AttachmentIDS;
 
 		public List<EnginTypeList> EnginTypeList;
-		
+
 		public String getSpaceLayoutFullName() {
 			return SpaceLayoutFullName;
 		}
@@ -185,6 +207,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 			public String CheckRemark;
 			public String EnginTypeName;
 			public String EnginTypeCode;
+			public String Code = CreateGUID.GenerateGUID();
 			// TODO:原public List<AttachmentIDS> AttachmentIDS;
 			public List<String> AttachmentIDS;
 
@@ -194,7 +217,7 @@ public class HouseMessage extends HouseMessageBaseBean {
 
 				public String ProblemDescriptionName;
 				public String ProblemDescriptionCode;
-				
+
 				public String getProblemDescriptionName() {
 					return ProblemDescriptionName;
 				}

@@ -1,5 +1,7 @@
 package com.sinooceanland.roomhelper.control.taskdata;
 
+import android.content.Intent;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,23 +16,26 @@ import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList;
+import com.sinooceanland.roomhelper.ui.utils.TextUtil;
 
 public class HouseMessageData {
 
 	// 这是保存homMessage 数据 为了保持始终一个引用初始化后能拿到所以静态
 	private static HouseMessage homMessage;
-//	private String bigPickturUrl;
-//	private String smallPickturUrl;
 
 	private static HouseMessageData data;
 
-//	private HouseMessageData(HouseMessage homMessage) {
-//		HouseMessageData.homMessage = homMessage;
-//		bigPickturUrl = SpKey.getBigPictureAddress();
-//		smallPickturUrl = SpKey.getSmallPictureAddress();
-//	}
-
 	private HouseMessageData(){}
+
+	public  void releaseOtherBigjson(){
+		if(homMessage==null)return;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				TaskMyssageData.releaseOtherBigjson(homMessage);
+			}
+		}).start();
+	}
 
 	/**
 	 * 记录当前进入的房间
@@ -43,14 +48,6 @@ public class HouseMessageData {
 			data = new HouseMessageData();
 		}
 		HouseMessageData.homMessage = homMessage;
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				TaskMyssageData.releaseOtherBigjson(homMessage);
-			}
-		}).start();
-//		data.bigPickturUrl = SpKey.getBigPictureAddress();
-//		data.smallPickturUrl = SpKey.getSmallPictureAddress();
 		return data;
 	}
 
@@ -101,9 +98,9 @@ public class HouseMessageData {
 		/**
 		 * 这是进行图片保存的类
 		 */
-		public void savePickInfo(){
-
-		}
+//		public void savePickInfo(){
+//
+//		}
 
 
 		/**
@@ -111,7 +108,7 @@ public class HouseMessageData {
 		 * @param layoutPotion 是第几个布局？
 		 * @param imageName 图片名
 		 * @param sure 是否确认
-		 * @param pinfo 问题
+		 * @param proinfo 问题
 		 * @return
 		 */
 		public PictureInfo addPictureInfoOrModify(int layoutPotion,String imageName,boolean sure,ProbleamInfo proinfo){
@@ -323,12 +320,31 @@ public class HouseMessageData {
 			pictureUri = System.currentTimeMillis() +SpKey.getCurrentTaskMessage()+  homMessage.PreHouseFullName;
 		}
 
-		preUrl = MD5Util.GetMD5Code(pictureUri);
+//		preUrl = MD5Util.GetMD5Code(pictureUri);
+		preUrl =TextUtil.connectString(MD5Util.GetMD5Code(pictureUri), ".jpg");
+
 		return preUrl;
 	}
 
 	public List<LastCheckProblemList> getProblemList(){
 		return homMessage.LastCheckProblemList;
+	}
+
+	public boolean haveProblemList(){
+		boolean  openProblem = homMessage.LastCheckProblemList!=null&&homMessage.LastCheckProblemList.size()>0;
+		if(openProblem){
+			f:for (int i = 0;i<homMessage.LastCheckProblemList.size();i++){
+				String sta =  homMessage.LastCheckProblemList.get(i).CheckStauts;
+				if("0".equals(sta)){
+					openProblem = false;
+					break f;
+				}
+			}
+			//如果都是通过 则返回不能进
+			openProblem = !openProblem;
+		}
+
+		return openProblem;
 	}
 
 
@@ -380,8 +396,31 @@ public class HouseMessageData {
 
 		return "2";
 	}
+
+
+
+	/**
+	 * 当点击拍照完成时调用的方法
+	 * @return
+	 */
+	public void setCheckStautsSure(String statue){
+		homMessage.CheckStauts  = statue;
+		//进行已完成房间数增加
+		int finishCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseFinalCount(),0)+1;
+		SpUtilCurrentTaskInfo.putInt(SpKey.getTaskHouseFinalCount(),finishCount);
+
+		int houseCount = SpUtilCurrentTaskInfo.getInt(SpKey.getTaskHouseCount(), 0);
+		//房间全部已完成  则工程全部已完成
+		if(finishCount>=houseCount){
+			SpUtil.putBoolean( TaskMyssageData.getInstance().getTaskMessage().TaskCode+SpKey.TASKSTATUE, true);
+			return;
+		}
+		savePicture();
+		//进行数据转换
+	}
 //========================================================================================	
 	/**
+	 * 已验证没问题
 	 * 根据照片进行循环遍历存储有问题的照片
 	 * 要对每个
 	 */
@@ -466,5 +505,85 @@ public class HouseMessageData {
 
 		if(!attachmentIDS.contains(pictureNme))
 			attachmentIDS.add(pictureNme);
+	}
+
+
+
+	/**
+	 * 直接根据调用
+	 * @return
+	 */
+	public String setHouseStatue(){
+		String statue = "2";
+		//得到空间布局的辅助类
+		SpaceLayoutListHelper layoutListHelper = getSpaceLayoutList();
+		List<SpaceLayoutList> spaceLayoutList = layoutListHelper.getSpaceLayoutList();
+		int size = spaceLayoutList.size();
+		for (int i = 0; i < size; i++) {
+			//得到对应id下的图片对象 
+			List<PictureInfo> potion = layoutListHelper.getPotion(i);
+			//有一个布局中没有照片  -- 未完成
+			if(potion.size()<=0){
+				setCheckStute("0");
+				return "0";
+			}
+			//判断房间中已完成房间数
+			int haveFinishhouseSun = 0;
+			for (int j = 0; j < potion.size(); j++) {
+				PictureInfo pictureInfo = potion.get(j);
+				ProbleamInfo problem = pictureInfo.problem;
+				//若有问题进行问题的添加
+				if(pictureInfo.isSure()&&problem==null){
+					haveFinishhouseSun+=1;
+				}
+			}
+			if(haveFinishhouseSun==0||haveFinishhouseSun>1){
+				//未验收
+				setCheckStute("0");
+				return "0";
+			}
+			if(potion.size()>1){
+				//已完成未通过状态
+				statue = "1";
+			}
+		}
+		setCheckStute(statue);
+		return statue;
+	}
+
+	/**
+	 * 进行房间完成状态的改变
+	 * @param stute
+	 */
+	public void setCheckStute(String stute){
+
+		//已完成变为未完成   减法
+		if("0".equals(stute)&&!"0".equals(homMessage.CheckStauts)){
+			homMessage.localIsFinish = false;
+			setCheckStautsFalse();
+		}
+
+		//未完成变为已完成 加法
+		if(!"0".equals(stute)&&"0".equals(homMessage.CheckStauts)){
+			homMessage.localIsFinish = true;
+			setCheckStautsSure(stute);
+		}
+		homMessage.CheckStauts = stute;
+		//如果原来状态相等
+		if(stute.equals(homMessage.CheckStauts)){
+			//如果是不是未完成进行图片存储转换操作
+			if(!"0".equals(stute))
+				savePicture();
+			return;
+		}
+//		//变为未验收
+//		if("0".equals(stute)){
+//			//若改变为0进行相减操作
+//			setCheckStautsFalse();
+//			return;
+//		}else{
+//		//变为已验收   进行相加操作
+//			setCheckStautsSure(stute);
+//		}
 	}
 }

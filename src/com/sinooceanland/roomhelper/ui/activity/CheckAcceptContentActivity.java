@@ -1,12 +1,12 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData;
@@ -14,8 +14,6 @@ import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
 import com.sinooceanland.roomhelper.dao.module.ProblemPicture;
 import com.sinooceanland.roomhelper.ui.adapter.CheckViewPagerAdapter;
-
-import java.util.ArrayList;
 
 /**
  * Created by Jackson on 2016/1/3.
@@ -46,10 +44,9 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
     private void initData() {
         int position = getIntent().getIntExtra("position", 0);
         HouseMessageData instance = HouseMessageData.getInstance();
-        LastCheckProblemList LastCheckProblem = instance.getProblemList().get(position);
-        mProblemList = LastCheckProblem.getPicture();
+        LastCheckProblemList lastCheckProblem = instance.getProblemList().get(position);
+        mProblemList = lastCheckProblem.getPicture();
         mAdapter = new CheckViewPagerAdapter(mProblemList, this);
-        // MyViewPagerAdapter 这个adapter 复制一下来用 //item_check_accept_content layout可以用这个改
     }
 
     private void initView() {

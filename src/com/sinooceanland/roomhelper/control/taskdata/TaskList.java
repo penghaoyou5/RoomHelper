@@ -35,11 +35,16 @@ public class TaskList {
 		for (int i = 0; i < list.size(); i++) {
 			TaskMessage taskMessage = list.get(i);
 			String taskCode = taskMessage.TaskCode;
-			boolean load;
+			boolean load = false;
 			//是否已完成
 			taskMessage.isFinish = SpUtil.getBoolean(taskCode+SpKey.TASKSTATUE, false);
 			//根据任务编码是否已下载
-			load = SpUtil.getBoolean(taskCode, false);
+			
+			//如果图片数相等
+			if(SpUtil.getInt(taskCode+"imagecurrent", 0)>=SpUtil.getInt(taskCode+"imagecount", 0)){
+				//根据json进行已完成未完成判断
+				load = SpUtil.getBoolean(taskCode, false);
+			}
 			if(load){
 				alreadLoad.add(taskMessage);
 			}else{

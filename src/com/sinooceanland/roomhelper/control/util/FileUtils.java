@@ -1,5 +1,6 @@
 package com.sinooceanland.roomhelper.control.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 
 public class FileUtils {
@@ -28,19 +31,55 @@ public class FileUtils {
 		if (!dirFile.exists()) {// 存储目录是否存在，不存在则穿件
 			dirFile.mkdirs();
 		}
-		File platCarFile = new File(dirFile + fileName);
+		File platCarFile = new File(dirFile,fileName);
 		return platCarFile;
 	}
 
+	public static  void saveFile(Bitmap bm,File dirFile) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(dirFile));
+		bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+		bos.flush();
+		bos.close();
+	}
+
 	/**
-	 * 往车辆平台文件中写入json数据
+	 * 写入图片数据
 	 */
 	public static void write2file(File file, byte[] responseBody) {
+		if(true){
+			FileOutputStream outputStream = null;
+
+			try{
+//				outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+				outputStream = new FileOutputStream(file);
+				outputStream.write(responseBody);
+				outputStream.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			finally {
+				try {
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+
+
 		PrintStream out = null;
 		try {
+			if(!file.exists()){
+				file.createNewFile();
+			}
 			out = new PrintStream(new FileOutputStream(file));
 			out.print(responseBody);
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		if (out != null) {

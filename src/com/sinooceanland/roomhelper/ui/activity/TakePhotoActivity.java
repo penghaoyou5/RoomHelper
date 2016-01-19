@@ -2,6 +2,7 @@ package com.sinooceanland.roomhelper.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -360,8 +361,6 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_title_complete:
                 if(!isCurrentLayoutSure())return;
-                HouseMessageData houseMessageData = HouseMessageData.getInstance();
-                houseMessageData.setCheckStautsSure();
                 startActivity(new Intent(this,ChooseBuildingActivity.class));
                 finish();
                 break;
@@ -506,11 +505,12 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
                         String question3 = data.getStringExtra("question3");
                         String questionCode3 = data.getStringExtra("questionCode3");
                         String question1 = data.getStringExtra("question1");
-                        //String questionCode1 = data.getStringExtra("questionCode1");
+                        String questionCode1 = data.getStringExtra("questionCode1");
                         ProbleamInfo probleamInfo = new ProbleamInfo();
+
                         probleamInfo.ProblemDescriptionName = question3;
                         probleamInfo.ProblemDescriptionCode = questionCode3;
-                        probleamInfo.EnginTypeCode = question1;
+                        probleamInfo.EnginTypeCode = questionCode1;
 
                         PictureInfo pictureInfo = mPictureList.get(getCurrentPosition());
                         pictureInfo.setProblem(probleamInfo);
@@ -553,10 +553,11 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void finish() {
-        super.finish();
         TaskMyssageData.saveModifyBigJson();
+        HouseMessageData.getInstance().setHouseStatue();
         vp_content.setAdapter(null);
         mAdapter = null;
+        super.finish();
     }
 
     public void setText(String question){
@@ -578,5 +579,13 @@ public class TakePhotoActivity extends BaseActivity implements View.OnClickListe
 
     public int getCurrentPosition(){
        return   vp_content.getCurrentItem();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        Camera camera = mSurface.getCamera();
+        if(camera!=null) camera.release();
+        super.onDestroy();
     }
 }

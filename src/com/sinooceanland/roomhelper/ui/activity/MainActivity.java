@@ -12,7 +12,6 @@ import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.utils.TextUtil;
-import com.victor.loading.rotate.RotateLoading;
 
 
 public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<LoginBean> {
@@ -54,7 +53,8 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
             public void onClick(View v) {
                 String account = TextUtil.getString(et_account);
                 String password = TextUtil.getString(et_password);
-               requestNet.login(account, password, MainActivity.this);
+                showDialog(false);
+                requestNet.login(account, password, MainActivity.this);
                 btn_login.setEnabled(false);
             }
         });
@@ -68,15 +68,18 @@ public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<L
     @Override
     public void messageResponse(BaseNet.RequestType requestType, LoginBean bean, String message) {
         btn_login.setEnabled(true);
+        dismissDialog();
         if(requestType== requestType.messagetrue){
             startActivity(new Intent(MainActivity.this, TaskActivity.class));
             SpUtils.putString(MainActivity.this, ACCOUNT, TextUtil.getString(et_account)).commit();
-
             requestNet.initprojectProblemByNe();
             finish();
-        }else {
+        }
+        if(requestType== requestType.connectFailure){
+            showToast("网络连接失败");
+        }
+        if(requestType== requestType.messagefalse) {
             showToast("账号密码错误");
         }
-
     }
 }
