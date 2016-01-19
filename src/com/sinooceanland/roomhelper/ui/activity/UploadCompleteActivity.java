@@ -1,12 +1,15 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import com.sinooceanland.roomhelper.R;
+import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.net.UpNet;
+import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
+
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.sinooceanland.roomhelper.R;
 
 /**
  * Created by Jackson on 2015/12/18.
@@ -23,15 +26,31 @@ public class UploadCompleteActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("这里写项目名称");
+        taskMyssageData = TaskMyssageData.getInstance();
+        setTitle(taskMyssageData.getTaskName());
         initView();
+        upLoad();
+    }
+    private boolean isFirst = true;
+    TaskMyssageData taskMyssageData;
+    private void upLoad() {
+        new UpNet().upTaskMessage(this,
+                taskMyssageData.getTaskMessage(), new BaseNet.JsonCallBack() {
+                    @Override
+                    public void jsonResponse(BaseNet.RequestType requestType, int count, int current) {
+                        if(requestType == BaseNet.RequestType.messagetrue){
+                            setCompleteState();
+                        }
+                    }
+                }, new BaseNet.ImageCallBack() {
+                    @Override
+                    public void imageResponse(BaseNet.RequestType requestType, int count, int current) {
+                        if(isFirst){
+                            isFirst = false;
+                        }
+                    }
+                });
         showLoading();
-        setRightOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setCompleteState();
-            }
-        });
     }
 
     private void initView() {
@@ -40,7 +59,6 @@ public class UploadCompleteActivity extends BaseActivity implements View.OnClick
         mTv = (TextView) findViewById(R.id.tv);
         mLoadingView = findViewById(R.id.v);
         loadingDrawable = (AnimationDrawable) mLoadingView.getBackground();
-
     }
 
     @Override
@@ -52,13 +70,14 @@ public class UploadCompleteActivity extends BaseActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_complete:
-            finish();
+                setResult(RESULT_OK);
+                finish();
                 break;
         }
     }
 
     private void showLoading(){
-        mLoadingView.setVisibility(View.VISIBLE);
+       // mLoadingView.setVisibility(View.VISIBLE);
         loadingDrawable.start();
         mTv.setText("请稍后...");
     }
@@ -74,6 +93,4 @@ public class UploadCompleteActivity extends BaseActivity implements View.OnClick
         mBtn_complete.setText("上传完成");
         dissmissLoading();
     }
-
-
 }

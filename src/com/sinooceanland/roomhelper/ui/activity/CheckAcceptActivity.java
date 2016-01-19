@@ -85,7 +85,6 @@ public class CheckAcceptActivity extends BaseActivity implements View.OnClickLis
                 startActivity(new Intent(this,TakePhotoActivity.class));
                 finish();
                 break;
-
         }
     }
 

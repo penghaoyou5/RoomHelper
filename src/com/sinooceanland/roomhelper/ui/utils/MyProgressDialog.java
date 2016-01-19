@@ -34,7 +34,7 @@ public class MyProgressDialog {
         return this;
     }
 
-    public  MyProgressDialog showDialogHorizontal(Context context,int max){
+    public  MyProgressDialog  showDialogHorizontal(Context context,int max){
 
 //创建ProgressDialog对象
         m_pDialog = new ProgressDialog(context);

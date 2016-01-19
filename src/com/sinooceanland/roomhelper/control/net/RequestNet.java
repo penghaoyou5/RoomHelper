@@ -1,5 +1,6 @@
 package com.sinooceanland.roomhelper.control.net;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -29,7 +30,7 @@ import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
  */
 /**
  * @author peng
- * 
+ *
  */
 public class RequestNet extends BaseNet {
 
@@ -42,7 +43,7 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 进行登陆的方法
-	 * 
+	 *
 	 * @param username
 	 *            用户名
 	 * @param password
@@ -51,7 +52,7 @@ public class RequestNet extends BaseNet {
 	 *            请求回掉
 	 */
 	public void login(final String username, String password,
-			final BaseCallBack<LoginBean> callBack) {
+					  final BaseCallBack<LoginBean> callBack) {
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("username", username);
 		requestParams.add("password", password);
@@ -59,7 +60,7 @@ public class RequestNet extends BaseNet {
 
 			@Override
 			public void messageResponse(RequestType requestType,
-					LoginBean bean, String message) {
+										LoginBean bean, String message) {
 				if (requestType == RequestType.messagetrue) {
 					// 如果登陆成功保存现有的用户名
 					SpUtil.putString(SpKey.USERINAME, username);
@@ -74,7 +75,7 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取任务列表 并进行存储
-	 * 
+	 *
 	 * @param callBack
 	 *            请求回掉 获得TaskList
 	 */
@@ -87,7 +88,7 @@ public class RequestNet extends BaseNet {
 
 					@Override
 					public void messageResponse(RequestType requestType,
-							TaskListBean bean, String message) {
+												TaskListBean bean, String message) {
 						if (requestType == RequestType.messagetrue) {
 							// 使用用户id存储任务列表
 							SpUtil.putString(SpKey.getUerId(), message);
@@ -100,14 +101,14 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取模板明细
-	 * 
+	 *
 	 * @param PreCheckArrangeDateCode
 	 * @param BuildingCode
 	 * @param UnitCode
 	 * @param callBack
 	 */
 	public void getTaskDetail(String PreCheckArrangeDateCode,
-			String BuildingCode, String UnitCode, BaseCallBack<String> callBack) {
+							  String BuildingCode, String UnitCode, BaseCallBack<String> callBack) {
 		RequestParams requestParams = new RequestParams();
 		requestParams.add("PreCheckArrangeDateCode", PreCheckArrangeDateCode);
 		requestParams.add("BuildingCode", BuildingCode);
@@ -125,15 +126,15 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 获取模板明细 并进行存根据任务信息进行任务的下载
-	 * 
+	 *
 	 * @param taskMessage
 	 *            任务消息le
 	 * @param callBack
 	 *            请求回掉 若全部成功则成功 有一个失败则进行失败回掉
 	 */
 	public void downTask(final Context context, final TaskMessage taskMessage,
-			final BaseCallBack<String> callBack,
-			final ImageCallBack imageCallBack) {
+						 final BaseCallBack<String> callBack,
+						 final ImageCallBack imageCallBack) {
 		SpUtil.putString(SpKey.CURRENTTASKMESSAGE, taskMessage.TaskCode);
 		haveCallBack = false;
 		// 这是请求正在请求中的次数
@@ -204,7 +205,7 @@ public class RequestNet extends BaseNet {
 		getStringRequest(NetUrl.PROJECT_PROBLEM, new BaseCallBack<String>() {
 			@Override
 			public void messageResponse(RequestType requestType, String bean,
-					String message) {
+										String message) {
 				if (requestType == RequestType.messagetrue) {
 					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
 				} else if (problemCount <= ProCount) {
@@ -221,7 +222,7 @@ public class RequestNet extends BaseNet {
 
 	/**
 	 * 进行网络请求 获取工程问题
-	 * 
+	 *
 	 * @param callBack
 	 *            请求回掉
 	 * @param useCache
@@ -245,7 +246,7 @@ public class RequestNet extends BaseNet {
 
 			@Override
 			public void messageResponse(RequestType requestType, String bean,
-					String message) {
+										String message) {
 				TreeDataBean problemBean = null;
 				if (requestType == RequestType.messagetrue) {
 					SpUtil.putString(SpKey.PROJECTPROBLEM, bean);
@@ -277,15 +278,20 @@ public class RequestNet extends BaseNet {
 	public boolean haveMessage = false;
 
 	/**
+	 * 进行图片请求地址的集合
+	 */
+	private ArrayList<String> imageUrls = new ArrayList<String>();
+	/**
 	 * 进行图片的下载
-	 * 
+	 *
 	 * @param taskMessage
 	 * @param imageCallBack
 	 * @param callBack
 	 */
 	public void downLoadImage(final TaskMessage taskMessage,
-			final ImageCallBack imageCallBack,
-			final BaseCallBack<String> callBack) {
+							  final ImageCallBack imageCallBack,
+							  final BaseCallBack<String> callBack) {
+		imageUrls = new ArrayList<String>();
 		haveMessage = false;
 		new TasMessagetUtil(taskMessage) {
 			@Override
@@ -306,46 +312,59 @@ public class RequestNet extends BaseNet {
 						}
 						List<String> attachmentIDS = lastCheckProblemList
 								.get(j).AttachmentIDS;
-						for (int k = 0; k < attachmentIDS.size(); k++) {
-							imagecount++;
-							SpUtil.putInt(taskMessage.TaskCode+"imagecount", imagecount);
-							downOneImage(attachmentIDS.get(k),
-									new BaseCallBack<String>() {
-
-										@Override
-										public void messageResponse(
-												RequestType requestType,
-												String bean, String message) {
-											if (requestType == RequestType.messagetrue) {
-												imagecurrent++;
-												SpUtil.putInt(taskMessage.TaskCode+"imagecurrent", imagecurrent);
-												//对当前任务的图片个数进行存储
-												imageCallBack.imageResponse(
-														RequestType.loading,
-														imagecount,
-														imagecurrent);
-												//如果当前图片下载图片数等于全部图片数  下载完成
-												if (imagecurrent == imagecount) {
-													imageCallBack
-															.imageResponse(
-																	RequestType.messagetrue,
-																	imagecount,
-																	imagecurrent);
-												}
-											}else{
-												imageCallBack.imageResponse(requestType, imagecount, imagecurrent);
-											}
-										}
-									});
-
-						}
-
+						imageUrls.addAll(attachmentIDS);
 					}
 				}
 				return false;
 			}
 		};
-		callBack.messageResponse(RequestType.messagetrue, "下载成功", "下载成功");
+		if(!haveMessage){
+			//如果没有图片下载成功
+			callBack.messageResponse(RequestType.messagetrue, "下载成功", "下载成功");
+		}else{
+			imagecount = imageUrls.size();
+			SpUtil.putInt(taskMessage.TaskCode+"imagecount", imagecount);
+			//如果有图片进行图片的下载
+			for (int i = 0; i < imageUrls.size(); i++) {
+				imageAfterLoad(taskMessage, imageCallBack,
+						imageUrls.get(i));
+			}
+
+		}
+	}
+
+
+	private void imageAfterLoad(final TaskMessage taskMessage,
+								final ImageCallBack imageCallBack,
+								String imageur) {
+		downOneImage(imageur,
+				new BaseCallBack<String>() {
+
+					@Override
+					public void messageResponse(
+							RequestType requestType,
+							String bean, String message) {
+						if (requestType == RequestType.messagetrue) {
+							imagecurrent++;
+							SpUtil.putInt(taskMessage.TaskCode+"imagecurrent", imagecurrent);
+							//对当前任务的图片个数进行存储
+							imageCallBack.imageResponse(
+									RequestType.loading,
+									imagecount,
+									imagecurrent);
+							//如果当前图片下载图片数等于全部图片数  下载完成
+							if (imagecurrent == imagecount) {
+								imageCallBack
+										.imageResponse(
+												RequestType.messagetrue,
+												imagecount,
+												imagecurrent);
+							}
+						}else{
+							imageCallBack.imageResponse(requestType, imagecount, imagecurrent);
+						}
+					}
+				});
 	}
 
 	/**

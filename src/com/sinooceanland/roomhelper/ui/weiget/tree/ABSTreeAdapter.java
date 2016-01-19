@@ -86,7 +86,7 @@ public abstract class ABSTreeAdapter extends BaseAdapter {
             /**
              * 对所有的Node进行排序
              */
-            mAllNodes = TreeHelper.getSortedNodes(mAllDatas);
+            mAllNodes = TreeHelper.getSortedNodes(mAllDatas,null,null);
             /**
              * 过滤出可见的Node
              */

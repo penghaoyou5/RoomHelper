@@ -2,8 +2,11 @@ package com.sinooceanland.roomhelper.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -129,6 +132,14 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChooseBuildingActivity.this, TaskActivity.class));
+                finish();
             }
         });
     }
@@ -260,14 +271,15 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
                 HouseMessageData.setHouseMessage(houseMessage);
                 startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
                 break;
-            case 1:
+            case 1://验收未通过
                 HouseMessage houseMessage2 = mAdapter.getData().get(position);//TODO 这里拿到点击的bean 然后跳转测量房间
                 HouseMessageData.setHouseMessage(houseMessage2);
-                // startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
-                startActivity(new Intent(this, CheckAcceptActivity.class));
+                startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
                 break;
             case 2:
-                showToast("验收已通过");
+                HouseMessage houseMessage3 = mAdapter.getData().get(position);//TODO 这里拿到点击的bean 然后跳转测量房间
+                HouseMessageData.setHouseMessage(houseMessage3);
+                startActivityForResult(new Intent(this, StartActivity.class), REQUEST_CODE_OK);
                 break;
         }
 
@@ -275,10 +287,17 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (REQUEST_CODE_OK == requestCode && resultCode == RESULT_OK) {
-            finish();
+        switch (requestCode){
+            case REQUEST_CODE_OK:
+                if(resultCode == RESULT_OK){
+                    finish();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private int mLoadTime = 1;
@@ -304,5 +323,15 @@ public class ChooseBuildingActivity extends BaseActivity implements View.OnClick
 
     }
     //--------滑动监听
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(this, TaskActivity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }

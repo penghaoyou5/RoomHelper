@@ -20,7 +20,7 @@ public class HouseMessageData {
 
 	// 这是保存homMessage 数据 为了保持始终一个引用初始化后能拿到所以静态
 	private static HouseMessage homMessage;
-	
+
 	private static HouseMessageData data;
 
 	private HouseMessageData(){}
@@ -327,7 +327,7 @@ public class HouseMessageData {
 	public List<LastCheckProblemList> getProblemList(){
 		return homMessage.LastCheckProblemList;
 	}
-	
+
 	public boolean haveProblemList(){
 		return homMessage.LastCheckProblemList!=null&&homMessage.LastCheckProblemList.size()>0;
 	}
@@ -381,9 +381,9 @@ public class HouseMessageData {
 
 		return "2";
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 当点击拍照完成时调用的方法
 	 * @return
@@ -491,12 +491,12 @@ public class HouseMessageData {
 		if(!attachmentIDS.contains(pictureNme))
 			attachmentIDS.add(pictureNme);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 直接根据调用
-	 * @return 
+	 * @return
 	 */
 	public String setHouseStatue(){
 		String statue = "2";
@@ -535,30 +535,30 @@ public class HouseMessageData {
 		setCheckStute(statue);
 		return statue;
 	}
-	
+
 	/**
 	 * 进行房间完成状态的改变
 	 * @param stute
 	 */
 	public void setCheckStute(String stute){
-		homMessage.CheckStauts = stute;
+
 		//已完成变为未完成   减法
-		if("0".equals(stute)&&homMessage.localIsFinish){
+		if("0".equals(stute)&&!"0".equals(homMessage.CheckStauts)){
 			homMessage.localIsFinish = false;
 			setCheckStautsFalse();
 		}
 
 		//未完成变为已完成 加法
-		if(!"0".equals(stute)&&!homMessage.localIsFinish){
+		if(!"0".equals(stute)&&"0".equals(homMessage.CheckStauts)){
 			homMessage.localIsFinish = true;
 			setCheckStautsSure(stute);
 		}
-
+		homMessage.CheckStauts = stute;
 		//如果原来状态相等
 		if(stute.equals(homMessage.CheckStauts)){
 			//如果是不是未完成进行图片存储转换操作
 			if(!"0".equals(stute))
-			savePicture();
+				savePicture();
 			return;
 		}
 //		//变为未验收

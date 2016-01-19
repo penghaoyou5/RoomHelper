@@ -38,7 +38,7 @@ public class UpNet extends BaseNet{
 	int requestCount = 0;
 	//当前进度 上传json
 	int requestCurrentProgress;
-	
+
 	//请求总条数 上传image
 	int imageCount = 0;
 	//当前进度 上传image
@@ -55,7 +55,7 @@ public class UpNet extends BaseNet{
 	 * @param callBack
 	 */
 	public void upTaskMessage(final Context context, final TaskMessage taskMessage,
-			final JsonCallBack callBack,final ImageCallBack imageCallBack){
+							  final JsonCallBack callBack,final ImageCallBack imageCallBack){
 		this.context = context;
 		this.taskMessage = taskMessage;
 		this.imageCallBack = imageCallBack;
@@ -65,34 +65,34 @@ public class UpNet extends BaseNet{
 		upImage();
 //		upLoadAllJson();
 	}
-	
+
 	private void upLoadAllJson(){
 		new TasMessagetUtil(taskMessage){
 			@Override
 			public boolean forKey(String key) {
 				requestCount++;
-				BigJsonManager bigJsonManager = BaseJsonManager.findManagerByKey(context, key, BigJsonManager.class);			
+				BigJsonManager bigJsonManager = BaseJsonManager.findManagerByKey(context, key, BigJsonManager.class);
 				//TODO:只让利强写一个只根据键存值的方法
 				TaskDetailBean taskDetailBean = bigJsonManager.getTaskDetailBean();
 				String json = getGson().toJson(taskDetailBean);
 //				 json = EscapeUnescape.escape(json);
-				 testTTT.saveFile(json);
+				testTTT.saveFile(json);
 				upLoadJson(context, json);
 				return false;
 			}
-			
+
 		};
-		
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 	private void upLoadJson(Context context,String json){
 		//data
 		RequestParams requestParams = new RequestParams();
@@ -101,7 +101,7 @@ public class UpNet extends BaseNet{
 
 			@Override
 			public void messageResponse(RequestType requestType, BaseBean bean,
-					String message) {
+										String message) {
 				if(requestType == RequestType.messagetrue){
 					requestCurrentProgress++;
 					if(requestCount==requestCurrentProgress){
@@ -118,8 +118,9 @@ public class UpNet extends BaseNet{
 			}
 		}, BaseBean.class);
 	}
-	
-	
+
+	public int imageOldCount;
+	private int imageAddCount;
 	/**
 	 * 进行本个任务图片的上传
 	 */
@@ -136,6 +137,10 @@ public class UpNet extends BaseNet{
 		}
 		if(listFiles!=null&&listFiles.length>0){
 			imageCount = listFiles.length;
+			imageOldCount = SpUtilCurrentTaskInfo.getInt("imageOldCount", 0);
+			if(imageOldCount<imageCount);
+			SpUtilCurrentTaskInfo.putInt("imageOldCount", imageCount);
+			imageAddCount = SpUtilCurrentTaskInfo.getInt("imageOldCount", imageCount)-imageCount;
 			for (int i = 0; i < listFiles.length; i++) {
 				//这里是单个图片的上传
 				final File fileImage = listFiles[i];
@@ -148,7 +153,7 @@ public class UpNet extends BaseNet{
 				baseRequest(requestParams, NetUrl.PICTURE_UP, new BaseCallBack<BaseBean>() {
 					@Override
 					public void messageResponse(RequestType requestType,
-							BaseBean bean, String message) {
+												BaseBean bean, String message) {
 						if(requestType==RequestType.messagetrue){
 							imageProgress++;
 							try {
@@ -162,17 +167,18 @@ public class UpNet extends BaseNet{
 								//上传完成 进行文件删除
 								try {
 									FileUtils.deletefile(SpKey.getBigPictureAddress());
+									FileUtils.deletefile(SpKey.getProblemPictureAddress());
 									FileUtils.deletefile(file.getAbsolutePath());
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-								imageCallBack.imageResponse(RequestType.messagetrue, imageCount, imageProgress);
+								imageCallBack.imageResponse(RequestType.messagetrue, imageCount+imageAddCount, imageAddCount+imageProgress);
 								//图片上传完成进行json的上传
 								upLoadAllJson();
 							}
-							imageCallBack.imageResponse(RequestType.loading, imageCount, imageProgress);
+							imageCallBack.imageResponse(RequestType.loading, imageCount+imageAddCount, imageProgress+imageAddCount);
 						}else{
-							imageCallBack.imageResponse(requestType, imageCount, imageProgress);
+							imageCallBack.imageResponse(requestType, imageCount+imageAddCount, imageProgress+imageAddCount);
 						}
 					}
 				}, BaseBean.class);

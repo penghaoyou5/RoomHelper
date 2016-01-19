@@ -13,6 +13,64 @@ public class TreeHelper {
     /**
      * 传入我们的普通bean，转化为我们排序后的Node
      */
+    public static List<TreeNode> getSortedNodes(List<TreeDataBean> datas,List<TreeNode> nodeList,TreeNode parentNode) {
+        if(nodeList==null){
+            nodeList= new ArrayList<TreeNode>();
+        }
+        for (TreeDataBean bean : datas) {
+            TreeNode node = formatNode(bean, parentNode);
+            nodeList.add(node);
+           if(bean.ProblemDescriptionList!=null &&bean.ProblemDescriptionList.size()!=0){
+                List<TreeDataBean.ProblemDescription> list = bean.ProblemDescriptionList;
+                for(TreeDataBean.ProblemDescription problem:list){
+                    TreeNode problemNodenode = formatProblemNode(problem, node);
+                    nodeList.add(problemNodenode);
+                }
+            }else {
+               getSortedNodes(bean.Children,nodeList,node);
+           }
+        }
+        return nodeList;
+    }
+
+
+
+
+    private static TreeNode formatNode(TreeDataBean bean,TreeNode parentNode) {
+        TreeNode node = new TreeNode();
+        node.isExpand = false;
+        node.id = bean.EnginTypeCode;
+        node.name = bean.EnginTypeName;
+        node.parentNode = parentNode;
+        node.isQuestion = false;
+        if(parentNode == null){
+            node.level = 0;
+            node.pId = null;
+        }else {
+            node.level = parentNode.level+1;
+            node.pId = parentNode.id;
+            parentNode.getChildrens().add(node);
+        }
+        return node;
+    }
+    private static TreeNode formatProblemNode(TreeDataBean.ProblemDescription problem,TreeNode parentNode) {
+        TreeNode node = new TreeNode();
+        node.level = 2;//3包含3 为问题的布局
+        node.isExpand = false;
+        node.id = problem.ProblemDescriptionCode;
+        node.name = problem.ProblemDescriptionName;
+        node.isQuestion = true;
+        if(parentNode!=null){
+            node.pId = parentNode.id;
+            node.parentNode = parentNode;
+            parentNode.getChildrens().add(node);
+        }
+        return node;
+    }
+
+
+
+    /*
     public static List<TreeNode> getSortedNodes(List<TreeDataBean> datas) {
         List<TreeNode> rootSmarts = new ArrayList<TreeNode>();
         for (TreeDataBean node : datas) {
@@ -41,21 +99,21 @@ public class TreeHelper {
             rootSmarts.add(rootSmart);
         }
         return rootSmarts;
-    }
+    }*/
 
-    private static TreeNode formatNode(TreeDataBean node,int level,String pId,TreeNode parentNode) {
-        TreeNode smart = new TreeNode();
-        smart.level = level;
-        smart.isExpand = false;
-        smart.pId = pId;
-        smart.id = node.EnginTypeCode;
-        smart.name = node.EnginTypeName;
-        smart.parentNode = parentNode;
-        smart.isQuestion = false;
-        return smart;
-    }
+ /*   private static TreeNode formatNode(TreeDataBean bean,int level,String pId,TreeNode parentNode) {
+        TreeNode node = new TreeNode();
+        node.level = level;
+        node.isExpand = false;
+        node.pId = pId;
+        node.id = bean.EnginTypeCode;
+        node.name = bean.EnginTypeName;
+        node.parentNode = parentNode;
+        node.isQuestion = false;
+        return node;
+    }*/
 
-    private static TreeNode formatProblem2Node(TreeDataBean.ProblemDescription problem,String pId,TreeNode parentNode) {
+/*    private static TreeNode formatProblem2Node(TreeDataBean.ProblemDescription problem,String pId,TreeNode parentNode) {
         TreeNode smart = new TreeNode();
         smart.level = 2;
         smart.isExpand = false;
@@ -65,7 +123,7 @@ public class TreeHelper {
         smart.parentNode = parentNode;
         smart.isQuestion = true;
         return smart;
-    }
+    }*/
 
     private static List<TreeNode> getRootNodes(List<TreeNode> nodes) {
         List<TreeNode> root = new ArrayList<TreeNode>();

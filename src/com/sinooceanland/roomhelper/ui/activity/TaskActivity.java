@@ -6,7 +6,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,6 +25,8 @@ import com.sinooceanland.roomhelper.ui.testdata.TaskData;
 import com.sinooceanland.roomhelper.ui.utils.MyProgressDialog;
 import com.sinooceanland.roomhelper.ui.common.CommonAdapter;
 import com.sinooceanland.roomhelper.ui.common.ViewHolder;
+import com.sinooceanland.roomhelper.ui.utils.SpUtils;
+import com.sinooceanland.roomhelper.ui.utils.TextUtil;
 
 import java.util.List;
 
@@ -40,7 +44,6 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
     private List<TaskMessage> mUnLoadList;
     private CommonAdapter mAdapter;
     private Dialog alertDialog;
-    private MyProgressDialog myProgressDialog;
 
 
     @Override
@@ -55,7 +58,6 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
     private void initData() {
         TaskList taskList = new TaskList();
         mLoadList = taskList.getAlreadLoad();
-        //  mLoadList = TaskData.getList(20);
     }
 
     private void initListener() {
@@ -72,7 +74,6 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initView() {
-        myProgressDialog = new MyProgressDialog();
         tv_load = (TextView) findViewById(R.id.tv_load);
         tv_unload = (TextView) findViewById(R.id.tv_unload);
         lv_content = (ListView) findViewById(R.id.lv_content);
@@ -80,14 +81,17 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             protected void getView(ViewHolder holder, TaskMessage bean, int position) {
                 holder.setText(R.id.tv_name, bean.TaskName);
-                String wanchenState = bean.isFinish ? "已完成" : "未完成";
-                holder.setText(R.id.tv_state, wanchenState);
+                String completeState = bean.isFinish ? "(已完成)" : "(未完成)";
+                String loadState = isLoadSelect? "(已下载)":"(未下载)";
+                String state  = TextUtil.connectString(bean.CreateTime," ",completeState, loadState);
+                holder.setText(R.id.tv_state, state);
 
                 //上传状态 这里需要赋值
                 //bean.isLoading
             }
         };
         lv_content.setAdapter(mAdapter);
+        myProgressDialog = new MyProgressDialog();
     }
 
     @Override
@@ -97,23 +101,23 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private boolean isLoadSelect = true;
-    private boolean isUnLoadSelect = false;
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_load:
                 if (isLoadSelect) return;
-                setState(true, false);
-                //TODO 在这里需要后去最新的已下载集合
+                isLoadSelect = true;
+                setState();
                 getLoadList();
                 setLoad(true);
                 break;
             case R.id.tv_unload:
-                if (isUnLoadSelect) return;
-                setState(false, true);
+                if (!isLoadSelect) return;
+                isLoadSelect = false;
+                setState();
+                showDialog(true);
                 netGetUnLoadList();
-                // setLoad(false);
                 break;
 
         }
@@ -125,32 +129,21 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void netGetUnLoadList() {
-        if(!myProgressDialog.isShowing())
-        myProgressDialog.showDialog(this);
         new RequestNet(this).taskList(this);
-
     }
 
     /**
      * 点击时，更改按钮等各种状态
      *
-     * @param loadIsSelect
-     * @param unloadIsSelect
      */
-    public void setState(boolean loadIsSelect, boolean unloadIsSelect) {
-        if (loadIsSelect) {
-            isLoadSelect = true;
-            isUnLoadSelect = false;
+    public void setState() {
+        if (isLoadSelect) {
             tv_load.setTextColor(getColor(R.color.colorBlue));
             tv_unload.setTextColor(getColor(R.color.textColor));
-        }
-        if (unloadIsSelect) {
-            isLoadSelect = false;
-            isUnLoadSelect = true;
+        }else {
             tv_load.setTextColor(getColor(R.color.textColor));
             tv_unload.setTextColor(getColor(R.color.colorBlue));
         }
-
     }
 
     /**
@@ -170,6 +163,8 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private int mClickPosition = -1;
+    private final int REQUEST_UPLOAD =10000;
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (isLoadSelect) {
@@ -178,30 +173,49 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
                 //TODO 这里将上传的bean传过去
                 Intent data = new Intent(this, UploadActivity.class);
                 TaskMyssageData.saveTaskMessage(this, bean);
-                startActivity(data);
+                startActivityForResult(data, REQUEST_UPLOAD);
             } else {
                 TaskMyssageData.saveTaskMessage(this, bean);
                 Intent data = new Intent(this, ChooseBuildingActivity.class);
                 startActivity(data);
+                finish();
             }
-            finish();
         }
-        if (isUnLoadSelect) {
-            //TODO 这里处理下载操作
-            showAlertDialog(position);
+        if (!isLoadSelect) {//未完成状态下
+            mClickPosition = position;
+            showAlertDialog();
         }
     }
 
-    private void showAlertDialog(final int position) {
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQUEST_UPLOAD:
+                if(resultCode == RESULT_OK){
+                    TaskList taskList = new TaskList();
+                    mLoadList = taskList.getAlreadLoad();
+                    mAdapter.setData(mLoadList);
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    private void showAlertDialog() {
         if (alertDialog == null) {
             alertDialog = new AlertDialog.Builder(this).
                     setTitle("是否下载").
                     setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.e("test", "" + position);
-                            TaskMessage taskMessage = mUnLoadList.get(position);
-                            downNet(taskMessage);
+                            Log.e("test", "" + mClickPosition);
+                            TaskMessage  tempDownLoadBean = mUnLoadList.get(mClickPosition);
+                            showDialog(false);
+                            downNet(tempDownLoadBean);
                             dialog.dismiss();
                         }
                     }).
@@ -216,7 +230,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void downNet(TaskMessage bean) {
-        myProgressDialog.showDialog(TaskActivity.this);
+
         new RequestNet(TaskActivity.this).downTask(
                 TaskActivity.this,
                 bean,
@@ -228,34 +242,86 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public void messageResponse(BaseNet.RequestType requestType, String bean, String message) {
-          //  myProgressDialog.dismissDialog();
-            netGetUnLoadList();
+            dismissDialog();
+            if (requestType == BaseNet.RequestType.haveImageSuccess) {
+
+            }
+            if (requestType == BaseNet.RequestType.messagetrue) {
+                mUnLoadList.remove(mClickPosition);
+                mAdapter.setData(mUnLoadList);
+                mAdapter.notifyDataSetChanged();
+                showToast("下载成功");
+            }
+            if (requestType == BaseNet.RequestType.messagefalse) {
+                showToast("下载失败");
+            }
+            if (requestType == BaseNet.RequestType.connectFailure) {
+                showToast("网络异常");
+            }
+
         }
     }
-
+    private MyProgressDialog myProgressDialog;
     private class DownLoadPicCallBack implements BaseNet.ImageCallBack {
         private boolean isFirst = true;
 
         @Override
         public void imageResponse(BaseNet.RequestType requestType, int count, int current) {
+
             if (isFirst) {
                 isFirst = false;
                 myProgressDialog.showDialogHorizontal(TaskActivity.this, count);
             }
-            myProgressDialog.setProgress(current);
-            if (count == current) {
+
+            if(requestType.loading == requestType){
+                myProgressDialog.setProgress(current);
+            }
+
+            if (requestType.messagetrue == requestType) {
                 myProgressDialog.dismissDialog();
+                mUnLoadList.remove(mClickPosition);
+                mAdapter.setData(mUnLoadList);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            if (requestType == BaseNet.RequestType.messagefalse) {
+                showToast("下载失败");
+            }
+            if (requestType == BaseNet.RequestType.connectFailure) {
+                showToast("网络异常");
             }
         }
     }
 
+    //获取未下载列表的
     @Override
     public void messageResponse(BaseNet.RequestType requestType, TaskList bean, String message) {
-        myProgressDialog.dismissDialog();
+        if(isLoadSelect)return;
+        dismissDialog();
         if (requestType == BaseNet.RequestType.messagetrue) {
             mUnLoadList = bean.getUnLoad();
             mAdapter.setData(mUnLoadList);
             mAdapter.notifyDataSetChanged();
         }
+        if(requestType == BaseNet.RequestType.connectFailure){
+            showToast("网络异常");
+            mAdapter.setData(null);
+            mAdapter.notifyDataSetChanged();
+        }
+        if(requestType == BaseNet.RequestType.messagefalse){
+            showToast("网络异常");
+            mAdapter.setData(null);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

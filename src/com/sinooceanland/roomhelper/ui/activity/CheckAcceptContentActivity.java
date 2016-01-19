@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.taskdata.HouseMessageData;
@@ -46,10 +47,11 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
     private void initData() {
         int position = getIntent().getIntExtra("position", 0);
         HouseMessageData instance = HouseMessageData.getInstance();
-        LastCheckProblemList LastCheckProblem = instance.getProblemList().get(position);
-        mProblemList = LastCheckProblem.getPicture();
+        LastCheckProblemList lastCheckProblem = instance.getProblemList().get(position);
+        mProblemList = lastCheckProblem.getPicture();
         mAdapter = new CheckViewPagerAdapter(mProblemList, this);
-        // MyViewPagerAdapter 这个adapter 复制一下来用 //item_check_accept_content layout可以用这个改
+        TextView tv_msg = (TextView) findViewById(R.id.tv_msg);
+        tv_msg.setText(lastCheckProblem.EnginTypeFullName);
     }
 
     private void initView() {
