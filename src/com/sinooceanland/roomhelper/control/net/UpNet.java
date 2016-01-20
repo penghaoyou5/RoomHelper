@@ -144,7 +144,7 @@ public class UpNet extends BaseNet{
 	/**
 	 * 进行本个任务图片的上传
 	 */
-	public void upImage(){			
+	public void upImageOld(){			
 		imageCount = 0;
 		imageProgress = 0;
 		//得到小图片的文件夹路径
@@ -211,4 +211,132 @@ public class UpNet extends BaseNet{
 			upLoadAllJson();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//========================================================================
+	private int  responsedezongshu = 0;
+	
+	//是否已经请求失败了？
+	private boolean haveRequestFalsean = false;
+	
+	/**
+	 * 进行本个任务图片的上传
+	 */
+	public void upImage(){			
+		imageCount = 0;
+		imageProgress = 0;
+		responsedezongshu = 0;
+		haveRequestFalsean = false;
+		//得到小图片的文件夹路径
+		String smallPictureAddress = SpKey.getSmallPictureAddress();
+		//得到当前所在文件夹
+		final File file = new File(smallPictureAddress);
+		File[] listFiles = null;
+		if(file.isDirectory()){
+			listFiles = file.listFiles();
+		}
+		if(listFiles!=null&&listFiles.length>0){
+			imageCount = listFiles.length;
+			imageOldCount = SpUtilCurrentTaskInfo.getInt("imageOldCount", 0);
+			if(imageOldCount<imageCount)
+			SpUtilCurrentTaskInfo.putInt("imageOldCount", imageCount);
+			imageAddCount = SpUtilCurrentTaskInfo.getInt("imageOldCount", imageCount)-imageCount;			
+			final int requestzongshu = listFiles.length>5?5:listFiles.length;
+			for (int i = 0; i < requestzongshu; i++) {
+				//这里是单个图片的上传
+				final File fileImage = listFiles[i];
+				RequestParams requestParams = new RequestParams();
+				try {
+					requestParams.put("TaskCode", SpKey.getCurrentTaskMessage());
+					requestParams.put("file", fileImage);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				Log.e("requestimageNum", ""+listFiles.length+"===="+i);
+				baseRequest(requestParams, NetUrl.PICTURE_UP, new BaseCallBack<BaseBean>() {
+					@Override
+					public void messageResponse(RequestType requestType,
+							BaseBean bean, String message) {
+						
+						
+						if(requestType==RequestType.messagetrue){
+							imageProgress++;
+							try {
+								fileImage.deleteOnExit();
+								FileUtils.deletefile(fileImage.getAbsolutePath());
+							}catch (Exception e){
+								
+							}
+							Log.e("imageNum",imageCount+"---"+imageProgress+"-------"+imageAddCount);
+							if(imageCount == imageProgress){
+								//上传完成 进行文件删除
+								try {
+									FileUtils.deletefile(SpKey.getBigPictureAddress());
+									FileUtils.deletefile(SpKey.getProblemPictureAddress());
+									FileUtils.deletefile(file.getAbsolutePath());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								imageCallBack.imageResponse(RequestType.messagetrue, imageCount+imageAddCount, imageAddCount+imageProgress);
+								//图片上传完成进行json的上传
+								upLoadAllJson();
+								return;
+							}
+							imageCallBack.imageResponse(RequestType.loading, imageCount+imageAddCount, imageProgress+imageAddCount);
+						}else{
+							if(!haveRequestFalsean)
+							imageCallBack.imageResponse(requestType, imageCount+imageAddCount, imageProgress+imageAddCount);
+							haveRequestFalsean = true;
+							return;//请求失败或错误以后  不应该在继续进行请求
+						}
+						
+						//不管断没断网  请求数据请求数据达到数目进行下一轮请求
+						responsedezongshu++;
+						if(responsedezongshu == requestzongshu){
+							upImage();
+						}
+						
+					}
+				}, BaseBean.class);
+			}
+		}else{
+			//图片上传完成进行json的上传
+			//如果用户把  图片删了怎么办?????
+			upLoadAllJson();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

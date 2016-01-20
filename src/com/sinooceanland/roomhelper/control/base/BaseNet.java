@@ -100,8 +100,7 @@ public class BaseNet {
 	public static AsyncHttpClient getAsyncHttpClient() {
 		if (httpClient == null) {
 			httpClient = new AsyncHttpClient();
-			httpClient.setTimeout(20000);
-			httpClient.setMaxConnections(1000);
+			httpClient.setTimeout(10000);
 		}
 		return httpClient;
 	}
