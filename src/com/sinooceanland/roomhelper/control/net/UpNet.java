@@ -10,7 +10,10 @@ import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
+import com.sinooceanland.roomhelper.control.bean.fuzhu.TaskListBeanFuZhu;
+import com.sinooceanland.roomhelper.control.bean.fuzhu.TaskMessageFuZhu;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
@@ -106,6 +109,23 @@ public class UpNet extends BaseNet{
 					requestCurrentProgress++;
 					if(requestCount==requestCurrentProgress){
 						callBack.jsonResponse(RequestType.messagetrue, requestCount, requestCurrentProgress);
+						{
+							TaskListBeanFuZhu	beanFuZhu = BaseNet.getGson().fromJson(SpKey.getTaskList(), TaskListBeanFuZhu.class);
+							m:if(beanFuZhu==null||beanFuZhu.list==null||beanFuZhu.list.size()<=0){
+							}else{
+								List<TaskMessageFuZhu> fuZhus = beanFuZhu.list;
+								for (int u = 0; u < fuZhus.size(); u++) {
+									TaskMessageFuZhu messageFuZhu = fuZhus.get(u);
+									String taskCode = messageFuZhu.TaskCode;
+									if(taskCode.endsWith(taskMessage.TaskCode)){
+										fuZhus.remove(messageFuZhu);
+										SpUtil.putString(SpKey.getUerId(), BaseNet.getGson().toJson(beanFuZhu));
+									}
+									break m;
+								}
+							}
+							
+						}
 						SpUtilCurrentTaskInfo.clear();
 						TaskMyssageData.getInstance().clearJson();
 						SpUtil.putBoolean(taskMessage.TaskCode, false);
