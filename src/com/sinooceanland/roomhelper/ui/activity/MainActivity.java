@@ -1,20 +1,17 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
 import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 import com.sinooceanland.roomhelper.ui.utils.TextUtil;
-<<<<<<< HEAD
-=======
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
->>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 
 
 public class MainActivity extends BaseActivity implements BaseNet.BaseCallBack<LoginBean> {

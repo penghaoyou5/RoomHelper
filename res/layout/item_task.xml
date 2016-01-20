@@ -36,6 +36,7 @@
         android:textColor="@color/textColor2" />
 
     <TextView
+        android:visibility="invisible"
         android:id="@+id/tv_upload_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

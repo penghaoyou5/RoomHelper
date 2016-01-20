@@ -1,15 +1,12 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-<<<<<<< HEAD
-=======
 import android.widget.Button;
->>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
 import android.widget.TextView;
 
 import com.sinooceanland.roomhelper.R;
@@ -18,6 +15,8 @@ import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList;
 import com.sinooceanland.roomhelper.dao.module.ProblemPicture;
 import com.sinooceanland.roomhelper.ui.adapter.CheckViewPagerAdapter;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jackson on 2016/1/3.
@@ -51,11 +50,8 @@ public class CheckAcceptContentActivity extends BaseActivity implements View.OnC
         LastCheckProblemList lastCheckProblem = instance.getProblemList().get(position);
         mProblemList = lastCheckProblem.getPicture();
         mAdapter = new CheckViewPagerAdapter(mProblemList, this);
-<<<<<<< HEAD
-=======
         TextView tv_msg = (TextView) findViewById(R.id.tv_msg);
         tv_msg.setText(lastCheckProblem.EnginTypeFullName);
->>>>>>> bd7db19437929ed8e3a979a4de8392288bb9ee94
     }
 
     private void initView() {
