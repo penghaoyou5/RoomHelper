@@ -47,6 +47,11 @@ public class HouseMessage extends HouseMessageBaseBean {
 			}
 			return arrayList;
 		}
+		
+		public ProblemPicture getSinglePicture(){
+			ProblemPicture problemPicture = new ProblemPicture(AttachmentIDS.get(0),SpaceLayoutName,this);
+			return problemPicture;
+		}
 
 		// int
 		/**

@@ -166,10 +166,12 @@ public class UpNet extends BaseNet{
 				final File fileImage = listFiles[i];
 				RequestParams requestParams = new RequestParams();
 				try {
+					requestParams.put("TaskCode", SpKey.getCurrentTaskMessage());
 					requestParams.put("file", fileImage);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
+				Log.e("requestimageNum", ""+listFiles.length+"===="+i);
 				baseRequest(requestParams, NetUrl.PICTURE_UP, new BaseCallBack<BaseBean>() {
 					@Override
 					public void messageResponse(RequestType requestType,
@@ -180,7 +182,7 @@ public class UpNet extends BaseNet{
 								fileImage.deleteOnExit();
 								FileUtils.deletefile(fileImage.getAbsolutePath());
 							}catch (Exception e){
-
+								
 							}
 							Log.e("imageNum",imageCount+"---"+imageProgress+"-------"+imageAddCount);
 							if(imageCount == imageProgress){

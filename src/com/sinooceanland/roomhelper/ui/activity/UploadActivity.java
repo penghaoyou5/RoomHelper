@@ -57,7 +57,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
                 //TODO 加参数过去
                 Intent data = new Intent(this, UploadCompleteActivity.class);
                 startActivityForResult(data, REQUEST_CODE);
-                finish();
+//                finish();
                 break;
         }
     }

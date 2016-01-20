@@ -371,6 +371,6 @@ public class RequestNet extends BaseNet {
 	 * 获得图片文件
 	 */
 	public void downOneImage(String id, BaseCallBack<String> callBack) {
-		baseDownImage(id, NetUrl.PICTURE_DOWN, callBack);
+		baseDownImage(id, NetUrl.PICTURE_DOWN+SpKey.getCurrentTaskMessage()+"/", callBack);
 	}
 }
