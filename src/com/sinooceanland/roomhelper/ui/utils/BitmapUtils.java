@@ -3,6 +3,7 @@ package com.sinooceanland.roomhelper.ui.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.sinooceanland.roomhelper.control.constant.Constants;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 
 import java.io.BufferedOutputStream;
@@ -148,7 +149,7 @@ public class BitmapUtils {
      * @return
      */
     public static Bitmap createBitmap(String filePath) {
-        return BitmapFactory.decodeFile(filePath);
+        return BitmapFactory.decodeFile(filePath.replace(Constants.IMAGEEND, ""));
     }
 
     /**
@@ -194,7 +195,8 @@ public class BitmapUtils {
         }
     }
 
-    public boolean deleteBitmap(String filePath) {
+    public static  boolean deleteBitmap(String filePath) {
+    	filePath =filePath.replace(Constants.IMAGEEND, "");
         File file = new File(filePath);
         return file.delete();
     }
@@ -203,6 +205,7 @@ public class BitmapUtils {
 
 //------------------------1月13日  存取图片操作
     public static void saveBitmap(byte[] bytes, String picName){
+    	picName = picName.replace(Constants.IMAGEEND, "");
         //获得存储路径
         String bitPath = SpKey.getBigPictureAddress();
         String smallPath = SpKey.getSmallPictureAddress();

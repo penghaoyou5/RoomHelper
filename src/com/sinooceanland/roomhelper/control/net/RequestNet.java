@@ -1,5 +1,6 @@
 package com.sinooceanland.roomhelper.control.net;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +10,12 @@ import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
+import com.sinooceanland.roomhelper.control.base.BaseNet.RequestType;
 import com.sinooceanland.roomhelper.control.bean.BuildingList;
 import com.sinooceanland.roomhelper.control.bean.LoginBean;
 import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
+import com.sinooceanland.roomhelper.control.constant.Constants;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.taskdata.TaskList;
@@ -326,8 +329,12 @@ public class RequestNet extends BaseNet {
 			SpUtil.putInt(taskMessage.TaskCode+"imagecount", imagecount);
 			//如果有图片进行图片的下载
 			for (int i = 0; i < imageUrls.size(); i++) {
-				imageAfterLoad(taskMessage, imageCallBack,
+				//这里进行判断 如果 图片已经存在就不进行下载
+				File file = new File(SpKey.getProblemPictureAddress(), imageUrls.get(i).replace(Constants.IMAGEEND, ""));
+				if(!file.exists()){
+					imageAfterLoad(taskMessage, imageCallBack,
 						imageUrls.get(i));
+				}
 			}
 			
 		}

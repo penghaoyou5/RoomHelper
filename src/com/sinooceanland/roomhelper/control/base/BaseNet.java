@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.sinooceanland.roomhelper.control.constant.Constants;
 import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.util.FileUtils;
@@ -206,13 +207,6 @@ public class BaseNet {
 
 	public void baseDownImage(final String id, String url,
 			final BaseCallBack<String> callback) {
-		File file = new File(SpKey.getProblemPictureAddress(), id);
-		if(file.exists()){
-			//如果图片已经存在就进行成功回调
-			callback.messageResponse(RequestType.messagetrue,
-					null, null);
-			return;
-		}
 		
 		RequestParams requestParams = new RequestParams();
 //		requestParams.add("id", id);
@@ -227,7 +221,7 @@ public class BaseNet {
 							BitmapFactory factory = new BitmapFactory();
 							Bitmap bitmap = factory.decodeByteArray(responseBody, 0, responseBody.length);
 							//保存图片
-							File file = FileUtils.getOrNewImageFile(SpKey.getProblemPictureAddress(), id);
+							File file = FileUtils.getOrNewImageFile(SpKey.getProblemPictureAddress(), id.replace(Constants.IMAGEEND, ""));
 //							FileUtils.write2file(file, responseBody);
 							try {
 								FileUtils.saveFile(bitmap,file);

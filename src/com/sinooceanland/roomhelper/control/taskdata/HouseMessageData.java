@@ -16,6 +16,7 @@ import com.sinooceanland.roomhelper.dao.module.HouseMessage.LastCheckProblemList
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList;
 import com.sinooceanland.roomhelper.dao.module.HouseMessage.SpaceLayoutList.EnginTypeList.ProblemDescriptionList;
+import com.sinooceanland.roomhelper.ui.utils.BitmapUtils;
 import com.sinooceanland.roomhelper.ui.utils.TextUtil;
 
 public class HouseMessageData {
@@ -155,8 +156,8 @@ public class HouseMessageData {
 				attachmentIDS.remove(pictureInfo.pictureUri);
 			}
 			try {
-				new File(pictureInfo.getBigPictureUri()).delete();
-				new File(pictureInfo.getSmallPictureUri()).delete();
+				BitmapUtils.deleteBitmap(pictureInfo.getBigPictureUri());
+				BitmapUtils.deleteBitmap(pictureInfo.getSmallPictureUri());
 			} catch (Exception e) {
 			}
 		}
@@ -572,7 +573,7 @@ public class HouseMessageData {
 			setCheckStautsSure(stute);
 		}
 		homMessage.CheckStauts = stute;
-		//如果原来状态相等
+		//如果原来状态相等   只是都为未完成 或者都为已完成
 		if(stute.equals(homMessage.CheckStauts)){
 			//如果是不是未完成进行图片存储转换操作
 			if(!"0".equals(stute))
