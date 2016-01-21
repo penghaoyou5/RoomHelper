@@ -154,8 +154,11 @@ public class HouseMessageData {
 			if(attachmentIDS!=null&&attachmentIDS.contains(pictureInfo.pictureUri)){
 				attachmentIDS.remove(pictureInfo.pictureUri);
 			}
-			new File(pictureInfo.getBigPictureUri()).deleteOnExit();
-			new File(pictureInfo.getSmallPictureUri()).deleteOnExit();
+			try {
+				new File(pictureInfo.getBigPictureUri()).delete();
+				new File(pictureInfo.getSmallPictureUri()).delete();
+			} catch (Exception e) {
+			}
 		}
 
 		/**
