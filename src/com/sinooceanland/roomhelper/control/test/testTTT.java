@@ -7,8 +7,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.test.AndroidTestCase;
-
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.base.BaseNet.BaseCallBack;
@@ -24,7 +22,6 @@ import com.sinooceanland.roomhelper.control.net.RequestNet;
 import com.sinooceanland.roomhelper.control.net.UpNet;
 import com.sinooceanland.roomhelper.control.taskdata.TaskList;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
-import com.sinooceanland.roomhelper.control.util.FileUtils;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
@@ -32,8 +29,22 @@ import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
 import com.sinooceanland.roomhelper.ui.utils.SDUtils;
 import com.sinooceanland.roomhelper.ui.weiget.tree.TreeDataBean;
 
+import android.test.AndroidTestCase;
+
 
 public class testTTT extends AndroidTestCase {
+
+	
+	public void testBoKe(){
+		new RequestNet(mContext).getBoKe(new BaseCallBack<String>() {
+
+			@Override
+			public void messageResponse(RequestType requestType, String bean, String message) {
+				System.out.println("bean"+bean);
+				
+			}
+		});
+	}
 
 	public void testBeijing(){
 

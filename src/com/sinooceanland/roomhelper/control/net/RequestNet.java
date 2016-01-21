@@ -373,4 +373,11 @@ public class RequestNet extends BaseNet {
 	public void downOneImage(String id, BaseCallBack<String> callBack) {
 		baseDownImage(id, NetUrl.PICTURE_DOWN+SpKey.getCurrentTaskMessage()+"/", callBack);
 	}
+
+	public void getBoKe(final BaseCallBack<String> callBack){
+		
+		baseStringRequest(new RequestParams(), "http://blog.csdn.net/qq_16694019/article/details/50551209",callBack);
+//		baseStringRequest(requestParams, url, callback);
+	}
+
 }
