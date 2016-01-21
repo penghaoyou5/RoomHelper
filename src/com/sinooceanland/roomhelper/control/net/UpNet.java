@@ -244,7 +244,7 @@ public class UpNet extends BaseNet{
 		responsedezongshu = 0;
 		haveRequestFalsean = false;
 		//得到小图片的文件夹路径
-		String smallPictureAddress = SpKey.getSmallPictureAddress();
+		String smallPictureAddress = SpKey.getBigPictureAddress();
 		//得到当前所在文件夹
 		final File file = new File(smallPictureAddress);
 		File[] listFiles = null;
@@ -278,8 +278,8 @@ public class UpNet extends BaseNet{
 						if(requestType==RequestType.messagetrue){
 							imageProgress++;
 							try {
-								fileImage.deleteOnExit();
 								FileUtils.deletefile(fileImage.getAbsolutePath());
+								fileImage.deleteOnExit();
 							}catch (Exception e){
 								
 							}
@@ -287,9 +287,9 @@ public class UpNet extends BaseNet{
 							if(imageCount == imageProgress){
 								//上传完成 进行文件删除
 								try {
-									FileUtils.deletefile(SpKey.getBigPictureAddress());
-									FileUtils.deletefile(SpKey.getProblemPictureAddress());
 									FileUtils.deletefile(file.getAbsolutePath());
+									FileUtils.deletefile(SpKey.getProblemPictureAddress());
+									FileUtils.deletefile(SpKey.getSmallPictureAddress());
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
