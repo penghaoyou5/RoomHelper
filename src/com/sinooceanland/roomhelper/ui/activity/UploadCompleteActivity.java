@@ -1,5 +1,6 @@
 package com.sinooceanland.roomhelper.ui.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.sinooceanland.roomhelper.R;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
 import com.sinooceanland.roomhelper.control.net.UpNet;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
+import com.sinooceanland.roomhelper.ui.service.UploadIntentService;
 
 /**
  * Created by Jackson on 2015/12/18.
@@ -59,6 +61,7 @@ public class UploadCompleteActivity extends BaseActivity implements View.OnClick
         mTv = (TextView) findViewById(R.id.tv);
         mLoadingView = findViewById(R.id.v);
         loadingDrawable = (AnimationDrawable) mLoadingView.getBackground();
+        startService(new Intent(getApplicationContext(), UploadIntentService.class));
     }
 
     @Override

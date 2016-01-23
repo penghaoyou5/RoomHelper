@@ -10,7 +10,8 @@ import com.sinooceanland.roomhelper.ui.utils.SDUtils;
 import com.sinooceanland.roomhelper.ui.utils.SpUtils;
 
 public class SpKey {
-
+	
+	
 	/**当前登陆用户名*/
 	public static final String USERINAME = "username";
 	/**根据用户名得到用户id*/
@@ -115,7 +116,59 @@ public class SpKey {
 		return fileName;
 	}
 
-
+	
+	
+	
+	
+	
+	
+	/**
+	 * 获得当前的TaskMyssageData的taskMessage  这是保证上传任务界面不崩溃
+	 */
+	public static final String CURRENTTASKMYSSAGEDATA = "currentTaskMyssageData";
+	
+	
+	
+	/**
+	 * 当前已完成处于上传状态的任务集合
+	 */
+	public static final String CURRENTDOUPTASKList = "currentDoUPTaskMap";
+	
+	/**
+	 * 货物当前任务正在上传的时间
+	 */
+	public static final String ENDMESSAGEDOUPING = "endmessageDoUPIng";
+	
+	//获取上传任务的事件
+	public static final void putEndMessageUpTime(String taskCode){
+		SpUtil.putLong(taskCode+ENDMESSAGEDOUPING, System.currentTimeMillis());
+	}
+	
+	/**
+	 * 判断某个任务是否正在上传
+	 * @param taskCode
+	 * @return
+	 */
+	public static final boolean getEndMessageUping(String taskCode){
+		float tim = SpUtil.getLong(taskCode+ENDMESSAGEDOUPING, 0);
+		float cha =  System.currentTimeMillis() - tim;
+		//大于一定时间间隔 没有上传   调用方法进行上传
+		if(tim!=0&&cha<30000){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	/**
+	 * 获得当前的upnet的taskMessage  这是保证上传任务界面不崩溃
+	 */
+	public static final String UPNETMYSSAGEDATA = "currentupentData";
+	
+	
+	
 //	private static final String TASKDITAIL = "TaskDetail";
 //	public static final String getTaskDetail(){
 //		return null;

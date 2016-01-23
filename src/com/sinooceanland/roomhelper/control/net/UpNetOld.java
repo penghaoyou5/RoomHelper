@@ -1,21 +1,16 @@
 package com.sinooceanland.roomhelper.control.net;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.RequestParams;
 import com.sinooceanland.roomhelper.control.base.BaseNet;
-import com.sinooceanland.roomhelper.control.base.BaseNet.RequestType;
+import com.sinooceanland.roomhelper.control.bean.TaskListBean;
 import com.sinooceanland.roomhelper.control.bean.TaskMessage;
 import com.sinooceanland.roomhelper.control.bean.fuzhu.TaskListBeanFuZhu;
 import com.sinooceanland.roomhelper.control.bean.fuzhu.TaskMessageFuZhu;
@@ -23,6 +18,7 @@ import com.sinooceanland.roomhelper.control.constant.NetUrl;
 import com.sinooceanland.roomhelper.control.constant.SpKey;
 import com.sinooceanland.roomhelper.control.taskdata.TaskMyssageData;
 import com.sinooceanland.roomhelper.control.test.testTTT;
+import com.sinooceanland.roomhelper.control.util.EscapeUnescape;
 import com.sinooceanland.roomhelper.control.util.FileUtils;
 import com.sinooceanland.roomhelper.control.util.SpUtil;
 import com.sinooceanland.roomhelper.control.util.SpUtilCurrentTaskInfo;
@@ -30,13 +26,15 @@ import com.sinooceanland.roomhelper.control.util.TasMessagetUtil;
 import com.sinooceanland.roomhelper.dao.BigJsonManager;
 import com.sinooceanland.roomhelper.dao.base.BaseBean;
 import com.sinooceanland.roomhelper.dao.base.BaseJsonManager;
+import com.sinooceanland.roomhelper.dao.module.HouseMessage;
 import com.sinooceanland.roomhelper.dao.module.TaskDetailBean;
+import com.sinooceanland.roomhelper.ui.camera.util.FileUtil;
 
 /**
  * @author peng
  * 这里是进行文件上传的接口
  */
-public class UpNet extends BaseNet{
+public class UpNetOld extends BaseNet{
 	JsonCallBack callBack;
 
 	//请求总条数 上传json
@@ -53,7 +51,7 @@ public class UpNet extends BaseNet{
 
 	private TaskMessage taskMessage;
 
-	private  ImageCallBack imageCallBack;
+	private ImageCallBack imageCallBack;
 	/**
 	 * 进行任务列表的上传的进度回掉
 	 * @param taskMessage 任务信息类
@@ -61,56 +59,6 @@ public class UpNet extends BaseNet{
 	 */
 	public void upTaskMessage(final Context context, final TaskMessage taskMessage,
 			final JsonCallBack callBack,final ImageCallBack imageCallBack){
-		
-		
-		if(SpUtil.mContext==null){
-			SpUtil.init(context);
-		}
-		if(SpUtilCurrentTaskInfo.mContext==null){
-			SpUtilCurrentTaskInfo.init(context);
-		}
-
-		
-		
-		//进行上传任务的记录
-		{
-			if(taskMessage!=null){
-//				String doList = SpUtil.getString(SpKey.CURRENTDOUPTASKList, "");
-				SpUtil.putString(SpKey.UPNETMYSSAGEDATA, BaseNet.getGson().toJson(taskMessage));
-			}
-			
-			//如果任务正在上传直接返回 
-			if(SpKey.getEndMessageUping(taskMessage.TaskCode)){
-				return;
-			}
-		}
-		SpKey.putEndMessageUpTime(taskMessage.TaskCode);
-//		{
-//			//1.得到当前正在上传的图片文件夹
-//			String doList = SpUtil.getString(SpKey.CURRENTDOUPTASKList, null);
-//				//进行集合装换
-//			Type type = new TypeToken<ArrayList<TaskMessage>>() {}.getType();  
-//			ArrayList<TaskMessage> messages=getGson().fromJson(doList, type); 
-//			if(messages == null){
-//				messages = new ArrayList<TaskMessage>();
-//			}
-//			//集合中是否已经包含着这个文件
-//			boolean alreadHave = false;
-//			f:for (int i = 0; i < messages.size(); i++) {
-//				if(messages.get(i).TaskCode.equals(taskMessage.TaskCode)){
-//					alreadHave = true;
-//					break f;
-//				}
-//			}
-//			//没有包含储存
-//			if(!alreadHave){
-//				messages.add(taskMessage);
-//				SpUtil.putString(SpKey.CURRENTDOUPTASKList, BaseNet.getGson().toJson(messages));
-//			}
-//		}
-		
-		
-		
 		this.context = context;
 		this.taskMessage = taskMessage;
 		this.imageCallBack = imageCallBack;
@@ -157,7 +105,6 @@ public class UpNet extends BaseNet{
 			@Override
 			public void messageResponse(RequestType requestType, BaseBean bean,
 					String message) {
-				SpKey.putEndMessageUpTime(taskMessage.TaskCode);
 				if(requestType == RequestType.messagetrue){
 					requestCurrentProgress++;
 					if(requestCount==requestCurrentProgress){
@@ -322,13 +269,12 @@ public class UpNet extends BaseNet{
 					e.printStackTrace();
 				}
 				Log.e("requestimageNum", ""+listFiles.length+"===="+i);
-				SpKey.putEndMessageUpTime(taskMessage.TaskCode);
 				baseRequest(requestParams, NetUrl.PICTURE_UP, new BaseCallBack<BaseBean>() {
 					@Override
 					public void messageResponse(RequestType requestType,
 							BaseBean bean, String message) {
 						
-						SpKey.putEndMessageUpTime(taskMessage.TaskCode);
+						
 						if(requestType==RequestType.messagetrue){
 							imageProgress++;
 							try {
@@ -356,7 +302,6 @@ public class UpNet extends BaseNet{
 						}else{
 							if(!haveRequestFalsean){
 								imageCallBack.imageResponse(requestType, imageCount+imageAddCount, imageProgress+imageAddCount);
-								upImage();
 							}
 							haveRequestFalsean = true;
 							return;//请求失败或错误以后  不应该在继续进行请求
@@ -392,59 +337,12 @@ public class UpNet extends BaseNet{
 	 * 有serivce调用判断是否有正在上传中的任务 进行上传
 	 * 目前限定为只有一个任务
 	 */
-	public static void startUpMessage(Context context){
+	public static void startUpMessage(){
 		//1.得到当前正在上传的图片文件夹
-//		SpUtil.init(context);
-//		SpUtilCurrentTaskInfo.init(context);
-		String doList = SpUtil.getString(SpKey.UPNETMYSSAGEDATA, "");
 		
-		if(TextUtils.isEmpty(doList)){
-			return;
-		}
-//		if(TextUtils.isEmpty(doList)){
-//			return;
-//		}
-//			进行集合装换
-//		Type type = new TypeToken<ArrayList<TaskMessage>>() {}.getType();  
-//		  
-//		ArrayList<TaskMessage> messages=getGson().fromJson(doList, type); 
-//		if(messages==null||messages.size()<=0){
-//			return;
-//		}						
-		//2.取集合第一个数据进行非正在上传判断  		//第一正在上传状态  第二 没有正在上传
-		TaskMessage taskMessage2 = getGson().fromJson(doList, TaskMessage.class);
-		if(taskMessage2==null){
-				return;
-		}
-		//如果任务正在上传直接返回 
-		if(SpKey.getEndMessageUping(taskMessage2.TaskCode)){
-			return;
-		}
-		
-		//如果任务  已经完成 状态  返回  是任务未完成或者已经上传状态
-		if(!SpUtil.getBoolean(taskMessage2.TaskCode, false)){
-			return;
-		}
+		//2.进行非正在上传判断
 		
 		//3.进行上传
-		new UpNet().upTaskMessage(context, taskMessage2, new JsonCallBack() {
-			
-			@Override
-			public void jsonResponse(RequestType requestType, int count, int current) {
-//				if(callBack!=null){
-//					callBack.jsonResponse(requestType, count, current);
-//				}
-			}
-		}, new ImageCallBack() {
-			@Override
-			public void imageResponse(RequestType requestType, int count, int current) {
-//				if(imageCallBack!=null){
-//					imageCallBack.imageResponse(requestType, count, current);
-//				}
-			}
-		});
-		
-		
 	}
 	
 	

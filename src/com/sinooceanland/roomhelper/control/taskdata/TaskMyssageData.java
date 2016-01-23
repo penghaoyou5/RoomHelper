@@ -169,6 +169,12 @@ public class TaskMyssageData {
 
 
 	public static TaskMyssageData getInstance() {
+		if(myssageData==null||myssageData.taskMessage==null){
+			myssageData = new TaskMyssageData();
+			myssageData.taskMessage = BaseNet.getGson().fromJson(SpKey.CURRENTTASKMYSSAGEDATA, TaskMessage.class);
+		}else{
+			SpUtil.putString(SpKey.CURRENTTASKMYSSAGEDATA, BaseNet.getGson().toJson(myssageData.taskMessage));
+		}
 		return myssageData;
 	}
 

@@ -23,7 +23,7 @@ public class TaskListBean extends BaseBean implements Parcelable{
 	protected TaskListBean(Parcel in) {
 		message = in.readString();
 		code = in.readInt();
-		list = in.createTypedArrayList(TaskMessage.CREATOR);
+//		list = in.createTypedArrayList(TaskMessage.CREATOR);
 	}
 
 	public static final Creator<TaskListBean> CREATOR = new Creator<TaskListBean>() {

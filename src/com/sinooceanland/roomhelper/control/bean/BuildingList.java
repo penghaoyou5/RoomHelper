@@ -25,17 +25,17 @@ public class BuildingList implements Parcelable {
 
 
 
-    public static final Creator<BuildingList> CREATOR = new Creator<BuildingList>() {
-        @Override
-        public BuildingList createFromParcel(Parcel in) {
-            return new BuildingList(in);
-        }
-
-        @Override
-        public BuildingList[] newArray(int size) {
-            return new BuildingList[size];
-        }
-    };
+//    public static final Creator<BuildingList> CREATOR = new Creator<BuildingList>() {
+//        @Override
+//        public BuildingList createFromParcel(Parcel in) {
+//            return new BuildingList(in);
+//        }
+//
+//        @Override
+//        public BuildingList[] newArray(int size) {
+//            return new BuildingList[size];
+//        }
+//    };
 
     @Override
     public int describeContents() {

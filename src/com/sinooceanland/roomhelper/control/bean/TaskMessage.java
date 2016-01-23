@@ -45,17 +45,17 @@ public  class TaskMessage extends BaseBean implements Parcelable {
         isFinish = in.readByte() != 0;
     }
 
-    public static final Creator<TaskMessage> CREATOR = new Creator<TaskMessage>() {
-        @Override
-        public TaskMessage createFromParcel(Parcel in) {
-            return new TaskMessage(in);
-        }
-
-        @Override
-        public TaskMessage[] newArray(int size) {
-            return new TaskMessage[size];
-        }
-    };
+//    public static final Creator<TaskMessage> CREATOR = new Creator<TaskMessage>() {
+//        @Override
+//        public TaskMessage createFromParcel(Parcel in) {
+//            return new TaskMessage(in);
+//        }
+//
+//        @Override
+//        public TaskMessage[] newArray(int size) {
+//            return new TaskMessage[size];
+//        }
+//    };
 
     @Override
     public int describeContents() {

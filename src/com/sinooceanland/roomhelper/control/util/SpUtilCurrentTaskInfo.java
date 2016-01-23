@@ -20,7 +20,7 @@ public class SpUtilCurrentTaskInfo {
 	}
 
 
-	private static Context mContext;
+	public static Context mContext;
 
 	public static void init(Context context){
 		mContext  = context;
